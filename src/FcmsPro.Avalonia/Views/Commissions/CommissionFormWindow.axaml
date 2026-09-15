@@ -1,0 +1,90 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Commissions"
+        xmlns:entities="using:FcmsPro.Core.Entities"
+        x:Class="FcmsPro.Avalonia.Views.Commissions.CommissionFormWindow"
+        x:DataType="vm:CommissionFormViewModel"
+        Title="{Binding HeaderText}"
+        Width="480" SizeToContent="Height"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner">
+
+  <!--
+    MaxHeight was 700, taller than the usable screen height on very common
+    laptop resolutions (e.g. 1366x768 leaves ~700px after the taskbar) - with
+    CanResize=False and CenterOwner, a window taller than the screen gets
+    centered with its top (title bar, including minimize/maximize/close)
+    pushed above y=0 and unreachable. Confirmed live: reported as "not full
+    screen" with no visible title-bar buttons. Lowered to a height that fits
+    common laptop screens with room to spare, and CanResize is now True as a
+    safety net so an unusually small/zoomed display can still resize/move
+    the window to reach the title bar instead of being stuck.
+  -->
+  <ScrollViewer MaxHeight="560">
+    <StackPanel Margin="24" Spacing="10">
+      <TextBlock Text="{Binding HeaderText}" FontSize="18" FontWeight="Bold" Margin="0,0,0,8" />
+
+      <TextBlock Text="Title *" FontWeight="SemiBold" />
+      <TextBox Text="{Binding Title, Mode=TwoWay}" />
+
+      <TextBlock Text="Client *" FontWeight="SemiBold" />
+      <ComboBox ItemsSource="{Binding AvailableClients}" SelectedItem="{Binding SelectedClient, Mode=TwoWay}"
+                HorizontalAlignment="Stretch">
+        <ComboBox.ItemTemplate>
+          <DataTemplate x:DataType="entities:Client">
+            <TextBlock Text="{Binding Name}" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+
+      <TextBlock Text="Service Type" FontWeight="SemiBold" />
+      <TextBox Text="{Binding ServiceType, Mode=TwoWay}" Watermark="e.g. Illustration, Logo, Character Design" />
+
+      <Grid ColumnDefinitions="*,*">
+        <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,12,0">
+          <TextBlock Text="Price *" FontWeight="SemiBold" />
+          <NumericUpDown Value="{Binding Price, Mode=TwoWay}" Minimum="0" FormatString="C2" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Spacing="4">
+          <TextBlock Text="Down Payment" FontWeight="SemiBold" />
+          <NumericUpDown Value="{Binding DownPayment, Mode=TwoWay}" Minimum="0" FormatString="C2" />
+        </StackPanel>
+      </Grid>
+
+      <TextBlock Text="Deadline" FontWeight="SemiBold" />
+      <CalendarDatePicker SelectedDate="{Binding Deadline, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+
+      <Grid ColumnDefinitions="*,*">
+        <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,12,0">
+          <TextBlock Text="Status" FontWeight="SemiBold" />
+          <ComboBox ItemsSource="{Binding Statuses}" SelectedItem="{Binding Status, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Spacing="4">
+          <TextBlock Text="Priority" FontWeight="SemiBold" />
+          <ComboBox ItemsSource="{Binding Priorities}" SelectedItem="{Binding Priority, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+        </StackPanel>
+      </Grid>
+
+      <TextBlock Text="Repeats" FontWeight="SemiBold" />
+      <ComboBox ItemsSource="{Binding RecurFrequencies}" SelectedItem="{Binding RecurFrequency, Mode=TwoWay}"
+                HorizontalAlignment="Stretch" />
+      <TextBlock Text="If set, a new Pending commission is created automatically once this one reaches Delivered."
+                 FontSize="11" Opacity="0.6" TextWrapping="Wrap" />
+
+      <TextBlock Text="Description" FontWeight="SemiBold" />
+      <TextBox Text="{Binding Description, Mode=TwoWay}" AcceptsReturn="True" Height="60" TextWrapping="Wrap" />
+
+      <TextBlock Text="Note to Client" FontWeight="SemiBold" />
+      <TextBox Text="{Binding ClientNote, Mode=TwoWay}" AcceptsReturn="True" Height="50" TextWrapping="Wrap"
+               Watermark="Shown on receipts/invoices for this commission" />
+
+      <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}" TextWrapping="Wrap"
+                 IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,10,0,0">
+        <Button Content="Cancel" Command="{Binding CancelCommand}" />
+        <Button Content="Save" Command="{Binding SaveCommand}" IsEnabled="{Binding !IsBusy}" Classes="accent" />
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</Window>

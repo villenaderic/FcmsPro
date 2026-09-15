@@ -1,0 +1,53 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Shared"
+        xmlns:search="using:FcmsPro.Core.Services"
+        x:Class="FcmsPro.Avalonia.Views.Shared.GlobalSearchWindow"
+        x:DataType="vm:GlobalSearchViewModel"
+        Title="Search"
+        Width="520" MinHeight="120" MaxHeight="520" SizeToContent="Height"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        SystemDecorations="Full"
+        ShowInTaskbar="False">
+
+  <Window.KeyBindings>
+    <KeyBinding Gesture="Escape" Command="{Binding CloseCommand}" />
+    <KeyBinding Gesture="Enter" Command="{Binding SelectResultCommand}" CommandParameter="{Binding TopResult}" />
+  </Window.KeyBindings>
+
+  <StackPanel Margin="16" Spacing="10">
+    <TextBox x:Name="QueryBox" Text="{Binding Query, Mode=TwoWay}"
+             Watermark="Search clients, commissions, invoices, quotes, expenses..."
+             FontSize="16" Padding="10,8" />
+
+    <TextBlock Text="Type at least 2 characters..." Opacity="0.5" FontSize="12"
+               IsVisible="{Binding ShowHint}" />
+
+    <TextBlock Text="No matches." Opacity="0.6"
+               IsVisible="{Binding HasQueryWithNoResults}" />
+
+    <ScrollViewer MaxHeight="380" IsVisible="{Binding HasResults}">
+      <ItemsControl ItemsSource="{Binding Results}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="search:GlobalSearchResult">
+            <Button Classes="navitem" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                    Command="{Binding $parent[ItemsControl].((vm:GlobalSearchViewModel)DataContext).SelectResultCommand}"
+                    CommandParameter="{Binding}">
+              <Grid ColumnDefinitions="Auto,*">
+                <Border Grid.Column="0" Background="{DynamicResource SystemAltHighColor}" CornerRadius="4"
+                        Padding="6,2" Margin="0,0,10,0" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding Type}" FontSize="10" FontWeight="SemiBold" Opacity="0.75" />
+                </Border>
+                <StackPanel Grid.Column="1">
+                  <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding Subtitle}" Opacity="0.6" FontSize="12" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+              </Grid>
+            </Button>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </StackPanel>
+</Window>

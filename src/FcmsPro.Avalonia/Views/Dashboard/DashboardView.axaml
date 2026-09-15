@@ -1,0 +1,104 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Dashboard"
+             x:Class="FcmsPro.Avalonia.Views.Dashboard.DashboardView"
+             x:DataType="vm:DashboardViewModel">
+
+  <StackPanel Margin="24" Spacing="20">
+    <TextBlock Text="Dashboard" FontSize="28" FontWeight="Bold" />
+
+    <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}" TextWrapping="Wrap"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+    <!--
+      Uses the dark-theme-appropriate warning colors defined in App.axaml
+      (AppWarningBgColor/AppWarningTextColor) rather than a hardcoded light
+      background - the previous #FFF3CD light-yellow background combined
+      with the app-wide TextBlock Foreground override (near-white) would
+      have rendered this banner's text almost invisible.
+
+      Now covers overdue invoices as well as overdue commissions (previously
+      commissions only), and is clickable - since Dashboard is the app's
+      default landing page, this banner is effectively the closest thing to
+      a startup notification the app has without real OS toast integration.
+    -->
+    <Button Background="{DynamicResource AppWarningBgColor}" CornerRadius="8" Padding="12,10"
+            IsVisible="{Binding HasOverdue}" Command="{Binding GoToOverdueItemsCommand}"
+            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0">
+      <TextBlock Text="{Binding OverdueSummaryText}"
+                 FontWeight="SemiBold" Foreground="{DynamicResource AppWarningTextColor}" />
+    </Button>
+
+    <!--
+      Same banner pattern as the overdue one above, but for items that
+      haven't passed their deadline yet - "still time to act" rather than
+      "already late". Blue (AppDueSoonBgColor/TextColor) rather than amber so
+      the two are visually distinct at a glance; deliberately never shows
+      the same item as the overdue banner (MetricsService's due-soon checks
+      exclude anything already overdue).
+    -->
+    <Button Background="{DynamicResource AppDueSoonBgColor}" CornerRadius="8" Padding="12,10"
+            IsVisible="{Binding HasDueSoon}" Command="{Binding GoToDueSoonItemsCommand}"
+            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0">
+      <TextBlock Text="{Binding DueSoonSummaryText}"
+                 FontWeight="SemiBold" Foreground="{DynamicResource AppDueSoonTextColor}" />
+    </Button>
+
+    <WrapPanel ItemWidth="220" ItemHeight="100">
+      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
+        <StackPanel>
+          <TextBlock Text="Total Income" Opacity="0.6" FontSize="12" />
+          <TextBlock Text="{Binding TotalIncome, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" />
+        </StackPanel>
+      </Border>
+      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
+        <StackPanel>
+          <TextBlock Text="This Month" Opacity="0.6" FontSize="12" />
+          <TextBlock Text="{Binding ThisMonthIncome, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" />
+        </StackPanel>
+      </Border>
+      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
+        <StackPanel>
+          <TextBlock Text="Pending Balance" Opacity="0.6" FontSize="12" />
+          <TextBlock Text="{Binding PendingBalance, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" />
+        </StackPanel>
+      </Border>
+      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
+        <StackPanel>
+          <TextBlock Text="Net Profit" Opacity="0.6" FontSize="12" />
+          <TextBlock Text="{Binding NetProfit, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" />
+        </StackPanel>
+      </Border>
+      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
+        <StackPanel>
+          <TextBlock Text="Completion Rate" Opacity="0.6" FontSize="12" />
+          <TextBlock Text="{Binding CompletionRatePercent, StringFormat='{}{0:N0}%'}" FontSize="24" FontWeight="Bold" />
+        </StackPanel>
+      </Border>
+      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
+        <StackPanel>
+          <TextBlock Text="Overdue" Opacity="0.6" FontSize="12" />
+          <TextBlock Text="{Binding OverdueCount}" FontSize="24" FontWeight="Bold" />
+        </StackPanel>
+      </Border>
+      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
+        <StackPanel>
+          <TextBlock Text="Overdue Invoices" Opacity="0.6" FontSize="12" />
+          <TextBlock Text="{Binding OverdueInvoiceCount}" FontSize="24" FontWeight="Bold" />
+        </StackPanel>
+      </Border>
+      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
+        <StackPanel>
+          <TextBlock Text="Due Soon" Opacity="0.6" FontSize="12" />
+          <TextBlock Text="{Binding DueSoonCount}" FontSize="24" FontWeight="Bold" />
+        </StackPanel>
+      </Border>
+      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
+        <StackPanel>
+          <TextBlock Text="Invoices Due Soon" Opacity="0.6" FontSize="12" />
+          <TextBlock Text="{Binding DueSoonInvoiceCount}" FontSize="24" FontWeight="Bold" />
+        </StackPanel>
+      </Border>
+    </WrapPanel>
+  </StackPanel>
+</UserControl>

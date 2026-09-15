@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Expenses"
+             xmlns:entities="using:FcmsPro.Core.Entities"
+             xmlns:conv="using:FcmsPro.Avalonia.Converters"
+             x:Class="FcmsPro.Avalonia.Views.Expenses.ExpensesListView"
+             x:DataType="vm:ExpensesListViewModel">
+
+  <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
+
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+      <StackPanel Grid.Column="0">
+        <TextBlock Text="Expenses" FontSize="28" FontWeight="Bold" />
+        <TextBlock Text="{Binding FilteredTotal, StringFormat='Total: {0:C2}'}" Opacity="0.6" FontSize="12" />
+      </StackPanel>
+      <Button Grid.Column="1" Content="+ Add Expense" Command="{Binding AddCommand}" Classes="accent" />
+    </Grid>
+
+    <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+               Margin="0,0,0,12" TextWrapping="Wrap" />
+
+    <TextBox Grid.Row="2" Text="{Binding SearchQuery, Mode=TwoWay}" Margin="0,0,0,12"
+             Watermark="Search description..." Width="280" HorizontalAlignment="Left" />
+
+    <Grid Grid.Row="3">
+      <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
+        <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
+        <TextBlock Text="No expenses yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+        <TextBlock Text="Log business expenses by category to track your net profit."
+                   TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
+        <Button Content="+ Add Expense" Command="{Binding AddCommand}" Classes="accent" HorizontalAlignment="Center" Margin="0,4,0,0" />
+      </StackPanel>
+
+      <ScrollViewer IsVisible="{Binding !HasNoResults}">
+        <ItemsControl ItemsSource="{Binding Expenses}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="entities:Expense">
+              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto">
+                  <StackPanel Grid.Column="0">
+                    <TextBlock Text="{Binding Description}" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding Category}" Opacity="0.6" FontSize="12" />
+                  </StackPanel>
+                  <TextBlock Grid.Column="1"
+                             Text="{Binding RecurFrequency, Converter={x:Static conv:RecurFrequencyLabelConverter.Instance}}"
+                             IsVisible="{Binding RecurFrequency, Converter={x:Static conv:IsRecurringConverter.Instance}}"
+                             Margin="8,0" FontSize="11" Opacity="0.6" VerticalAlignment="Center" />
+                  <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat='{}{0:C2}'}" Margin="8,0" FontWeight="SemiBold" />
+                  <TextBlock Grid.Column="3" Text="{Binding Date}" Margin="8,0" Opacity="0.7" />
+                  <Button Grid.Column="4" Content="Edit"
+                          Command="{Binding $parent[ItemsControl].((vm:ExpensesListViewModel)DataContext).EditCommand}"
+                          CommandParameter="{Binding}" />
+                  <Button Grid.Column="5" Content="Delete"
+                          Command="{Binding $parent[ItemsControl].((vm:ExpensesListViewModel)DataContext).DeleteCommand}"
+                          CommandParameter="{Binding}" Classes="destructive" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Grid>
+
+  </Grid>
+</UserControl>

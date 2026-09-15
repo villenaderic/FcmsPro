@@ -1,0 +1,236 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FcmsPro.Avalonia.App"
+             RequestedThemeVariant="Default">
+  <!--
+    RequestedThemeVariant follows UiPreferences.Theme ("Light"/"Dark"/"System"),
+    set programmatically in App.axaml.cs after settings load - "Default" here
+    is just the design-time fallback before that runs.
+  -->
+
+  <Application.Resources>
+    <!--
+      Enterprise dark palette. SystemAltHighColor and SystemBaseLowColor are
+      FluentTheme resource keys that every module View already references via
+      {DynamicResource} for card backgrounds and row-separator borders -
+      overriding them here cascades the new palette across all ~13 views
+      without editing each one individually. SystemAccentColor stays
+      user-configurable (Settings > Appearance sets it at runtime via
+      ThemeService.Apply); the value below is just the design-time default.
+    -->
+    <Color x:Key="SystemAccentColor">#6366F1</Color>
+    <Color x:Key="AppAccentSecondaryColor">#8B5CF6</Color>
+    <Color x:Key="AppBackgroundColor">#0A0B0F</Color>
+    <Color x:Key="SystemAltHighColor">#151720</Color>
+    <!-- card / surface bg -->
+    <Color x:Key="AppSurfaceHoverColor">#1D2029</Color>
+    <Color x:Key="SystemBaseLowColor">#242832</Color>
+    <!-- borders / separators -->
+    <Color x:Key="AppTextPrimaryColor">#F1F2F6</Color>
+    <Color x:Key="AppTextSecondaryColor">#9096A8</Color>
+    <Color x:Key="AppDestructiveColor">#EF4444</Color>
+    <Color x:Key="AppDestructiveHoverColor">#F87171</Color>
+    <Color x:Key="AppWarningBgColor">#3A2E12</Color>
+    <Color x:Key="AppWarningTextColor">#FBBF24</Color>
+    <!-- "Due soon" banner: same treatment as the overdue warning above, but
+         blue instead of amber - distinct at a glance from "already late". -->
+    <Color x:Key="AppDueSoonBgColor">#122A3A</Color>
+    <Color x:Key="AppDueSoonTextColor">#60A5FA</Color>
+
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource AppBackgroundColor}" />
+    <SolidColorBrush x:Key="AppSurfaceBrush" Color="{DynamicResource SystemAltHighColor}" />
+    <SolidColorBrush x:Key="AppSurfaceHoverBrush" Color="{StaticResource AppSurfaceHoverColor}" />
+    <SolidColorBrush x:Key="AppBorderBrush" Color="{DynamicResource SystemBaseLowColor}" />
+    <SolidColorBrush x:Key="AppTextPrimaryBrush" Color="{StaticResource AppTextPrimaryColor}" />
+    <SolidColorBrush x:Key="AppTextSecondaryBrush" Color="{StaticResource AppTextSecondaryColor}" />
+    <SolidColorBrush x:Key="AppAccentBrush" Color="{DynamicResource SystemAccentColor}" />
+    <SolidColorBrush x:Key="AppDestructiveBrush" Color="{StaticResource AppDestructiveColor}" />
+    <SolidColorBrush x:Key="AppDestructiveHoverBrush" Color="{StaticResource AppDestructiveHoverColor}" />
+
+    <LinearGradientBrush x:Key="AppAccentGradientBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Color="{DynamicResource SystemAccentColor}" Offset="0" />
+      <GradientStop Color="{StaticResource AppAccentSecondaryColor}" Offset="1" />
+    </LinearGradientBrush>
+
+    <!--
+      FluentTheme resource-key overrides (confirmed against the actual
+      resource keys embedded in Avalonia.Themes.Fluent.dll, since this app
+      has never been through a real compiler pass - see README). These are
+      distinct from the Style-selector overrides below: Style Selector="X"
+      Setter Property="Background" only sets the *control's own* Background
+      property, but several FluentTheme control templates (TextBox,
+      NumericUpDown's inner TextBox, ComboBox's popup, CalendarDatePicker's
+      flyout) bind their visible surfaces to these specific named theme
+      resources instead of TemplateBinding Background for certain visual
+      states (pointer-over, focused) - so without overriding the resources
+      themselves, those states fall back to FluentTheme's own (light-style)
+      defaults regardless of what Style Selector="TextBox" sets. Confirmed
+      live: every TextBox flashed white on focus, and the Client combo box's
+      open dropdown rendered as a white-on-white unreadable popup - both
+      before this fix, both explained by this exact mechanism.
+    -->
+    <SolidColorBrush x:Key="TextControlBackground" Color="{StaticResource SystemAltHighColor}" />
+    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="{StaticResource SystemAltHighColor}" />
+    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{StaticResource SystemAltHighColor}" />
+    <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{StaticResource SystemAltHighColor}" />
+    <SolidColorBrush x:Key="TextControlBorderBrush" Color="{StaticResource SystemBaseLowColor}" />
+    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="{StaticResource SystemBaseLowColor}" />
+    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{DynamicResource SystemAccentColor}" />
+
+    <SolidColorBrush x:Key="ComboBoxBackground" Color="{StaticResource SystemAltHighColor}" />
+    <SolidColorBrush x:Key="ComboBoxBackgroundUnfocused" Color="{StaticResource SystemAltHighColor}" />
+    <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="{StaticResource AppSurfaceHoverColor}" />
+    <SolidColorBrush x:Key="ComboBoxBackgroundPressed" Color="{StaticResource AppSurfaceHoverColor}" />
+    <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="{StaticResource SystemAltHighColor}" />
+    <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="{StaticResource SystemBaseLowColor}" />
+    <SolidColorBrush x:Key="ComboBoxForeground" Color="{StaticResource AppTextPrimaryColor}" />
+    <SolidColorBrush x:Key="ComboBoxForegroundFocused" Color="{StaticResource AppTextPrimaryColor}" />
+    <SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver" Color="{StaticResource AppSurfaceHoverColor}" />
+    <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected" Color="{StaticResource AppSurfaceHoverColor}" />
+    <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver" Color="{StaticResource AppSurfaceHoverColor}" />
+
+    <SolidColorBrush x:Key="FlyoutPresenterBackground" Color="{StaticResource SystemAltHighColor}" />
+    <SolidColorBrush x:Key="DatePickerFlyoutPresenterBackground" Color="{StaticResource SystemAltHighColor}" />
+    <SolidColorBrush x:Key="CalendarViewBackground" Color="{StaticResource SystemAltHighColor}" />
+    <SolidColorBrush x:Key="CalendarViewForeground" Color="{StaticResource AppTextPrimaryColor}" />
+    <SolidColorBrush x:Key="CalendarViewCalendarItemForeground" Color="{StaticResource AppTextPrimaryColor}" />
+    <SolidColorBrush x:Key="CalendarViewOutOfScopeForeground" Color="{StaticResource AppTextSecondaryColor}" />
+  </Application.Resources>
+
+  <Application.Styles>
+    <FluentTheme />
+
+    <!-- ===== Window / base surface ===== -->
+    <Style Selector="Window">
+      <Setter Property="Background" Value="{StaticResource AppBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+    <Style Selector="UserControl">
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="TextBlock">
+      <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+    </Style>
+
+    <!-- ===== Input controls: explicit background/border/foreground on all
+         of them. TextBox/ComboBox/NumericUpDown/CalendarDatePicker were
+         previously left at FluentTheme defaults with no explicit Foreground,
+         which produced invisible/near-invisible text in at least one
+         confirmed case (the Commission row status dropdown). ===== -->
+    <Style Selector="TextBox">
+      <Setter Property="Background" Value="{StaticResource AppSurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="Padding" Value="10,8" />
+      <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+      <Setter Property="CaretBrush" Value="{StaticResource AppTextPrimaryBrush}" />
+    </Style>
+    <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+      <Setter Property="Background" Value="{StaticResource AppSurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}" />
+    </Style>
+    <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+      <Setter Property="Background" Value="{StaticResource AppSurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource AppAccentBrush}" />
+    </Style>
+    <Style Selector="TextBox:focus-within /template/ Border#PART_BorderElement">
+      <Setter Property="Background" Value="{StaticResource AppSurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource AppAccentBrush}" />
+    </Style>
+
+    <Style Selector="ComboBox">
+      <Setter Property="Background" Value="{StaticResource AppSurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="Padding" Value="10,8" />
+      <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+    </Style>
+    <Style Selector="ComboBoxItem">
+      <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="ComboBoxItem:selected /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AppSurfaceHoverBrush}" />
+    </Style>
+
+    <Style Selector="NumericUpDown">
+      <Setter Property="Background" Value="{StaticResource AppSurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+    </Style>
+
+    <Style Selector="CalendarDatePicker">
+      <Setter Property="Background" Value="{StaticResource AppSurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+    </Style>
+
+    <!-- ===== Buttons ===== -->
+    <!-- Base/secondary button: visible bordered surface rather than
+         FluentTheme's flat default, so unstyled buttons (Cancel, Edit, View,
+         etc.) read as deliberate UI rather than unstyled placeholders. -->
+    <Style Selector="Button">
+      <Setter Property="Background" Value="{StaticResource AppSurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="Padding" Value="9,5" />
+      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+    </Style>
+    <Style Selector="Button:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AppSurfaceHoverBrush}" />
+    </Style>
+
+    <Style Selector="Button.accent">
+      <Setter Property="Background" Value="{StaticResource AppAccentGradientBrush}" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Padding" Value="14,8" />
+      <Setter Property="CornerRadius" Value="6" />
+    </Style>
+    <Style Selector="Button.accent:pointerover /template/ ContentPresenter">
+      <Setter Property="Opacity" Value="0.9" />
+    </Style>
+
+    <Style Selector="Button.destructive">
+      <Setter Property="Background" Value="{StaticResource AppDestructiveBrush}" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="Padding" Value="10,6" />
+      <Setter Property="CornerRadius" Value="6" />
+    </Style>
+    <Style Selector="Button.destructive:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AppDestructiveHoverBrush}" />
+    </Style>
+
+    <!-- ===== Sidebar navigation items ===== -->
+    <Style Selector="Button.navitem">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Foreground" Value="{StaticResource AppTextSecondaryBrush}" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="Padding" Value="12,9" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="FontWeight" Value="Normal" />
+    </Style>
+    <Style Selector="Button.navitem:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AppSurfaceHoverBrush}" />
+    </Style>
+    <Style Selector="Button.navitem.active">
+      <Setter Property="Background" Value="#336366F1" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+  </Application.Styles>
+</Application>

@@ -1,0 +1,115 @@
+name: Build, Test, and Release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet restore
+      - run: dotnet build --no-restore -c Release
+      - run: dotnet test src/FcmsPro.Tests --no-build -c Release --logger "console;verbosity=normal"
+
+  build-windows:
+    name: Package - Windows
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Publish self-contained win-x64
+        run: >
+          dotnet publish src/FcmsPro.Avalonia/FcmsPro.Avalonia.csproj
+          -c Release -r win-x64 --self-contained true
+          -p:PublishSingleFile=true
+          -o installers/windows/publish
+      - name: Install Inno Setup
+        run: choco install innosetup -y
+      - name: Build installer
+        run: '"C:\Program Files (x86)\Inno Setup 6\iscc.exe" installers\windows\fcmspro.iss'
+        shell: cmd
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: installers/windows/Output/*.exe
+
+  build-macos:
+    name: Package - macOS
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Install create-dmg
+        run: brew install create-dmg
+      - name: Build .app and .dmg (Apple Silicon)
+        run: |
+          chmod +x installers/macos/build-dmg.sh
+          ./installers/macos/build-dmg.sh arm64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-dmg
+          path: installers/macos/build/*.dmg
+
+  build-linux:
+    name: Package - Linux
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build .deb package
+        run: |
+          chmod +x installers/linux/build-deb.sh
+          ./installers/linux/build-deb.sh
+      - name: Download appimagetool
+        run: |
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage \
+            -O installers/linux/appimagetool-x86_64.AppImage
+          chmod +x installers/linux/appimagetool-x86_64.AppImage
+      - name: Build AppImage
+        run: |
+          chmod +x installers/linux/build-appimage.sh
+          ./installers/linux/build-appimage.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-packages
+          path: |
+            installers/linux/*.deb
+            installers/linux/build/*.AppImage
+
+  release:
+    name: Publish GitHub Release
+    needs: [build-windows, build-macos, build-linux]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+      - name: Create release with all platform installers attached
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            windows-installer/*.exe
+            macos-dmg/*.dmg
+            linux-packages/*

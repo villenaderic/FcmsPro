@@ -1,0 +1,111 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Commissions"
+             xmlns:entities="using:FcmsPro.Core.Entities"
+             x:Class="FcmsPro.Avalonia.Views.Commissions.CommissionProfileView"
+             x:DataType="vm:CommissionProfileViewModel">
+
+  <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
+
+    <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,4">
+      <TextBlock Text="{Binding Commission.Title}" FontSize="28" FontWeight="Bold" />
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <TextBlock Text="{Binding Commission.Status}" Opacity="0.7" />
+        <TextBlock Text="&#183;" Opacity="0.4" />
+        <TextBlock Text="{Binding Client.Name}" Opacity="0.7" />
+        <Button Content="View Client" Command="{Binding ViewClientCommand}" Padding="8,3" FontSize="11" />
+      </StackPanel>
+    </StackPanel>
+
+    <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+               Margin="0,4,0,0" TextWrapping="Wrap" />
+
+    <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="24" Margin="0,12,0,16">
+      <StackPanel>
+        <TextBlock Text="Price" Opacity="0.6" FontSize="12" />
+        <TextBlock Text="{Binding Commission.Price, StringFormat='{}{0:C2}'}" FontSize="20" FontWeight="Bold" />
+      </StackPanel>
+      <StackPanel>
+        <TextBlock Text="Down Payment" Opacity="0.6" FontSize="12" />
+        <TextBlock Text="{Binding Commission.DownPayment, StringFormat='{}{0:C2}'}" FontSize="20" FontWeight="Bold" />
+      </StackPanel>
+      <StackPanel>
+        <TextBlock Text="Remaining Balance" Opacity="0.6" FontSize="12" />
+        <TextBlock Text="{Binding Commission.Remaining, StringFormat='{}{0:C2}'}" FontSize="20" FontWeight="Bold" />
+      </StackPanel>
+      <StackPanel>
+        <TextBlock Text="Deadline" Opacity="0.6" FontSize="12" />
+        <TextBlock Text="{Binding Commission.Deadline}" FontSize="20" FontWeight="Bold" />
+      </StackPanel>
+    </StackPanel>
+
+    <ScrollViewer Grid.Row="3">
+      <StackPanel Spacing="24">
+
+        <StackPanel Spacing="8">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" Text="Attachments" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" />
+            <Button Grid.Column="1" Content="+ Add Image" Command="{Binding AddAttachmentCommand}" Padding="8,3" FontSize="11" />
+          </Grid>
+
+          <TextBlock Text="No attachments yet - add a reference photo or the delivered piece."
+                     Opacity="0.5" FontStyle="Italic"
+                     IsVisible="{Binding HasNoAttachments}" />
+
+          <ItemsControl ItemsSource="{Binding Attachments}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:AttachmentItemViewModel">
+                <Border Width="150" Margin="0,0,12,12" Padding="6"
+                        Background="{DynamicResource SystemAltHighColor}"
+                        BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="6">
+                  <StackPanel Spacing="4">
+                    <Border Height="120" ClipToBounds="True" CornerRadius="4" Background="{DynamicResource SystemBaseLowColor}">
+                      <Panel>
+                        <Image Source="{Binding Image}" Stretch="UniformToFill" IsVisible="{Binding !LoadFailed}" />
+                        <TextBlock Text="Couldn't load image" IsVisible="{Binding LoadFailed}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Opacity="0.6" FontSize="11" TextWrapping="Wrap" TextAlignment="Center" Margin="6" />
+                      </Panel>
+                    </Border>
+                    <TextBlock Text="{Binding Attachment.FileName}" FontSize="11" Opacity="0.7"
+                               TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Attachment.FileName}" />
+                    <Button Content="Remove" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            FontSize="11" Padding="0,4"
+                            Command="{Binding $parent[ItemsControl].((vm:CommissionProfileViewModel)DataContext).RemoveAttachmentCommand}"
+                            CommandParameter="{Binding}" />
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+
+        <StackPanel Spacing="8">
+          <TextBlock Text="Payment History" FontWeight="SemiBold" FontSize="16" />
+          <ItemsControl ItemsSource="{Binding Payments}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="entities:Payment">
+                <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                  <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+                    <TextBlock Grid.Column="0" Text="{Binding Amount, StringFormat='{}{0:C2}'}" FontWeight="SemiBold" Width="100" />
+                    <TextBlock Grid.Column="1" Text="{Binding Method}" Margin="8,0" Opacity="0.7" Width="100" />
+                    <TextBlock Grid.Column="2" Text="{Binding ReferenceNumber}" Margin="8,0" Opacity="0.6" />
+                    <TextBlock Grid.Column="3" Text="{Binding Date}" Opacity="0.7" />
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+
+      </StackPanel>
+    </ScrollViewer>
+
+  </Grid>
+</UserControl>

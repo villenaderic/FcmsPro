@@ -1,0 +1,11 @@
+Package: fcmspro
+Version: 1.1.0
+Section: office
+Priority: optional
+Architecture: amd64
+Maintainer: Roderic Villena <REPLACE_WITH_YOUR_EMAIL@example.com>
+Description: FCMS Pro - Freelance Commission Management System
+ Cross-platform desktop app for managing freelance commissions, clients,
+ invoices, quotes, payments, and receipts. All data is stored locally in
+ a SQLite database - no cloud sync, no external server dependency.
+Depends: libicu-dev

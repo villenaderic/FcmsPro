@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FcmsPro.Core\FcmsPro.Core.csproj" />
+    <!-- Only CommissionsListViewModelKanbanTests.cs needs this - it's the one test file
+         testing an Avalonia-layer ViewModel rather than pure Core business logic. Pulls in
+         the Avalonia UI framework as a test dependency, which is a real, if minor,
+         architectural tradeoff against this project's original "Tests only tests Core"
+         design. Kept because kanban grouping/filtering was a named zero-coverage gap and
+         the logic lives in the ViewModel, not in Core - but noting the tradeoff here in
+         case a future contributor wonders why Tests suddenly needs Avalonia.Controls.dll. -->
+    <ProjectReference Include="..\FcmsPro.Avalonia\FcmsPro.Avalonia.csproj" />
+  </ItemGroup>
+
+</Project>

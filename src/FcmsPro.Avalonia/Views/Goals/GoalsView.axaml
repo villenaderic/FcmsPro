@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Goals"
+             x:Class="FcmsPro.Avalonia.Views.Goals.GoalsView"
+             x:DataType="vm:GoalsViewModel">
+
+  <StackPanel Margin="24" Spacing="16" MaxWidth="420">
+    <TextBlock Text="Goals" FontSize="28" FontWeight="Bold" />
+    <TextBlock Text="{Binding ThisMonthIncome, StringFormat='This month so far: {0:C2}'}" Opacity="0.7" />
+
+    <StackPanel Spacing="4">
+      <TextBlock Text="Monthly Income Goal" FontWeight="SemiBold" />
+      <NumericUpDown Value="{Binding MonthlyIncomeGoal, Mode=TwoWay}" Minimum="0" FormatString="C2" />
+    </StackPanel>
+
+    <StackPanel Spacing="4">
+      <TextBlock Text="Yearly Income Goal" FontWeight="SemiBold" />
+      <NumericUpDown Value="{Binding YearlyIncomeGoal, Mode=TwoWay}" Minimum="0" FormatString="C2" />
+    </StackPanel>
+
+    <StackPanel Spacing="4">
+      <TextBlock Text="Monthly Expense Budget" FontWeight="SemiBold" />
+      <NumericUpDown Value="{Binding MonthlyExpenseBudget, Mode=TwoWay}" Minimum="0" FormatString="C2" />
+    </StackPanel>
+
+    <StackPanel Spacing="4">
+      <TextBlock Text="Yearly Expense Budget" FontWeight="SemiBold" />
+      <NumericUpDown Value="{Binding YearlyExpenseBudget, Mode=TwoWay}" Minimum="0" FormatString="C2" />
+    </StackPanel>
+
+    <TextBlock Text="{Binding StatusMessage}" Opacity="0.7" FontSize="12"
+               IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+    <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}" TextWrapping="Wrap"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+    <Button Content="Save Goals" Command="{Binding SaveCommand}" IsEnabled="{Binding !IsBusy}"
+            Classes="accent" HorizontalAlignment="Left" />
+  </StackPanel>
+</UserControl>

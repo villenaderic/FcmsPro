@@ -1,0 +1,100 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Analytics"
+             xmlns:metrics="using:FcmsPro.Core.Metrics"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             x:Class="FcmsPro.Avalonia.Views.Analytics.AnalyticsView"
+             x:DataType="vm:AnalyticsViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="24" Spacing="24">
+      <TextBlock Text="Analytics" FontSize="28" FontWeight="Bold" />
+
+      <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}" TextWrapping="Wrap"
+                 IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+      <StackPanel Spacing="8">
+        <TextBlock Text="Revenue by Month" FontWeight="SemiBold" FontSize="16" />
+        <!--
+          If LiveChartsCore.SkiaSharpView.Avalonia's CartesianChart control
+          fails to build/render, delete this <lvc:CartesianChart> block and
+          the xmlns:lvc line above - everything else on this page (TopClients,
+          ExpensesByCategory) works with no chart library dependency at all.
+        -->
+        <lvc:CartesianChart Series="{Binding RevenueSeries}" XAxes="{Binding RevenueXAxes}" Height="260" />
+      </StackPanel>
+
+      <StackPanel Spacing="8">
+        <TextBlock Text="Top Clients by Revenue" FontWeight="SemiBold" FontSize="16" />
+        <ItemsControl ItemsSource="{Binding TopClients}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:NamedTotal">
+              <Grid ColumnDefinitions="*,Auto" Margin="0,4">
+                <TextBlock Grid.Column="0" Text="{Binding Name}" />
+                <TextBlock Grid.Column="1" Text="{Binding Total, StringFormat='{}{0:C2}'}" FontWeight="SemiBold" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+
+      <StackPanel Spacing="8">
+        <TextBlock Text="Expenses by Category" FontWeight="SemiBold" FontSize="16" />
+        <ItemsControl ItemsSource="{Binding ExpensesByCategory}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:NamedTotal">
+              <Grid ColumnDefinitions="*,Auto" Margin="0,4">
+                <TextBlock Grid.Column="0" Text="{Binding Name}" />
+                <TextBlock Grid.Column="1" Text="{Binding Total, StringFormat='{}{0:C2}'}" FontWeight="SemiBold" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+
+      <!-- Tax / year-end summary -->
+      <StackPanel Spacing="8">
+        <Grid ColumnDefinitions="*,Auto,Auto">
+          <TextBlock Grid.Column="0" Text="Income &amp; Expense Summary" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" />
+          <ComboBox Grid.Column="1" ItemsSource="{Binding AvailableYears}" SelectedItem="{Binding SelectedYear, Mode=TwoWay}"
+                    Width="110" Margin="0,0,8,0" />
+          <Button Grid.Column="2" Content="Export PDF" Command="{Binding ExportTaxSummaryCommand}"
+                  IsEnabled="{Binding !IsExportingTaxSummary}" Classes="accent" />
+        </Grid>
+
+        <TextBlock Text="{Binding TaxSummaryStatusMessage}" Opacity="0.7" FontSize="12" TextWrapping="Wrap"
+                   IsVisible="{Binding TaxSummaryStatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+        <StackPanel Orientation="Horizontal" Spacing="32" Margin="0,4,0,8">
+          <StackPanel>
+            <TextBlock Text="Total Income" Opacity="0.6" FontSize="12" />
+            <TextBlock Text="{Binding TaxSummary.TotalIncome, StringFormat='{}{0:C2}'}" FontSize="18" FontWeight="Bold" />
+          </StackPanel>
+          <StackPanel>
+            <TextBlock Text="Total Expenses" Opacity="0.6" FontSize="12" />
+            <TextBlock Text="{Binding TaxSummary.TotalExpenses, StringFormat='{}{0:C2}'}" FontSize="18" FontWeight="Bold" />
+          </StackPanel>
+          <StackPanel>
+            <TextBlock Text="Net Profit" Opacity="0.6" FontSize="12" />
+            <TextBlock Text="{Binding TaxSummary.NetProfit, StringFormat='{}{0:C2}'}" FontSize="18" FontWeight="Bold" />
+          </StackPanel>
+        </StackPanel>
+
+        <TextBlock Text="By Quarter" Opacity="0.7" FontSize="13" FontWeight="SemiBold" Margin="0,4,0,0" />
+        <ItemsControl ItemsSource="{Binding TaxSummary.Quarters}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="metrics:QuarterTotal">
+              <Grid ColumnDefinitions="60,*,*,*" Margin="0,3">
+                <TextBlock Grid.Column="0" Text="{Binding Quarter, StringFormat='Q{0}'}" />
+                <TextBlock Grid.Column="1" Text="{Binding Income, StringFormat='{}{0:C2}'}" />
+                <TextBlock Grid.Column="2" Text="{Binding Expenses, StringFormat='{}{0:C2}'}" Opacity="0.8" />
+                <TextBlock Grid.Column="3" Text="{Binding Net, StringFormat='{}{0:C2}'}" FontWeight="SemiBold" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

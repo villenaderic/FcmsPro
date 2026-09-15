@@ -1,0 +1,110 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Clients"
+             xmlns:icons="using:FcmsPro.Avalonia.Views.Icons"
+             xmlns:entities="using:FcmsPro.Core.Entities"
+             x:Class="FcmsPro.Avalonia.Views.Clients.ClientProfileView"
+             x:DataType="vm:ClientProfileViewModel">
+
+  <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
+
+    <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,16">
+      <TextBlock Text="{Binding Client.Name}" FontSize="28" FontWeight="Bold" />
+      <TextBlock Text="{Binding Client.ClientType}" Opacity="0.6" />
+    </StackPanel>
+
+    <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+               Margin="0,0,0,8" TextWrapping="Wrap" />
+
+    <!-- Live-computed stats (Phase 1 audit §3: never stored on the Client record) -->
+    <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="24" Margin="0,0,0,16">
+      <StackPanel>
+        <TextBlock Text="Commissions" Opacity="0.6" FontSize="12" />
+        <TextBlock Text="{Binding CommissionCount}" FontSize="20" FontWeight="Bold" />
+      </StackPanel>
+      <StackPanel>
+        <TextBlock Text="Total Paid" Opacity="0.6" FontSize="12" />
+        <TextBlock Text="{Binding TotalPaid, StringFormat='{}{0:C2}'}" FontSize="20" FontWeight="Bold" />
+      </StackPanel>
+      <StackPanel>
+        <TextBlock Text="Outstanding Balance" Opacity="0.6" FontSize="12" />
+        <TextBlock Text="{Binding OutstandingBalance, StringFormat='{}{0:C2}'}" FontSize="20" FontWeight="Bold" />
+      </StackPanel>
+    </StackPanel>
+
+    <ScrollViewer Grid.Row="3">
+      <StackPanel Spacing="24">
+
+        <!--
+          Generalized from Commission's attachments section (round 8) - a
+          client-level file is typically a signed contract or agreement
+          rather than a reference photo, so the file picker here also
+          accepts PDF (see AttachmentService's allowed-extensions list).
+        -->
+        <StackPanel Spacing="8">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" Text="Attachments" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" />
+            <Button Grid.Column="1" Content="+ Add File" Command="{Binding AddAttachmentCommand}" Padding="8,3" FontSize="11" />
+          </Grid>
+
+          <TextBlock Text="No attachments yet - add a signed contract or reference file."
+                     Opacity="0.5" FontStyle="Italic"
+                     IsVisible="{Binding HasNoAttachments}" />
+
+          <ItemsControl ItemsSource="{Binding Attachments}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:ClientAttachmentItemViewModel">
+                <Border Width="150" Margin="0,0,12,12" Padding="6"
+                        Background="{DynamicResource SystemAltHighColor}"
+                        BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="6">
+                  <StackPanel Spacing="4">
+                    <Border Height="120" ClipToBounds="True" CornerRadius="4" Background="{DynamicResource SystemBaseLowColor}">
+                      <Panel>
+                        <Image Source="{Binding Image}" Stretch="UniformToFill" IsVisible="{Binding IsImage}" />
+                        <icons:DocumentIcon Width="36" Height="36" IsVisible="{Binding !IsImage}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBlock Text="Couldn't load image" IsVisible="{Binding LoadFailed}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Opacity="0.6" FontSize="11" TextWrapping="Wrap" TextAlignment="Center" Margin="6" />
+                      </Panel>
+                    </Border>
+                    <TextBlock Text="{Binding Attachment.FileName}" FontSize="11" Opacity="0.7"
+                               TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Attachment.FileName}" />
+                    <Button Content="Remove" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            FontSize="11" Padding="0,4"
+                            Command="{Binding $parent[ItemsControl].((vm:ClientProfileViewModel)DataContext).RemoveAttachmentCommand}"
+                            CommandParameter="{Binding}" />
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+
+        <StackPanel Spacing="8">
+          <TextBlock Text="Commissions" FontWeight="SemiBold" FontSize="16" />
+          <ItemsControl ItemsSource="{Binding Commissions}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="entities:Commission">
+                <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                  <Grid ColumnDefinitions="*,Auto,Auto">
+                    <TextBlock Grid.Column="0" Text="{Binding Title}" FontWeight="SemiBold" />
+                    <TextBlock Grid.Column="1" Text="{Binding Status}" Margin="8,0" Opacity="0.7" />
+                    <TextBlock Grid.Column="2" Text="{Binding Price, StringFormat='{}{0:C2}'}" Margin="8,0" />
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+
+      </StackPanel>
+    </ScrollViewer>
+
+  </Grid>
+</UserControl>

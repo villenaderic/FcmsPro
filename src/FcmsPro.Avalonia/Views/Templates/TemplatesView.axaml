@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Templates"
+             xmlns:entities="using:FcmsPro.Core.Entities"
+             x:Class="FcmsPro.Avalonia.Views.Templates.TemplatesView"
+             x:DataType="vm:TemplatesViewModel">
+
+  <Grid RowDefinitions="Auto,Auto,*" Margin="24">
+
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,12">
+      <TextBlock Grid.Column="0" Text="Templates" FontSize="28" FontWeight="Bold" />
+      <Button Grid.Column="1" Content="Reset Defaults" Command="{Binding ResetDefaultsCommand}" Margin="0,0,8,0" />
+      <Button Grid.Column="2" Content="+ New Template" Command="{Binding AddCommand}" Classes="accent" />
+    </Grid>
+
+    <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+               Margin="0,0,0,12" TextWrapping="Wrap" />
+
+    <Grid Grid.Row="2">
+      <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
+        <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
+        <TextBlock Text="No templates yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+        <TextBlock Text="This shouldn't normally happen - default templates are seeded automatically. Try Reset Defaults, or add your own."
+                   TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
+        <Button Content="+ New Template" Command="{Binding AddCommand}" Classes="accent" HorizontalAlignment="Center" Margin="0,4,0,0" />
+      </StackPanel>
+
+      <ScrollViewer IsVisible="{Binding !HasNoResults}">
+        <ItemsControl ItemsSource="{Binding Templates}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="entities:CommissionTemplate">
+              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto">
+                  <StackPanel Grid.Column="0">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding ServiceType}" Opacity="0.6" FontSize="12" />
+                  </StackPanel>
+                  <TextBlock Grid.Column="1" Text="{Binding Price, StringFormat='{}{0:C2}'}" Margin="8,0" />
+                  <TextBlock Grid.Column="2" Text="{Binding DeadlineDays, StringFormat='{}{0}d'}" Margin="8,0" Opacity="0.7" />
+                  <Button Grid.Column="3" Content="Use"
+                          Command="{Binding $parent[ItemsControl].((vm:TemplatesViewModel)DataContext).UseTemplateCommand}"
+                          CommandParameter="{Binding}" Classes="accent" />
+                  <Button Grid.Column="4" Content="Edit"
+                          Command="{Binding $parent[ItemsControl].((vm:TemplatesViewModel)DataContext).EditCommand}"
+                          CommandParameter="{Binding}" />
+                  <Button Grid.Column="5" Content="Delete"
+                          Command="{Binding $parent[ItemsControl].((vm:TemplatesViewModel)DataContext).DeleteCommand}"
+                          CommandParameter="{Binding}" Classes="destructive" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Grid>
+
+  </Grid>
+</UserControl>

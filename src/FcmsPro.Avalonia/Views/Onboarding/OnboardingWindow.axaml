@@ -1,0 +1,84 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Onboarding"
+        x:Class="FcmsPro.Avalonia.Views.Onboarding.OnboardingWindow"
+        x:DataType="vm:OnboardingFlowViewModel"
+        Title="Welcome to FCMS Pro"
+        Width="640" Height="560"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+
+  <Grid RowDefinitions="*,Auto" Margin="32">
+
+    <!--
+      Switches on computed IsXStep bool properties (see OnboardingFlowViewModel)
+      rather than DataTemplate-per-enum-value, since Avalonia's DataTemplate
+      matching is by CLR type, not by value - an earlier version of this file
+      bound Content directly to the CurrentStep enum expecting per-member
+      templates, which does not work (every step is the same enum type, so
+      only one template would ever have matched, always showing Welcome).
+    -->
+    <Grid Grid.Row="0">
+
+      <StackPanel Spacing="16" VerticalAlignment="Center" IsVisible="{Binding IsWelcomeStep}">
+        <Image Source="avares://FcmsPro/Assets/logo-wordmark.png" Width="280"
+               HorizontalAlignment="Left" Margin="0,0,0,8" />
+        <TextBlock TextWrapping="Wrap"
+                   Text="Your freelance commission, invoicing, and client management app - now running natively, with all your data stored locally on this machine." />
+      </StackPanel>
+
+      <StackPanel Spacing="12" IsVisible="{Binding IsTermsStep}">
+        <TextBlock Text="Terms &amp; Data Handling" FontSize="20" FontWeight="Bold" />
+        <ScrollViewer Height="280" Background="{DynamicResource SystemAltHighColor}" Padding="12">
+          <TextBlock TextWrapping="Wrap" Text="FCMS Pro stores all of your business data - clients, commissions, payments, invoices, and everything else - locally on this computer, in a SQLite database file in your app data folder. Nothing is sent to any external server; there is no cloud sync, and Anthropic/the app developer has no access to your data.&#10;&#10;You are responsible for backing up your own data (see the Backup page once you're in the app) - if this computer is lost, reformatted, or the app data folder is deleted without a backup, your data cannot be recovered.&#10;&#10;This app stores a password you set, hashed using industry-standard PBKDF2-SHA256, and never stores your password in plain text.&#10;&#10;By continuing, you acknowledge you've read and understood the above." />
+        </ScrollViewer>
+        <CheckBox Content="I've read and accept the above" IsChecked="{Binding TermsAccepted, Mode=TwoWay}" />
+      </StackPanel>
+
+      <StackPanel Spacing="12" IsVisible="{Binding IsDataLocationStep}">
+        <TextBlock Text="Where Your Data Lives" FontSize="20" FontWeight="Bold" />
+        <TextBlock TextWrapping="Wrap"
+                   Text="Your data will be stored at the location below. This is the standard app-data location for your operating system and isn't user-changeable in this version." />
+        <Border Background="{DynamicResource SystemAltHighColor}" CornerRadius="6" Padding="12">
+          <SelectableTextBlock Text="{Binding SelectedDataDirectory}" FontFamily="Consolas,Menlo,monospace" TextWrapping="Wrap" />
+        </Border>
+      </StackPanel>
+
+      <StackPanel Spacing="10" IsVisible="{Binding IsAdminSetupStep}">
+        <TextBlock Text="Create Your Admin Account" FontSize="20" FontWeight="Bold" />
+        <TextBlock TextWrapping="Wrap" Opacity="0.7"
+                   Text="This account protects access to the app on this computer. Choose a password you'll remember - it cannot be recovered if lost, only reset by deleting the local database (which also deletes your data)." />
+
+        <TextBlock Text="Username" FontWeight="SemiBold" />
+        <TextBox Text="{Binding AdminUsername, Mode=TwoWay}" Watermark="e.g. your name" />
+
+        <TextBlock Text="Password" FontWeight="SemiBold" />
+        <TextBox Text="{Binding AdminPassword, Mode=TwoWay}" PasswordChar="*" Watermark="At least 8 characters" />
+
+        <TextBlock Text="Confirm Password" FontWeight="SemiBold" />
+        <TextBox Text="{Binding AdminPasswordConfirm, Mode=TwoWay}" PasswordChar="*" />
+
+        <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}" TextWrapping="Wrap"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+      </StackPanel>
+
+      <StackPanel Spacing="16" VerticalAlignment="Center" IsVisible="{Binding IsReadyStep}">
+        <TextBlock Text="You're All Set" FontSize="24" FontWeight="Bold" />
+        <TextBlock TextWrapping="Wrap"
+                   Text="Your admin account has been created and your data location is ready. Click Finish to start using FCMS Pro." />
+      </StackPanel>
+
+    </Grid>
+
+    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,16,0,0">
+      <Button Content="Back" Command="{Binding GoBackCommand}" IsVisible="{Binding !IsWelcomeStep}" />
+
+      <Button Content="Get Started" Command="{Binding GoToTermsCommand}" IsVisible="{Binding IsWelcomeStep}" Classes="accent" />
+      <Button Content="I Accept" Command="{Binding AcceptTermsCommand}" IsVisible="{Binding IsTermsStep}" Classes="accent" />
+      <Button Content="Continue" Command="{Binding ConfirmDataLocationCommand}" IsVisible="{Binding IsDataLocationStep}" Classes="accent" />
+      <Button Content="Create Account" Command="{Binding CreateAdminAccountCommand}" IsVisible="{Binding IsAdminSetupStep}" Classes="accent" />
+      <Button Content="Finish" Command="{Binding FinishCommand}" IsVisible="{Binding IsReadyStep}" Classes="accent" />
+    </StackPanel>
+
+  </Grid>
+</Window>

@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Trash"
+             xmlns:svc="using:FcmsPro.Core.Services"
+             x:Class="FcmsPro.Avalonia.Views.Trash.TrashView"
+             x:DataType="vm:TrashViewModel">
+
+  <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
+
+    <Button Grid.Row="0" Content="&#8592; Back to Settings" Command="{Binding BackToSettingsCommand}"
+            Background="Transparent" BorderThickness="0" Padding="0" Margin="0,0,0,8" HorizontalAlignment="Left" />
+
+    <StackPanel Grid.Row="1" Spacing="4" Margin="0,0,0,12">
+      <TextBlock Text="Trash" FontSize="28" FontWeight="Bold" />
+      <TextBlock Text="Deleted clients, commissions, payments, expenses, quotes, and invoices land here and can be restored for 30 days before they're automatically removed for good."
+                 Opacity="0.6" TextWrapping="Wrap" />
+    </StackPanel>
+
+    <TextBlock Grid.Row="2" Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+               Margin="0,0,0,12" TextWrapping="Wrap" />
+
+    <Grid Grid.Row="3">
+      <StackPanel IsVisible="{Binding HasNoItems}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8" MaxWidth="320">
+        <TextBlock Text="Trash is empty" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+        <TextBlock Text="Deleted items will show up here." TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
+      </StackPanel>
+
+      <ScrollViewer IsVisible="{Binding !HasNoItems}">
+        <ItemsControl ItemsSource="{Binding Items}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="svc:TrashItem">
+              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+                  <Border Grid.Column="0" Background="{DynamicResource SystemAltHighColor}" CornerRadius="4" Padding="6,2" Margin="0,0,12,0">
+                    <TextBlock Text="{Binding Type}" FontSize="11" />
+                  </Border>
+                  <StackPanel Grid.Column="1">
+                    <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding Detail}" Opacity="0.6" FontSize="12" />
+                  </StackPanel>
+                  <TextBlock Grid.Column="2" Text="{Binding DeletedAt, StringFormat='Deleted {0:d}'}" Opacity="0.6" FontSize="12"
+                             VerticalAlignment="Center" Margin="8,0" />
+                  <Button Grid.Column="3" Content="Restore" Margin="0,0,8,0"
+                          Command="{Binding $parent[ItemsControl].((vm:TrashViewModel)DataContext).RestoreCommand}"
+                          CommandParameter="{Binding}" />
+                  <Button Grid.Column="4" Content="Delete Forever" Classes="destructive"
+                          Command="{Binding $parent[ItemsControl].((vm:TrashViewModel)DataContext).PermanentlyDeleteCommand}"
+                          CommandParameter="{Binding}" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Grid>
+
+  </Grid>
+</UserControl>

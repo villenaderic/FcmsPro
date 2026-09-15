@@ -1,0 +1,21 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Shared"
+        x:Class="FcmsPro.Avalonia.Views.Shared.ConfirmDialogWindow"
+        x:DataType="vm:ConfirmDialogViewModel"
+        Title="{Binding Title}"
+        Width="380" SizeToContent="Height"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner">
+
+  <StackPanel Margin="24" Spacing="16">
+    <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="Bold" />
+    <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Opacity="0.8" />
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+      <Button Content="{Binding CancelLabel}" Click="OnCancelClick" />
+      <Button Content="{Binding ConfirmLabel}" Click="OnConfirmClick"
+              Classes.destructive="{Binding IsDestructive}" Classes="accent" />
+    </StackPanel>
+  </StackPanel>
+</Window>

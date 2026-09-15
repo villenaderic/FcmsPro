@@ -1,0 +1,148 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Commissions"
+             x:Class="FcmsPro.Avalonia.Views.Commissions.CommissionsListView"
+             x:DataType="vm:CommissionsListViewModel">
+
+  <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
+
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+      <StackPanel Grid.Column="0">
+        <TextBlock Text="Commissions" FontSize="28" FontWeight="Bold" />
+        <TextBlock Text="{Binding FilteredByClient.Name, StringFormat='Filtered by client: {0}'}"
+                   IsVisible="{Binding FilteredByClient, Converter={x:Static ObjectConverters.IsNotNull}}"
+                   Opacity="0.6" FontSize="12" />
+      </StackPanel>
+      <Button Grid.Column="1" Content="+ New Commission" Command="{Binding AddCommand}" Classes="accent" />
+    </Grid>
+
+    <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+               Margin="0,0,0,12" TextWrapping="Wrap" />
+
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+      <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12">
+        <TextBox Text="{Binding SearchQuery, Mode=TwoWay}" Watermark="Search title or service type..." Width="280" />
+        <ComboBox ItemsSource="{Binding StatusFilterOptions}" SelectedItem="{Binding StatusFilter, Mode=TwoWay}"
+                  PlaceholderText="All statuses" Width="160" />
+      </StackPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="0">
+        <Button Content="Table" Padding="12,6" CornerRadius="6,0,0,6"
+                Classes.accent="{Binding IsTableView}"
+                Command="{Binding SetViewModeCommand}" CommandParameter="Table" />
+        <Button Content="Kanban" Padding="12,6" CornerRadius="0,6,6,0"
+                Classes.accent="{Binding IsKanbanView}"
+                Command="{Binding SetViewModeCommand}" CommandParameter="Kanban" />
+      </StackPanel>
+    </Grid>
+
+    <Grid Grid.Row="3">
+      <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
+        <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
+        <TextBlock Text="No commissions yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+        <TextBlock Text="Create your first commission to start tracking its status, balance, and payments."
+                   TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
+        <Button Content="+ New Commission" Command="{Binding AddCommand}" Classes="accent" HorizontalAlignment="Center" Margin="0,4,0,0" />
+      </StackPanel>
+
+      <!--
+        Table view. Each row's status ComboBox goes through
+        CommissionRowViewModel.SelectedStatus so the recurrence-spawn rule
+        can snapshot the previous status correctly.
+      -->
+      <ScrollViewer IsVisible="{Binding ShowTableView}">
+        <ItemsControl ItemsSource="{Binding Rows}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:CommissionRowViewModel">
+              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto">
+                  <StackPanel Grid.Column="0">
+                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding Priority}" Opacity="0.5" FontSize="11" />
+                  </StackPanel>
+                  <TextBlock Grid.Column="1" Text="{Binding Price, StringFormat='{}{0:C2}'}" VerticalAlignment="Center" Margin="8,0" />
+                  <TextBlock Grid.Column="2" Text="{Binding Remaining, StringFormat='{}{0:C2} due'}" VerticalAlignment="Center" Margin="8,0" Opacity="0.8" />
+                  <TextBlock Grid.Column="3" Text="{Binding Deadline}" VerticalAlignment="Center" Margin="8,0" Opacity="0.7" />
+                  <ComboBox Grid.Column="4" ItemsSource="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).RowStatusOptions}"
+                            SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" Width="140" Margin="8,0" />
+                  <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4">
+                    <Button Content="View"
+                            Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).ViewCommand}"
+                            CommandParameter="{Binding}" />
+                    <Button Content="Edit"
+                            Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).EditCommand}"
+                            CommandParameter="{Binding}" />
+                    <Button Content="Duplicate"
+                            Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).DuplicateCommand}"
+                            CommandParameter="{Binding}" />
+                    <Button Content="Delete"
+                            Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).DeleteCommand}"
+                            CommandParameter="{Binding}" Classes="destructive" />
+                  </StackPanel>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+
+      <!--
+        Kanban board. One column per CommissionStatus (KanbanColumns is
+        prebuilt with all 6 in enum order, populated in
+        CommissionsListViewModel.ApplyFilterToRows). Cards use the SAME
+        CommissionRowViewModel instances as the table above, so the status
+        ComboBox on each card goes through the identical SelectedStatus /
+        StatusChangeRequested wiring - moving a card between columns is just
+        changing that ComboBox, then LoadAsync rebuilds both views from the
+        refreshed data.
+      -->
+      <ScrollViewer IsVisible="{Binding ShowKanbanView}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <ItemsControl ItemsSource="{Binding KanbanColumns}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" Spacing="12" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:KanbanColumnViewModel">
+              <Border Width="260" Background="{DynamicResource SystemAltHighColor}"
+                      BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="10">
+                <StackPanel Spacing="8">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding Items.Count}" Opacity="0.5" />
+                  </StackPanel>
+
+                  <ItemsControl ItemsSource="{Binding Items}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:CommissionRowViewModel">
+                        <Border Background="{DynamicResource SystemChromeMediumLowColor}" CornerRadius="6" Padding="10" Margin="0,0,0,8">
+                          <StackPanel Spacing="6">
+                            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding Remaining, StringFormat='{}{0:C2} due'}" FontSize="12" Opacity="0.8" />
+                            <TextBlock Text="{Binding Deadline}" FontSize="12" Opacity="0.6" />
+                            <ComboBox ItemsSource="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).RowStatusOptions}"
+                                      SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" HorizontalAlignment="Stretch" FontSize="11" />
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                              <Button Content="View" FontSize="11" Padding="6,3"
+                                      Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).ViewCommand}"
+                                      CommandParameter="{Binding}" />
+                              <Button Content="Edit" FontSize="11" Padding="6,3"
+                                      Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).EditCommand}"
+                                      CommandParameter="{Binding}" />
+                            </StackPanel>
+                          </StackPanel>
+                        </Border>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Grid>
+
+  </Grid>
+</UserControl>

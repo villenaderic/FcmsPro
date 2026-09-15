@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>FcmsPro.Core</RootNamespace>
+  </PropertyGroup>
+
+  <!--
+    Intentionally zero external package references.
+    Business logic here must stay persistence- and UI-ignorant so it can be
+    unit tested without EF Core/SQLite and reused unchanged across the
+    Windows/macOS/Linux Avalonia builds.
+  -->
+
+</Project>

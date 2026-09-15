@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Quotes"
+             x:Class="FcmsPro.Avalonia.Views.Quotes.QuotesListView"
+             x:DataType="vm:QuotesListViewModel">
+
+  <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
+
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+      <StackPanel Grid.Column="0">
+        <TextBlock Text="Quotes" FontSize="28" FontWeight="Bold" />
+        <TextBlock Text="{Binding FilteredByClient.Name, StringFormat='Filtered by client: {0}'}"
+                   IsVisible="{Binding FilteredByClient, Converter={x:Static ObjectConverters.IsNotNull}}"
+                   Opacity="0.6" FontSize="12" />
+      </StackPanel>
+      <Button Grid.Column="1" Content="+ New Quote" Command="{Binding AddCommand}" Classes="accent" />
+    </Grid>
+
+    <TextBox Grid.Row="1" Text="{Binding SearchQuery, Mode=TwoWay}" Margin="0,0,0,12"
+             Watermark="Search by quote # or scope..." Width="320" HorizontalAlignment="Left" />
+
+    <TextBlock Grid.Row="2" Text="{Binding StatusMessage}" Opacity="0.7" FontSize="12" Margin="0,0,0,12"
+               IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+    <Grid Grid.Row="3">
+      <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
+        <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
+        <TextBlock Text="No quotes yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+        <TextBlock Text="Send a scope of work and price before committing to a commission."
+                   TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
+        <Button Content="+ New Quote" Command="{Binding AddCommand}" Classes="accent" HorizontalAlignment="Center" Margin="0,4,0,0" />
+      </StackPanel>
+
+      <ScrollViewer IsVisible="{Binding !HasNoResults}">
+        <ItemsControl ItemsSource="{Binding Rows}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:QuoteRowViewModel">
+              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto">
+                  <TextBlock Grid.Column="0" Text="{Binding Quote.QuoteNumber}" FontWeight="SemiBold" Width="90" />
+                  <StackPanel Grid.Column="1" Margin="8,0">
+                    <TextBlock Text="{Binding ClientName}" />
+                    <TextBlock Text="{Binding Quote.Scope}" Opacity="0.6" FontSize="12" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                  </StackPanel>
+                  <TextBlock Grid.Column="2" Text="{Binding Quote.Total, StringFormat='{}{0:C2}'}" Margin="8,0" FontWeight="SemiBold" />
+                  <TextBlock Grid.Column="3" Text="{Binding EffectiveStatus}" Margin="8,0" Opacity="0.8" />
+                  <Button Grid.Column="4" Content="Convert"
+                          ToolTip.Tip="Convert to Commission"
+                          Command="{Binding $parent[ItemsControl].((vm:QuotesListViewModel)DataContext).ConvertToCommissionCommand}"
+                          CommandParameter="{Binding}" />
+                  <Button Grid.Column="5" Content="PDF"
+                          Command="{Binding $parent[ItemsControl].((vm:QuotesListViewModel)DataContext).DownloadPdfCommand}"
+                          CommandParameter="{Binding}" />
+                  <Button Grid.Column="6" Content="Edit"
+                          Command="{Binding $parent[ItemsControl].((vm:QuotesListViewModel)DataContext).EditCommand}"
+                          CommandParameter="{Binding}" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Grid>
+
+  </Grid>
+</UserControl>

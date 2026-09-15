@@ -1,0 +1,64 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>FcmsPro.Avalonia</RootNamespace>
+    <AssemblyName>FcmsPro</AssemblyName>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.1.4" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.1.4" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.4" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.4" />
+    <!-- Diagnostics only in Debug builds; harmless in Release -->
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.1.4" />
+
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+
+    <!--
+      Required so the EF Core CLI tooling works when this project is used as
+      the startup project (i.e. the "startup-project" argument points here).
+      FcmsPro.Data also references this package but marks it PrivateAssets="all"
+      (correct for a library that shouldn't leak its dev-time tooling to
+      consumers), so it does NOT flow through to FcmsPro.Avalonia automatically -
+      needs its own direct reference here.
+    -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc4.5" />
+
+    <PackageReference Include="Serilog" Version="4.0.2" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FcmsPro.Core\FcmsPro.Core.csproj" />
+    <ProjectReference Include="..\FcmsPro.Data\FcmsPro.Data.csproj" />
+    <ProjectReference Include="..\FcmsPro.Pdf\FcmsPro.Pdf.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      Makes everything under Assets/ loadable from XAML via
+      avares://FcmsPro.Avalonia/Assets/<filename> URIs (e.g. an <Image
+      Source="avares://FcmsPro.Avalonia/Assets/logo-wordmark.png" /> on an
+      About screen). The platform-specific icon files (app.ico, app.icns)
+      don't need this - MSBuild's ApplicationIcon property and the installer
+      scripts read those directly from disk - but the PNG assets do.
+    -->
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+</Project>

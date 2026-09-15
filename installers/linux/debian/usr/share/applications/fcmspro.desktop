@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=FCMS Pro
+Comment=Freelance Commission Management System
+Exec=/usr/bin/fcmspro-bin/FcmsPro
+Icon=fcmspro
+Type=Application
+Categories=Office;Finance;
+Terminal=false

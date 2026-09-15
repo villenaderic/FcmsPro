@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Auth"
+        x:Class="FcmsPro.Avalonia.Views.Auth.LoginWindow"
+        x:DataType="vm:LoginViewModel"
+        Title="FCMS Pro - Login"
+        Width="400" Height="320"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+
+  <StackPanel Margin="32" Spacing="12" VerticalAlignment="Center">
+    <TextBlock Text="FCMS Pro" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" />
+    <TextBlock Text="Enter your password to continue" HorizontalAlignment="Center" Opacity="0.7" />
+
+    <TextBox PasswordChar="*" Text="{Binding Password, Mode=TwoWay}"
+             Watermark="Password"
+             IsEnabled="{Binding !IsLockedOut}"
+             KeyDown="OnPasswordKeyDown" />
+
+    <TextBlock Text="{Binding ErrorMessage}"
+               Foreground="{DynamicResource AppDestructiveBrush}"
+               TextWrapping="Wrap"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+    <Button Content="Log In" Command="{Binding SubmitCommand}"
+            IsEnabled="{Binding !IsLockedOut}"
+            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+            Classes="accent" />
+  </StackPanel>
+</Window>

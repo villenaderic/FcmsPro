@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FcmsPro.Avalonia.Views.Icons.DocumentIcon"
+             Width="32" Height="32">
+  <!-- Same reasoning as SearchIcon.axaml: plain shapes, no font/emoji dependency. -->
+  <Viewbox Stretch="Uniform">
+    <Canvas Width="24" Height="24">
+      <!-- Page outline with a folded top-right corner -->
+      <Path Data="M6,2 L14,2 L18,6 L18,22 L6,22 Z"
+            Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="1.4" Fill="Transparent" />
+      <Path Data="M14,2 L14,6 L18,6"
+            Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="1.4" Fill="Transparent" />
+      <!-- Two lines suggesting text content -->
+      <Line StartPoint="9,12" EndPoint="15,12" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="1.2" StrokeLineCap="Round" />
+      <Line StartPoint="9,16" EndPoint="15,16" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="1.2" StrokeLineCap="Round" />
+    </Canvas>
+  </Viewbox>
+</UserControl>

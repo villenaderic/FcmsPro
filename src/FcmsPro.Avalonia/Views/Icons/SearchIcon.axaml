@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FcmsPro.Avalonia.Views.Icons.SearchIcon"
+             Width="16" Height="16">
+  <!--
+    Deliberately built from primitive shapes (Ellipse + Line) rather than a
+    unicode/emoji character or a hand-authored SVG path string. The app had
+    been using raw emoji glyphs (e.g. "&#128269;") for icons, which render as
+    a missing-glyph "tofu" box on systems whose UI font has no color-emoji
+    fallback - primitive shapes have no font dependency at all, so this
+    can't have that failure mode on any platform.
+  -->
+  <Viewbox Stretch="Uniform">
+    <Canvas Width="24" Height="24">
+      <Ellipse Canvas.Left="3" Canvas.Top="3" Width="13" Height="13"
+                Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" />
+      <Line StartPoint="15.5,15.5" EndPoint="21,21"
+            Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" StrokeLineCap="Round" />
+    </Canvas>
+  </Viewbox>
+</UserControl>

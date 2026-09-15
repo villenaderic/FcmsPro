@@ -1,0 +1,216 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Shell"
+        xmlns:conv="using:FcmsPro.Avalonia.Converters"
+        xmlns:clientsVm="using:FcmsPro.Avalonia.ViewModels.Clients"
+        xmlns:clientsViews="using:FcmsPro.Avalonia.Views.Clients"
+        xmlns:icons="using:FcmsPro.Avalonia.Views.Icons"
+        xmlns:commissionsVm="using:FcmsPro.Avalonia.ViewModels.Commissions"
+        xmlns:commissionsViews="using:FcmsPro.Avalonia.Views.Commissions"
+        xmlns:paymentsVm="using:FcmsPro.Avalonia.ViewModels.Payments"
+        xmlns:paymentsViews="using:FcmsPro.Avalonia.Views.Payments"
+        xmlns:receiptsVm="using:FcmsPro.Avalonia.ViewModels.Receipts"
+        xmlns:receiptsViews="using:FcmsPro.Avalonia.Views.Receipts"
+        xmlns:invoicesVm="using:FcmsPro.Avalonia.ViewModels.Invoices"
+        xmlns:invoicesViews="using:FcmsPro.Avalonia.Views.Invoices"
+        xmlns:quotesVm="using:FcmsPro.Avalonia.ViewModels.Quotes"
+        xmlns:quotesViews="using:FcmsPro.Avalonia.Views.Quotes"
+        xmlns:expensesVm="using:FcmsPro.Avalonia.ViewModels.Expenses"
+        xmlns:expensesViews="using:FcmsPro.Avalonia.Views.Expenses"
+        xmlns:goalsVm="using:FcmsPro.Avalonia.ViewModels.Goals"
+        xmlns:goalsViews="using:FcmsPro.Avalonia.Views.Goals"
+        xmlns:dashboardVm="using:FcmsPro.Avalonia.ViewModels.Dashboard"
+        xmlns:dashboardViews="using:FcmsPro.Avalonia.Views.Dashboard"
+        xmlns:analyticsVm="using:FcmsPro.Avalonia.ViewModels.Analytics"
+        xmlns:analyticsViews="using:FcmsPro.Avalonia.Views.Analytics"
+        xmlns:settingsVm="using:FcmsPro.Avalonia.ViewModels.Settings"
+        xmlns:settingsViews="using:FcmsPro.Avalonia.Views.Settings"
+        xmlns:templatesVm="using:FcmsPro.Avalonia.ViewModels.Templates"
+        xmlns:templatesViews="using:FcmsPro.Avalonia.Views.Templates"
+        xmlns:logsVm="using:FcmsPro.Avalonia.ViewModels.Logs"
+        xmlns:logsViews="using:FcmsPro.Avalonia.Views.Logs"
+        xmlns:trashVm="using:FcmsPro.Avalonia.ViewModels.Trash"
+        xmlns:trashViews="using:FcmsPro.Avalonia.Views.Trash"
+        xmlns:backupVm="using:FcmsPro.Avalonia.ViewModels.Backup"
+        xmlns:backupViews="using:FcmsPro.Avalonia.Views.Backup"
+        xmlns:svc="using:FcmsPro.Avalonia.Services"
+        x:Class="FcmsPro.Avalonia.Views.Shell.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="FCMS Pro"
+        Width="1280" Height="720"
+        MinWidth="640" MinHeight="480"
+        WindowStartupLocation="CenterScreen">
+
+  <Grid ColumnDefinitions="Auto,Auto,*">
+
+    <!-- Slim rail shown only when the sidebar is collapsed - the sole
+         purpose is to keep a way back in, since the full sidebar (which
+         normally hosts the toggle button) is hidden entirely in that
+         state. -->
+    <StackPanel Grid.Column="0" Width="36" Background="{DynamicResource SystemAltHighColor}"
+                IsVisible="{Binding IsSidebarCollapsed}" Margin="0,20,0,0" HorizontalAlignment="Center">
+      <Button Content="&#9776;" FontSize="14" Padding="6,4"
+              Background="Transparent" BorderThickness="0"
+              ToolTip.Tip="Expand sidebar (Ctrl+B)"
+              Command="{Binding ToggleSidebarCommand}" />
+      <Button Padding="6,4" Margin="0,4,0,0"
+              Background="Transparent" BorderThickness="0"
+              ToolTip.Tip="Search everything (/)"
+              Command="{Binding OpenGlobalSearchCommand}">
+        <icons:SearchIcon Width="14" Height="14" />
+      </Button>
+    </StackPanel>
+
+    <!-- Sidebar -->
+    <StackPanel Grid.Column="1" Width="212" Background="{DynamicResource SystemAltHighColor}"
+                IsVisible="{Binding !IsSidebarCollapsed}" Spacing="2" Margin="0">
+
+      <Grid ColumnDefinitions="*,Auto" Margin="16,20,12,20">
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+          <Image Source="avares://FcmsPro/Assets/app-icon-64.png" Width="26" Height="26" />
+          <TextBlock Text="FCMS Pro" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" />
+        </StackPanel>
+        <Button Grid.Column="1" Content="&#9776;" FontSize="14" Padding="6,2"
+                Background="Transparent" BorderThickness="0"
+                ToolTip.Tip="Collapse sidebar (Ctrl+B)"
+                Command="{Binding ToggleSidebarCommand}" />
+      </Grid>
+
+      <StackPanel Margin="8,0" Spacing="2">
+        <Button Classes="navitem" HorizontalContentAlignment="Left" Command="{Binding OpenGlobalSearchCommand}"
+                ToolTip.Tip="Search everything (/)">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:SearchIcon Width="13" Height="13" VerticalAlignment="Center" />
+            <TextBlock Text="Search..." Opacity="0.7" />
+          </StackPanel>
+        </Button>
+        <Border Height="1" Background="{DynamicResource SystemBaseLowColor}" Margin="4,6" />
+
+        <Button Classes="navitem" Content="Dashboard" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Dashboard}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Dashboard}}" />
+        <Button Classes="navitem" Content="Analytics" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Analytics}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Analytics}}" />
+        <Button Classes="navitem" Content="Clients" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Clients}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Clients}}" />
+        <Button Classes="navitem" Content="Commissions" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Commissions}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Commissions}}" />
+        <Button Classes="navitem" Content="Quotes" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Quotes}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Quotes}}" />
+        <Button Classes="navitem" Content="Payments" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Payments}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Payments}}" />
+        <Button Classes="navitem" Content="Receipts" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Receipts}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Receipts}}" />
+        <Button Classes="navitem" Content="Invoices" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Invoices}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Invoices}}" />
+        <Button Classes="navitem" Content="Expenses" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Expenses}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Expenses}}" />
+        <Button Classes="navitem" Content="Goals" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Goals}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Goals}}" />
+        <Button Classes="navitem" Content="Templates" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Templates}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Templates}}" />
+
+        <Border Height="1" Background="{DynamicResource SystemBaseLowColor}" Margin="4,10" />
+
+        <Button Classes="navitem" Content="Backup" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Backup}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Backup}}" />
+        <Button Classes="navitem" Content="Settings" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Settings}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Settings}}" />
+      </StackPanel>
+    </StackPanel>
+
+    <!-- Content area: DataTemplates map each page ViewModel to its View.
+         PlaceholderPageViewModel covers any AppPage without a real module
+         implementation yet. -->
+    <!-- Vertical scroll only - horizontal scroll would give child content
+         unconstrained width, which stops Grid "*" columns and other
+         responsive sizing in module pages from actually shrinking to fit a
+         narrow/split-screen window; better for those to reflow/wrap than to
+         silently get an unbounded layout pass. -->
+    <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+    <Border Padding="24">
+      <ContentControl Content="{Binding CurrentPageViewModel}">
+        <ContentControl.DataTemplates>
+
+          <DataTemplate DataType="{x:Type vm:PlaceholderPageViewModel}">
+            <StackPanel Spacing="8">
+              <TextBlock Text="{Binding PageName}" FontSize="28" FontWeight="Bold" />
+              <TextBlock Text="This page's content lands in its module implementation phase."
+                         Opacity="0.6" />
+            </StackPanel>
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type clientsVm:ClientsListViewModel}">
+            <clientsViews:ClientsListView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type clientsVm:ClientProfileViewModel}">
+            <clientsViews:ClientProfileView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type commissionsVm:CommissionsListViewModel}">
+            <commissionsViews:CommissionsListView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type commissionsVm:CommissionProfileViewModel}">
+            <commissionsViews:CommissionProfileView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type paymentsVm:PaymentsListViewModel}">
+            <paymentsViews:PaymentsListView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type receiptsVm:ReceiptsListViewModel}">
+            <receiptsViews:ReceiptsListView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type invoicesVm:InvoicesListViewModel}">
+            <invoicesViews:InvoicesListView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type quotesVm:QuotesListViewModel}">
+            <quotesViews:QuotesListView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type expensesVm:ExpensesListViewModel}">
+            <expensesViews:ExpensesListView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type goalsVm:GoalsViewModel}">
+            <goalsViews:GoalsView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type dashboardVm:DashboardViewModel}">
+            <dashboardViews:DashboardView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type analyticsVm:AnalyticsViewModel}">
+            <analyticsViews:AnalyticsView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type settingsVm:SettingsViewModel}">
+            <settingsViews:SettingsView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type templatesVm:TemplatesViewModel}">
+            <templatesViews:TemplatesView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type logsVm:LogsViewModel}">
+            <logsViews:LogsView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type trashVm:TrashViewModel}">
+            <trashViews:TrashView />
+          </DataTemplate>
+
+          <DataTemplate DataType="{x:Type backupVm:BackupViewModel}">
+            <backupViews:BackupView />
+          </DataTemplate>
+
+        </ContentControl.DataTemplates>
+      </ContentControl>
+    </Border>
+    </ScrollViewer>
+
+  </Grid>
+</Window>

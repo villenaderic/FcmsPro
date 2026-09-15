@@ -1,0 +1,116 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Quotes"
+             xmlns:icons="using:FcmsPro.Avalonia.Views.Icons"
+        xmlns:entities="using:FcmsPro.Core.Entities"
+        x:Class="FcmsPro.Avalonia.Views.Quotes.QuoteFormWindow"
+        x:DataType="vm:QuoteFormViewModel"
+        Title="{Binding HeaderText}"
+        Width="480" SizeToContent="Height"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner">
+
+  <!-- See CommissionFormWindow.axaml for why CanResize is True and MaxHeight
+       was lowered - same off-screen-title-bar bug, same fix. -->
+  <ScrollViewer MaxHeight="560">
+    <StackPanel Margin="24" Spacing="10">
+      <TextBlock Text="{Binding HeaderText}" FontSize="18" FontWeight="Bold" Margin="0,0,0,8" />
+
+      <TextBlock Text="Client *" FontWeight="SemiBold" />
+      <ComboBox ItemsSource="{Binding AvailableClients}" SelectedItem="{Binding SelectedClient, Mode=TwoWay}"
+                HorizontalAlignment="Stretch">
+        <ComboBox.ItemTemplate>
+          <DataTemplate x:DataType="entities:Client">
+            <TextBlock Text="{Binding Name}" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+
+      <TextBlock Text="Service Type" FontWeight="SemiBold" />
+      <TextBox Text="{Binding ServiceType, Mode=TwoWay}" />
+
+      <TextBlock Text="Scope of Work *" FontWeight="SemiBold" />
+      <TextBox Text="{Binding Scope, Mode=TwoWay}" AcceptsReturn="True" Height="80" TextWrapping="Wrap" />
+
+      <Grid ColumnDefinitions="*,*">
+        <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,12,0">
+          <TextBlock Text="Total *" FontWeight="SemiBold" />
+          <NumericUpDown Value="{Binding Total, Mode=TwoWay}" Minimum="0" FormatString="C2" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Spacing="4">
+          <TextBlock Text="Down Payment" FontWeight="SemiBold" />
+          <NumericUpDown Value="{Binding DownPayment, Mode=TwoWay}" Minimum="0" FormatString="C2" />
+        </StackPanel>
+      </Grid>
+
+      <TextBlock Text="Revisions Included" FontWeight="SemiBold" />
+      <NumericUpDown Value="{Binding Revisions, Mode=TwoWay}" Minimum="0" />
+
+      <Grid ColumnDefinitions="*,*">
+        <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,12,0">
+          <TextBlock Text="Issue Date" FontWeight="SemiBold" />
+          <CalendarDatePicker SelectedDate="{Binding IssueDate, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Spacing="4">
+          <TextBlock Text="Valid Until" FontWeight="SemiBold" />
+          <CalendarDatePicker SelectedDate="{Binding ValidUntil, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+        </StackPanel>
+      </Grid>
+
+      <TextBlock Text="Status" FontWeight="SemiBold" />
+      <ComboBox ItemsSource="{Binding Statuses}" SelectedItem="{Binding Status, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+
+      <TextBlock Text="Terms" FontWeight="SemiBold" />
+      <TextBox Text="{Binding Terms, Mode=TwoWay}" AcceptsReturn="True" Height="60" TextWrapping="Wrap" />
+
+      <!-- Same "save first, then attach" pattern as InvoiceFormWindow - see there for the reasoning. -->
+      <StackPanel Spacing="8" IsVisible="{Binding IsEditMode}" Margin="0,4,0,0">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Grid.Column="0" Text="Attachments" FontWeight="SemiBold" VerticalAlignment="Center" />
+          <Button Grid.Column="1" Content="+ Add File" Command="{Binding AddAttachmentCommand}" Padding="8,3" FontSize="11" />
+        </Grid>
+
+        <TextBlock Text="No attachments yet." Opacity="0.5" FontStyle="Italic"
+                   IsVisible="{Binding HasNoAttachments}" />
+
+        <ItemsControl ItemsSource="{Binding Attachments}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:QuoteAttachmentItemViewModel">
+              <Border Width="130" Margin="0,0,10,10" Padding="6"
+                      Background="{DynamicResource SystemAltHighColor}"
+                      BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="6">
+                <StackPanel Spacing="4">
+                  <Border Height="90" ClipToBounds="True" CornerRadius="4" Background="{DynamicResource SystemBaseLowColor}">
+                    <Panel>
+                      <Image Source="{Binding Image}" Stretch="UniformToFill" IsVisible="{Binding IsImage}" />
+                      <icons:DocumentIcon Width="28" Height="28" IsVisible="{Binding !IsImage}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Panel>
+                  </Border>
+                  <TextBlock Text="{Binding Attachment.FileName}" FontSize="10" Opacity="0.7"
+                             TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Attachment.FileName}" />
+                  <Button Content="Remove" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                          FontSize="10" Padding="0,3"
+                          Command="{Binding $parent[ItemsControl].((vm:QuoteFormViewModel)DataContext).RemoveAttachmentCommand}"
+                          CommandParameter="{Binding}" />
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+
+      <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}" TextWrapping="Wrap"
+                 IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,10,0,0">
+        <Button Content="Cancel" Command="{Binding CancelCommand}" />
+        <Button Content="Save" Command="{Binding SaveCommand}" IsEnabled="{Binding !IsBusy}" Classes="accent" />
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</Window>

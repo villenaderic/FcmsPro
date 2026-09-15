@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Clients"
+             xmlns:entities="using:FcmsPro.Core.Entities"
+             x:Class="FcmsPro.Avalonia.Views.Clients.ClientsListView"
+             x:DataType="vm:ClientsListViewModel">
+
+  <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
+
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+      <TextBlock Grid.Column="0" Text="Clients" FontSize="28" FontWeight="Bold" />
+      <Button Grid.Column="1" Content="+ Add Client" Command="{Binding AddCommand}" Classes="accent" />
+    </Grid>
+
+    <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+               Margin="0,0,0,12" TextWrapping="Wrap" />
+
+    <TextBox Grid.Row="2" Text="{Binding SearchQuery, Mode=TwoWay}" Margin="0,0,0,12"
+             Watermark="Search by name, email, or phone..." Width="320" HorizontalAlignment="Left" />
+
+    <!--
+      Simple stacked-row list for this scaffolding pass rather than a full
+      DataGrid - sortable/filterable columns, pagination, and per-row live
+      stats (commission count / balance) are a reasonable next iteration
+      once this vertical slice is confirmed working end-to-end.
+    -->
+    <Grid Grid.Row="3">
+      <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
+        <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
+        <TextBlock Text="No clients yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+        <TextBlock Text="Add your first client to start tracking commissions, payments, and invoices for them."
+                   TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
+        <Button Content="+ Add Client" Command="{Binding AddCommand}" Classes="accent" HorizontalAlignment="Center" Margin="0,4,0,0" />
+      </StackPanel>
+
+      <ScrollViewer IsVisible="{Binding !HasNoResults}">
+        <ItemsControl ItemsSource="{Binding Clients}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="entities:Client">
+              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+                  <StackPanel Grid.Column="0">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding ClientType}" Opacity="0.6" FontSize="12" />
+                  </StackPanel>
+                  <TextBlock Grid.Column="1" Text="{Binding Phone}" VerticalAlignment="Center" Margin="8,0" Opacity="0.8" />
+                  <TextBlock Grid.Column="2" Text="{Binding Email}" VerticalAlignment="Center" Margin="8,0" Opacity="0.8" />
+                  <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="4">
+                    <Button Content="View"
+                            Command="{Binding $parent[ItemsControl].((vm:ClientsListViewModel)DataContext).ViewProfileCommand}"
+                            CommandParameter="{Binding}" />
+                    <Button Content="Edit"
+                            Command="{Binding $parent[ItemsControl].((vm:ClientsListViewModel)DataContext).EditCommand}"
+                            CommandParameter="{Binding}" />
+                    <Button Content="Delete"
+                            Command="{Binding $parent[ItemsControl].((vm:ClientsListViewModel)DataContext).DeleteCommand}"
+                            CommandParameter="{Binding}" Classes="destructive" />
+                  </StackPanel>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Grid>
+
+  </Grid>
+</UserControl>

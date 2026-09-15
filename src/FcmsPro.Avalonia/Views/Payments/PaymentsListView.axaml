@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Payments"
+             x:Class="FcmsPro.Avalonia.Views.Payments.PaymentsListView"
+             x:DataType="vm:PaymentsListViewModel">
+
+  <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
+
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+      <StackPanel Grid.Column="0">
+        <TextBlock Text="Payments" FontSize="28" FontWeight="Bold" />
+        <TextBlock Text="{Binding FilteredByClient.Name, StringFormat='Filtered by client: {0}'}"
+                   IsVisible="{Binding FilteredByClient, Converter={x:Static ObjectConverters.IsNotNull}}"
+                   Opacity="0.6" FontSize="12" />
+      </StackPanel>
+      <Button Grid.Column="1" Content="+ Record Payment" Command="{Binding AddCommand}" Classes="accent" />
+    </Grid>
+
+    <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+               Margin="0,0,0,12" TextWrapping="Wrap" />
+
+    <TextBox Grid.Row="2" Text="{Binding SearchQuery, Mode=TwoWay}" Margin="0,0,0,12"
+             Watermark="Search by reference number or commission..." Width="320" HorizontalAlignment="Left" />
+
+    <Grid Grid.Row="3">
+      <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
+        <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
+        <TextBlock Text="No payments yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+        <TextBlock Text="Payments recorded against a commission will show up here."
+                   TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
+        <Button Content="+ Record Payment" Command="{Binding AddCommand}" Classes="accent" HorizontalAlignment="Center" Margin="0,4,0,0" />
+      </StackPanel>
+
+      <ScrollViewer IsVisible="{Binding !HasNoResults}">
+        <ItemsControl ItemsSource="{Binding Rows}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:PaymentRowViewModel">
+              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                <Grid ColumnDefinitions="*,*,Auto,Auto,Auto,Auto">
+                  <TextBlock Grid.Column="0" Text="{Binding CommissionTitle}" FontWeight="SemiBold" />
+                  <TextBlock Grid.Column="1" Text="{Binding ClientName}" Opacity="0.8" />
+                  <TextBlock Grid.Column="2" Text="{Binding Payment.Amount, StringFormat='{}{0:C2}'}" Margin="8,0" FontWeight="SemiBold" />
+                  <TextBlock Grid.Column="3" Text="{Binding Payment.Method}" Margin="8,0" Opacity="0.7" />
+                  <TextBlock Grid.Column="4" Text="{Binding Payment.Date}" Margin="8,0" Opacity="0.7" />
+                  <Button Grid.Column="5" Content="Refund"
+                          Command="{Binding $parent[ItemsControl].((vm:PaymentsListViewModel)DataContext).RefundCommand}"
+                          CommandParameter="{Binding}" Classes="destructive" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Grid>
+
+  </Grid>
+</UserControl>

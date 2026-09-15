@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Invoices"
+             x:Class="FcmsPro.Avalonia.Views.Invoices.InvoicesListView"
+             x:DataType="vm:InvoicesListViewModel">
+
+  <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
+
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+      <StackPanel Grid.Column="0">
+        <TextBlock Text="Invoices" FontSize="28" FontWeight="Bold" />
+        <TextBlock Text="{Binding FilteredByClient.Name, StringFormat='Filtered by client: {0}'}"
+                   IsVisible="{Binding FilteredByClient, Converter={x:Static ObjectConverters.IsNotNull}}"
+                   Opacity="0.6" FontSize="12" />
+      </StackPanel>
+      <Button Grid.Column="1" Content="+ New Invoice" Command="{Binding AddCommand}" Classes="accent" />
+    </Grid>
+
+    <TextBox Grid.Row="1" Text="{Binding SearchQuery, Mode=TwoWay}" Margin="0,0,0,12"
+             Watermark="Search by invoice # or description..." Width="320" HorizontalAlignment="Left" />
+
+    <TextBlock Grid.Row="2" Text="{Binding StatusMessage}" Opacity="0.7" FontSize="12" Margin="0,0,0,12"
+               IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+    <Grid Grid.Row="3">
+      <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
+        <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
+        <TextBlock Text="No invoices yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+        <TextBlock Text="Create an invoice to bill a client, whether or not it's linked to a commission."
+                   TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
+        <Button Content="+ New Invoice" Command="{Binding AddCommand}" Classes="accent" HorizontalAlignment="Center" Margin="0,4,0,0" />
+      </StackPanel>
+
+      <ScrollViewer IsVisible="{Binding !HasNoResults}">
+        <ItemsControl ItemsSource="{Binding Rows}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:InvoiceRowViewModel">
+              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto">
+                  <TextBlock Grid.Column="0" Text="{Binding Invoice.InvoiceNumber}" FontWeight="SemiBold" Width="90" />
+                  <StackPanel Grid.Column="1" Margin="8,0">
+                    <TextBlock Text="{Binding ClientName}" />
+                    <TextBlock Text="{Binding Invoice.Description}" Opacity="0.6" FontSize="12" />
+                  </StackPanel>
+                  <TextBlock Grid.Column="2" Text="{Binding Invoice.Total, StringFormat='{}{0:C2}'}" Margin="8,0" FontWeight="SemiBold" />
+                  <TextBlock Grid.Column="3" Text="{Binding EffectiveStatus}" Margin="8,0" Opacity="0.8" />
+                  <Button Grid.Column="4" Content="Mark Paid"
+                          Command="{Binding $parent[ItemsControl].((vm:InvoicesListViewModel)DataContext).MarkPaidCommand}"
+                          CommandParameter="{Binding}" />
+                  <Button Grid.Column="5" Content="PDF"
+                          Command="{Binding $parent[ItemsControl].((vm:InvoicesListViewModel)DataContext).DownloadPdfCommand}"
+                          CommandParameter="{Binding}" />
+                  <Button Grid.Column="6" Content="Edit"
+                          Command="{Binding $parent[ItemsControl].((vm:InvoicesListViewModel)DataContext).EditCommand}"
+                          CommandParameter="{Binding}" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Grid>
+
+  </Grid>
+</UserControl>
