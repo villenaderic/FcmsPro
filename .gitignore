@@ -18,11 +18,15 @@ installers/linux/appimagetool-*.AppImage
 .idea/
 *.suo
 
-## Local app data (never commit a real user's DB/logs/backups)
-**/fcms.db
-**/fcms.db-*
-**/logs/
-**/backups/
+## Local runtime data (fcms.db, logs, backups) lives entirely outside this
+## repo, in the OS app-data directory (see FcmsDbContextFactory.GetAppDataDirectory) -
+## never inside the source tree, so there's nothing here to ignore by path.
+## A previous **/logs/ and **/backups/ pattern here was removed after it
+## silently excluded the real ViewModels/Logs, Views/Logs, and Backup source
+## folders from git (Windows' default case-insensitive git config matched
+## "logs"/"backups" against "Logs"/"Backup" folders) - a build that works
+## locally on Windows but fails on Linux CI with a missing-namespace error
+## is the symptom to watch for if a pattern like that gets reintroduced.
 **/window-state.json
 
 ## OS

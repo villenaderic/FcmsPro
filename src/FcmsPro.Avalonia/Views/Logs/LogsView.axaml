@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Logs"
+             xmlns:entities="using:FcmsPro.Core.Entities"
+             x:Class="FcmsPro.Avalonia.Views.Logs.LogsView"
+             x:DataType="vm:LogsViewModel">
+
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="24">
+
+    <Button Grid.Row="0" Content="&#8592; Back to Settings" Command="{Binding BackToSettingsCommand}"
+            Background="Transparent" BorderThickness="0" Padding="0" Margin="0,0,0,8" HorizontalAlignment="Left" />
+
+    <TextBlock Grid.Row="1" Text="Logs" FontSize="28" FontWeight="Bold" Margin="0,0,0,12" />
+
+    <TextBlock Grid.Row="2" Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+               Margin="0,0,0,12" TextWrapping="Wrap" />
+
+    <TextBox Grid.Row="3" Text="{Binding SearchQuery, Mode=TwoWay}" Margin="0,0,0,12"
+             Watermark="Search logs..." Width="280" HorizontalAlignment="Left" />
+
+    <ScrollViewer Grid.Row="4">
+      <ItemsControl ItemsSource="{Binding Logs}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="entities:AuditLog">
+            <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,8">
+              <Grid ColumnDefinitions="Auto,Auto,*">
+                <TextBlock Grid.Column="0" Text="{Binding Timestamp, StringFormat='{}{0:g}'}" Opacity="0.6" FontSize="12" Width="150" />
+                <Border Grid.Column="1" Background="{DynamicResource SystemAltHighColor}" CornerRadius="4" Padding="6,2" Margin="8,0">
+                  <TextBlock Text="{Binding Type}" FontSize="11" />
+                </Border>
+                <TextBlock Grid.Column="2" Text="{Binding Message}" Margin="8,0" />
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+
+  </Grid>
+</UserControl>
