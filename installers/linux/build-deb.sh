@@ -29,6 +29,12 @@ ln -sf "fcmspro-bin/FcmsPro" "${DEBIAN_ROOT}/usr/bin/fcmspro"
 
 ICON_SRC="${PROJECT_DIR}/Assets/app-256.png"
 if [ -f "${ICON_SRC}" ]; then
+  # mkdir -p here matters: git never tracks empty directories, so a fresh
+  # clone of this repo has no usr/share/icons/... tree at all - this exact
+  # gap is what broke the first CI run of this script (cp failed with "No
+  # such file or directory" on a clean checkout that worked fine locally,
+  # where the empty directory happened to still be sitting on disk).
+  mkdir -p "${DEBIAN_ROOT}/usr/share/icons/hicolor/256x256/apps"
   cp "${ICON_SRC}" "${DEBIAN_ROOT}/usr/share/icons/hicolor/256x256/apps/fcmspro.png"
 else
   echo "WARNING: ${ICON_SRC} not found - package will have no icon."
