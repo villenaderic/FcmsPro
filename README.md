@@ -1,90 +1,96 @@
-# FCMS Pro — Native Desktop (Avalonia / .NET 8)
+# FCMS Pro
 
-A cross-platform freelance commission-tracking app: clients, commissions, quotes, invoices,
-receipts, payments, expenses, and reporting, all running locally with no server and no account
-required. Built with Avalonia UI on .NET 8, runs on Windows, macOS, and Linux from one codebase.
+A desktop app for freelancers to track commissions, invoices, quotes, payments, and expenses.
+Runs entirely on your own machine. No account, no server, no subscription.
 
-See `docs/USER_GUIDE.md` for a full walkthrough of onboarding and every module, `CHANGELOG.md`
-for release history, and `LICENSE` for terms (MIT).
+Built with Avalonia UI on .NET 8. One codebase, native builds for Windows, macOS, and Linux.
 
-Found a bug? Please open an [issue](../../issues) — screenshots help a lot.
+## Download
 
-## Status
+Get the latest release for your operating system from the
+[Releases page](https://github.com/villenaderic/FcmsPro/releases).
 
-All 14 modules are implemented. Build and test suite are verified passing on Windows; macOS and
-Linux builds are set up (see `installers/` and `.github/workflows/`) but not yet confirmed on
-real hardware for every module — if you hit something on either platform, that's exactly the
-kind of report worth filing. See `CHANGELOG.md` for what's shipped in each version.
+| Platform | File |
+|---|---|
+| Windows | `.exe` installer |
+| macOS | `.dmg` |
+| Linux | `.deb` or `.AppImage` |
 
-## Your data
+## Features
 
-FCMS Pro stores everything locally in a SQLite file — no server, no account, no telemetry.
-That also means nobody but you is responsible for backing it up: use the built-in backup/export
-feature regularly, since there's no cloud copy to fall back on if the database file is lost or
+- **Dashboard** with income, balances, overdue items, and due-soon warnings at a glance
+- **Clients** with profile pages, activity history, and file attachments for things like signed
+  contracts
+- **Commissions** with both a table view and a kanban board, plus optional recurring commissions
+- **Quotes and Invoices** with PDF export and file attachments
+- **Payments and Receipts** with automatic balance tracking and refund handling
+- **Expenses** with category tracking and support for recurring expenses like subscriptions
+- **Analytics** with income breakdowns and a tax and quarterly summary export
+- **Global search** across clients, commissions, invoices, quotes, and expenses, triggered by
+  pressing `/` anywhere in the app
+- **Automatic local backups** with a configurable retention count, plus manual export and import
+- **Soft delete and Trash** so a client or commission you remove by accident isn't gone for good
+- **Templates and Goals** for repeatable commission types and income targets
+
+## Your data stays local
+
+FCMS Pro stores everything in a SQLite file on your own computer. There is no server, no account,
+and no telemetry. This also means backups are your responsibility. Use the built in backup and
+export feature regularly, since there is no cloud copy to restore from if the file is lost or
 corrupted.
 
-## What's implemented
+## Built with
 
-- **`FcmsPro.Core`** — complete: all entities, enums, repository interfaces, and business-logic
-  services (recurrence spawning, refund recalculation, atomic payment+receipt transactions,
-  PBKDF2 auth, backup/restore, centralized KPI/overdue metrics via `MetricsService`).
-- **`FcmsPro.Data`** — complete: EF Core `DbContext`, repositories, `UnitOfWork` with transaction
-  support, OS-aware app-data paths, first-run database initializer (migrations + WAL mode + seeding).
-- **`FcmsPro.Pdf`** — complete: `ReceiptRenderer`, `InvoiceRenderer`, and `QuoteRenderer` are all
-  fully implemented (PdfSharpCore, vector PDF generation) — no stubs remaining.
-- **`FcmsPro.Avalonia`** — complete: all 14 module ViewModels/Views, onboarding wizard (all 5 steps
-  have real content), login with lockout, main shell with DI-scoped per-page navigation, the ported
-  two-key keyboard shortcut system, `accent`/`destructive` button styling, native save/open file
-  dialogs, and a working confirm-dialog host.
-- **`FcmsPro.Tests`** — unit tests across the service and view-model layers, covering business
-  rules like commission/expense recurrence, payment refunds, attachments, and global search.
-- **`installers/`** — Windows (Inno Setup), macOS (`.app` + `.dmg` via `create-dmg`), and Linux
-  (AppImage + `.deb`) packaging scripts, all referencing real generated app icons under
-  `src/FcmsPro.Avalonia/Assets/` (`app.ico`, `app.icns`, `app-256.png`) — see the branding
-  section below.
+- [Avalonia UI](https://avaloniaui.net/) for the cross-platform interface
+- .NET 8
+- Entity Framework Core with SQLite
+- PdfSharpCore for PDF generation
+- xUnit and Moq for testing
 
-## Branding
+## Building from source
 
-`Assets/app-icon-source.png` is the 1254×1254 master icon; platform icon files are derived from
-it: `app.ico` (Windows, multi-resolution 16–256px), `app.icns` (macOS, via `icnsutil`), and
-`app-256.png`/`app-512.png` (Linux). `logo-wordmark.png` is the horizontal lockup used on the
-onboarding Welcome screen. `illustration-empty-state.png` is the shared empty-state illustration
-used across every list page's "nothing here yet" state.
-
-**Known limitation**: the current visual design is FluentTheme's stock dark palette with minimal
-customization — flat borders, limited illustration work beyond onboarding and the empty states.
-Functional and stable, but not a final design pass.
-
-## Getting started
+Requires the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
 
 ```bash
-# From the solution root, once you have the .NET 8 SDK installed:
+git clone https://github.com/villenaderic/FcmsPro.git
+cd FcmsPro
 dotnet restore
 dotnet build
-# Migrations are already checked in under src/FcmsPro.Data/Migrations - the app applies them
-# itself on first run (see FcmsDbContextFactory), so no `dotnet ef migrations add` step is
-# needed for a normal run. Only regenerate migrations if you've changed an entity yourself.
 dotnet run --project src/FcmsPro.Avalonia
 ```
 
+Database migrations are already checked into `src/FcmsPro.Data/Migrations` and are applied
+automatically on first launch. There is no manual migration step for a normal run.
+
+Run the test suite with:
+
 ```bash
-# Run the unit tests
 dotnet test src/FcmsPro.Tests
 ```
 
-## Building installers
+## Building installers yourself
 
-Each script in `installers/` publishes a self-contained build and packages it. Run from the
-`installers/<platform>/` folder on the matching OS (macOS packaging must happen on macOS; Windows
-Inno Setup must run on Windows; Linux scripts need `appimagetool`/`dpkg-deb`). All three currently
-build without a custom app icon — supply one under `src/FcmsPro.Avalonia/Assets/` to fix that later
-without changing the scripts.
+Each platform has its own packaging script under `installers/`. Windows packaging needs Inno
+Setup and must run on Windows. The macOS `.dmg` needs `create-dmg` and must run on macOS. The
+Linux scripts need `dpkg-deb` and `appimagetool`. See `RELEASE_CHECKLIST.md` for the full process,
+including how the automated build in `.github/workflows/` works if you want to set up your own
+fork's releases.
 
-## Reporting back
+## Reporting bugs
 
-Since this has never been compiled, please run `dotnet build` and paste the output. Errors will
-likely cluster by root cause (e.g. if the `NumericUpDown` binding pattern needs adjustment, it'll
-fail identically everywhere it's used, which is one fix, not ten). Once it builds and runs cleanly
-through onboarding → login → main shell → each module, we're genuinely done with the initial
-cross-platform port.
+Please open an [issue](../../issues). The bug report template asks for your version and operating
+system, which helps a lot. Screenshots help even more.
 
+## Contributing
+
+Feature requests and pull requests are welcome. For anything nontrivial, opening an issue first to
+discuss the approach is a good idea before writing code.
+
+## Documentation
+
+`docs/USER_GUIDE.md` covers onboarding and every module in detail. `CHANGELOG.md` has the full
+release history.
+
+## License
+
+MIT. See `LICENSE`.
