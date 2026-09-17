@@ -72,6 +72,13 @@ if ! command -v appimagetool &> /dev/null; then
   fi
 fi
 
-"${APPIMAGETOOL}" "${APPDIR}" "${BUILD_DIR}/FcmsPro-${VERSION}-x86_64.AppImage"
+# --appimage-extract-and-run avoids needing FUSE to run appimagetool itself
+# (appimagetool is distributed as an AppImage, which normally self-mounts via
+# FUSE to execute) - GitHub's standard ubuntu-latest runners don't have FUSE
+# available, so a plain invocation fails with "dlopen(): error loading
+# libfuse.so.2" before it ever gets to building anything. This flag makes it
+# extract itself to a temp dir and run from there instead, which needs no
+# special runner configuration.
+"${APPIMAGETOOL}" --appimage-extract-and-run "${APPDIR}" "${BUILD_DIR}/FcmsPro-${VERSION}-x86_64.AppImage"
 
 echo "==> Done. Output: ${BUILD_DIR}/FcmsPro-${VERSION}-x86_64.AppImage"
