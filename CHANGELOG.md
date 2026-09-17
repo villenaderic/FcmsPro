@@ -3,6 +3,11 @@
 All notable changes to FCMS Pro are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.1]
+
+### Fixed
+- Removed a stray developer-name reference from the onboarding terms screen.
+
 ## [1.1.0]
 
 ### Added
