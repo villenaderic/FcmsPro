@@ -3,6 +3,18 @@
 All notable changes to FCMS Pro are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.2]
+
+### Fixed
+- Light theme now actually changes the app's appearance. Previously the Settings > Appearance >
+  Theme dropdown had no visible effect.
+- Search boxes on Clients, Payments, Receipts, Quotes, Invoices, and Commissions no longer
+  overflow past the window edge when the window is narrow.
+
+### Changed
+- Sharpened the app icon at small sizes (16px and 32px) for better clarity in title bars and
+  taskbars.
+
 ## [1.1.1]
 
 ### Fixed
