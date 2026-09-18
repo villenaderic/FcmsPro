@@ -17,7 +17,7 @@
                Margin="0,0,0,12" TextWrapping="Wrap" />
 
     <TextBox Grid.Row="2" Text="{Binding SearchQuery, Mode=TwoWay}" Margin="0,0,0,12"
-             Watermark="Search by name, email, or phone..." Width="320" HorizontalAlignment="Left" />
+             Watermark="Search by name, email, or phone..." MaxWidth="320" HorizontalAlignment="Stretch" />
 
     <!--
       Simple stacked-row list for this scaffolding pass rather than a full

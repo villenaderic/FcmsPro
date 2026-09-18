@@ -21,11 +21,19 @@
                Margin="0,0,0,12" TextWrapping="Wrap" />
 
     <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
-      <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12">
-        <TextBox Text="{Binding SearchQuery, Mode=TwoWay}" Watermark="Search title or service type..." Width="280" />
-        <ComboBox ItemsSource="{Binding StatusFilterOptions}" SelectedItem="{Binding StatusFilter, Mode=TwoWay}"
+      <!-- Nested Grid (not a horizontal StackPanel) so the search box can
+           actually shrink on a narrow window - a StackPanel never resizes
+           its children below their set width, regardless of available
+           space, which is what made this row overflow past the window edge
+           at narrow widths. The status dropdown keeps a fixed width since
+           its own label text is short and doesn't benefit from shrinking. -->
+      <Grid Grid.Column="0" ColumnDefinitions="*,Auto" Margin="0,0,12,0">
+        <TextBox Grid.Column="0" Text="{Binding SearchQuery, Mode=TwoWay}"
+                  Watermark="Search title or service type..." MaxWidth="280"
+                  HorizontalAlignment="Stretch" Margin="0,0,12,0" />
+        <ComboBox Grid.Column="1" ItemsSource="{Binding StatusFilterOptions}" SelectedItem="{Binding StatusFilter, Mode=TwoWay}"
                   PlaceholderText="All statuses" Width="160" />
-      </StackPanel>
+      </Grid>
       <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="0">
         <Button Content="Table" Padding="12,6" CornerRadius="6,0,0,6"
                 Classes.accent="{Binding IsTableView}"

@@ -5,6 +5,20 @@ Runs entirely on your own machine. No account, no server, no subscription.
 
 Built with Avalonia UI on .NET 8. One codebase, native builds for Windows, macOS, and Linux.
 
+## Why local-first
+
+Most commission and invoice tools for freelancers are subscription SaaS products with your
+financial data sitting on someone else's server. FCMS Pro takes the opposite approach: everything
+runs on your own machine, in a single SQLite file you control. No account to create, no monthly
+fee, no risk of a company shutting down and taking your records with it.
+
+## Screenshots
+
+<!-- Add screenshots here, for example:
+![Dashboard](docs/screenshots/dashboard.png)
+![Kanban board](docs/screenshots/kanban.png)
+-->
+
 ## Download
 
 Get the latest release for your operating system from the
@@ -15,6 +29,15 @@ Get the latest release for your operating system from the
 | Windows | `.exe` installer |
 | macOS | `.dmg` |
 | Linux | `.deb` or `.AppImage` |
+
+### About the security warning on first launch
+
+This app is not code signed, since that requires a paid certificate. Windows will likely show a
+SmartScreen warning ("Windows protected your PC"), and macOS will show a Gatekeeper warning
+("cannot be opened because the developer cannot be verified"). This is normal for small
+independently distributed apps and does not mean anything is wrong with the download, as long as
+you got it from this repository's own Releases page. On Windows, click "More info" then "Run
+anyway." On macOS, right click the app and choose "Open," then confirm.
 
 ## Features
 

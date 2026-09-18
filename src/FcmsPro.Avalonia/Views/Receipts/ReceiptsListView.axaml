@@ -15,7 +15,7 @@
     </StackPanel>
 
     <TextBox Grid.Row="1" Text="{Binding SearchQuery, Mode=TwoWay}" Margin="0,0,0,12"
-             Watermark="Search by receipt #, client, or commission..." Width="320" HorizontalAlignment="Left" />
+             Watermark="Search by receipt #, client, or commission..." MaxWidth="320" HorizontalAlignment="Stretch" />
 
     <TextBlock Grid.Row="2" Text="{Binding StatusMessage}" Opacity="0.7" FontSize="12" Margin="0,0,0,12"
                IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />

@@ -21,7 +21,7 @@
                Margin="0,0,0,12" TextWrapping="Wrap" />
 
     <TextBox Grid.Row="2" Text="{Binding SearchQuery, Mode=TwoWay}" Margin="0,0,0,12"
-             Watermark="Search by reference number or commission..." Width="320" HorizontalAlignment="Left" />
+             Watermark="Search by reference number or commission..." MaxWidth="320" HorizontalAlignment="Stretch" />
 
     <Grid Grid.Row="3">
       <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
