@@ -36,7 +36,8 @@
                 <Grid ColumnDefinitions="Auto,*,*,Auto,Auto,Auto">
                   <TextBlock Grid.Column="0" Text="{Binding ReceiptNumber}" FontWeight="SemiBold" Width="100" />
                   <TextBlock Grid.Column="1" Text="{Binding ClientName}" Margin="8,0" />
-                  <TextBlock Grid.Column="2" Text="{Binding CommissionTitle}" Margin="8,0" Opacity="0.8" />
+                  <TextBlock Grid.Column="2" Text="{Binding CommissionTitle}" Margin="8,0" Opacity="0.8"
+                             TextTrimming="CharacterEllipsis" />
                   <TextBlock Grid.Column="3" Text="{Binding AmountPaid, StringFormat='{}{0:C2}'}" Margin="8,0" FontWeight="SemiBold" />
                   <Button Grid.Column="4" Content="Download PDF" Margin="0,0,8,0"
                           Command="{Binding $parent[ItemsControl].((vm:ReceiptsListViewModel)DataContext).DownloadPdfCommand}"

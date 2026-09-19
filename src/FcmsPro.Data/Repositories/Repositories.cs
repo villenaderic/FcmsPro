@@ -128,36 +128,51 @@ public class CommissionAttachmentRepository : EfRepository<CommissionAttachment>
 {
     public CommissionAttachmentRepository(FcmsDbContext db) : base(db) { }
 
-    public async Task<List<CommissionAttachment>> GetByCommissionIdAsync(Guid commissionId, CancellationToken ct = default) =>
-        await Set.AsNoTracking().Where(a => a.CommissionId == commissionId)
-            .OrderByDescending(a => a.UploadedAt).ToListAsync(ct);
+    // .OrderByDescending(a => a.UploadedAt) run as part of the query used to
+    // throw at runtime - "SQLite does not support expressions of type
+    // 'DateTimeOffset' in ORDER BY clauses" - since EF Core's SQLite provider
+    // can't translate an ORDER BY on a DateTimeOffset column into SQL. Fixed
+    // by materializing the (small, per-commission) result set first via
+    // ToListAsync, then sorting in memory with LINQ to Objects instead of
+    // LINQ to Entities, exactly as the error message itself suggests.
+    public async Task<List<CommissionAttachment>> GetByCommissionIdAsync(Guid commissionId, CancellationToken ct = default)
+    {
+        var attachments = await Set.AsNoTracking().Where(a => a.CommissionId == commissionId).ToListAsync(ct);
+        return attachments.OrderByDescending(a => a.UploadedAt).ToList();
+    }
 }
 
 public class ClientAttachmentRepository : EfRepository<ClientAttachment>, IClientAttachmentRepository
 {
     public ClientAttachmentRepository(FcmsDbContext db) : base(db) { }
 
-    public async Task<List<ClientAttachment>> GetByClientIdAsync(Guid clientId, CancellationToken ct = default) =>
-        await Set.AsNoTracking().Where(a => a.ClientId == clientId)
-            .OrderByDescending(a => a.UploadedAt).ToListAsync(ct);
+    public async Task<List<ClientAttachment>> GetByClientIdAsync(Guid clientId, CancellationToken ct = default)
+    {
+        var attachments = await Set.AsNoTracking().Where(a => a.ClientId == clientId).ToListAsync(ct);
+        return attachments.OrderByDescending(a => a.UploadedAt).ToList();
+    }
 }
 
 public class InvoiceAttachmentRepository : EfRepository<InvoiceAttachment>, IInvoiceAttachmentRepository
 {
     public InvoiceAttachmentRepository(FcmsDbContext db) : base(db) { }
 
-    public async Task<List<InvoiceAttachment>> GetByInvoiceIdAsync(Guid invoiceId, CancellationToken ct = default) =>
-        await Set.AsNoTracking().Where(a => a.InvoiceId == invoiceId)
-            .OrderByDescending(a => a.UploadedAt).ToListAsync(ct);
+    public async Task<List<InvoiceAttachment>> GetByInvoiceIdAsync(Guid invoiceId, CancellationToken ct = default)
+    {
+        var attachments = await Set.AsNoTracking().Where(a => a.InvoiceId == invoiceId).ToListAsync(ct);
+        return attachments.OrderByDescending(a => a.UploadedAt).ToList();
+    }
 }
 
 public class QuoteAttachmentRepository : EfRepository<QuoteAttachment>, IQuoteAttachmentRepository
 {
     public QuoteAttachmentRepository(FcmsDbContext db) : base(db) { }
 
-    public async Task<List<QuoteAttachment>> GetByQuoteIdAsync(Guid quoteId, CancellationToken ct = default) =>
-        await Set.AsNoTracking().Where(a => a.QuoteId == quoteId)
-            .OrderByDescending(a => a.UploadedAt).ToListAsync(ct);
+    public async Task<List<QuoteAttachment>> GetByQuoteIdAsync(Guid quoteId, CancellationToken ct = default)
+    {
+        var attachments = await Set.AsNoTracking().Where(a => a.QuoteId == quoteId).ToListAsync(ct);
+        return attachments.OrderByDescending(a => a.UploadedAt).ToList();
+    }
 }
 
 public class ReceiptRepository : EfRepository<Receipt>, IReceiptRepository

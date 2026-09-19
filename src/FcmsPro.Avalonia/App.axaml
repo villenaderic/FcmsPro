@@ -144,6 +144,21 @@
       <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="{DynamicResource SystemBaseLowColor}" />
       <SolidColorBrush x:Key="ComboBoxForeground" Color="{DynamicResource AppTextPrimaryColor}" />
       <SolidColorBrush x:Key="ComboBoxForegroundFocused" Color="{DynamicResource AppTextPrimaryColor}" />
+      <!--
+        ComboBoxPlaceHolderForeground (note FluentTheme's own unusual
+        capitalization - "PlaceHolder", not "Placeholder") controls the
+        watermark-style text shown before anything is selected (e.g. "All
+        statuses"). This is a completely separate resource from
+        ComboBoxForeground above, which only colors the text once something
+        IS selected - missing this one is exactly why a status filter
+        dropdown could look empty/invisible until first choosing a value,
+        then suddenly show text correctly afterwards.
+      -->
+      <SolidColorBrush x:Key="ComboBoxPlaceHolderForeground" Color="{DynamicResource AppTextSecondaryColor}" />
+      <SolidColorBrush x:Key="ComboBoxPlaceHolderForegroundPointerOver" Color="{DynamicResource AppTextSecondaryColor}" />
+      <SolidColorBrush x:Key="ComboBoxPlaceHolderForegroundFocused" Color="{DynamicResource AppTextSecondaryColor}" />
+      <SolidColorBrush x:Key="ComboBoxPlaceHolderForegroundFocusedPressed" Color="{DynamicResource AppTextSecondaryColor}" />
+      <SolidColorBrush x:Key="ComboBoxPlaceHolderForegroundDisabled" Color="{DynamicResource AppTextSecondaryColor}" />
       <SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver" Color="{DynamicResource AppSurfaceHoverColor}" />
       <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected" Color="{DynamicResource AppSurfaceHoverColor}" />
       <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver" Color="{DynamicResource AppSurfaceHoverColor}" />
@@ -154,6 +169,17 @@
       <SolidColorBrush x:Key="CalendarViewForeground" Color="{DynamicResource AppTextPrimaryColor}" />
       <SolidColorBrush x:Key="CalendarViewCalendarItemForeground" Color="{DynamicResource AppTextPrimaryColor}" />
       <SolidColorBrush x:Key="CalendarViewOutOfScopeForeground" Color="{DynamicResource AppTextSecondaryColor}" />
+
+      <!--
+        Used by the kanban card background (CommissionsListView) to sit
+        visually on top of the column's own SystemAltHighColor background -
+        a genuine FluentTheme resource key, but never explicitly defined
+        anywhere in this app, so it was relying entirely on FluentTheme's own
+        built-in default rather than this app's actual palette. Defining it
+        explicitly removes that uncertainty and keeps kanban cards
+        consistent with the rest of the theme system, in both Light and Dark.
+      -->
+      <SolidColorBrush x:Key="SystemChromeMediumLowColor" Color="{DynamicResource AppSurfaceHoverColor}" />
     </ResourceDictionary>
   </Application.Resources>
 
