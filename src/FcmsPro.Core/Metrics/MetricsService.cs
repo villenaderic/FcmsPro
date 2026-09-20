@@ -21,6 +21,7 @@ public class MetricsService
     public static bool IsCommissionOverdue(Commission c, DateOnly today) =>
         c.Deadline.HasValue
         && c.Deadline.Value < today
+        && c.Status != CommissionStatus.Completed
         && c.Status != CommissionStatus.Delivered
         && c.Status != CommissionStatus.Cancelled;
 
@@ -44,6 +45,7 @@ public class MetricsService
         c.Deadline.HasValue
         && c.Deadline.Value >= today
         && c.Deadline.Value <= today.AddDays(windowDays)
+        && c.Status != CommissionStatus.Completed
         && c.Status != CommissionStatus.Delivered
         && c.Status != CommissionStatus.Cancelled;
 

@@ -46,20 +46,28 @@
     <!-- Slim rail shown only when the sidebar is collapsed - the sole
          purpose is to keep a way back in, since the full sidebar (which
          normally hosts the toggle button) is hidden entirely in that
-         state. -->
-    <StackPanel Grid.Column="0" Width="36" Background="{DynamicResource SystemAltHighColor}"
-                IsVisible="{Binding IsSidebarCollapsed}" Margin="0,20,0,0" HorizontalAlignment="Center">
-      <Button Content="&#9776;" FontSize="14" Padding="6,4"
-              Background="Transparent" BorderThickness="0"
-              ToolTip.Tip="Expand sidebar (Ctrl+B)"
-              Command="{Binding ToggleSidebarCommand}" />
-      <Button Padding="6,4" Margin="0,4,0,0"
-              Background="Transparent" BorderThickness="0"
-              ToolTip.Tip="Search everything (/)"
-              Command="{Binding OpenGlobalSearchCommand}">
-        <icons:SearchIcon Width="14" Height="14" />
-      </Button>
-    </StackPanel>
+         state. Background fills edge-to-edge with no top margin, matching
+         the expanded sidebar below - it previously had Margin="0,20,0,0" on
+         this same Border, which left a visible gap of the window's plain
+         background above the rail that the expanded sidebar doesn't have,
+         looking like the rail wasn't fully rendered. The 20px of top
+         breathing room the buttons need is now on the inner StackPanel
+         instead, where it doesn't affect the colored background's extent. -->
+    <Border Grid.Column="0" Width="36" Background="{DynamicResource SystemAltHighColor}"
+            IsVisible="{Binding IsSidebarCollapsed}">
+      <StackPanel Margin="0,20,0,0" HorizontalAlignment="Center">
+        <Button Content="&#9776;" FontSize="14" Padding="6,4"
+                Background="Transparent" BorderThickness="0"
+                ToolTip.Tip="Expand sidebar (Ctrl+B)"
+                Command="{Binding ToggleSidebarCommand}" />
+        <Button Padding="6,4" Margin="0,4,0,0"
+                Background="Transparent" BorderThickness="0"
+                ToolTip.Tip="Search everything (/)"
+                Command="{Binding OpenGlobalSearchCommand}">
+          <icons:SearchIcon Width="14" Height="14" />
+        </Button>
+      </StackPanel>
+    </Border>
 
     <!-- Sidebar -->
     <StackPanel Grid.Column="1" Width="212" Background="{DynamicResource SystemAltHighColor}"

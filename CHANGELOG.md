@@ -3,6 +3,27 @@
 All notable changes to FCMS Pro are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.3]
+
+### Fixed
+- Kanban board: the status dropdown and View/Edit buttons on each card did not work at all,
+  caused by a binding path that resolved to the wrong parent inside the board's nested column/card
+  structure.
+- Commission status dropdown (table and kanban) sometimes displayed blank instead of the actual
+  current status until manually reselected, caused by a timing gap between when the dropdown's
+  option list and its selected value resolved. Fixed by having each row supply its own status
+  list directly instead of reaching up to a shared one.
+- A commission marked "Completed" with a past deadline was still counted as overdue. Only
+  "Delivered" and "Cancelled" were previously excluded; "Completed" now is too, since finished
+  work should not be flagged as overdue regardless of which of those statuses it ended in.
+- Long commission/client/quote text on the Payments, Receipts, and Quotes pages was cut off
+  mid-word. Now wraps onto a second line instead of truncating.
+- Loading attachments on a Client, Invoice, or Quote could throw a database error ("SQLite does
+  not support expressions of type 'DateTimeOffset' in ORDER BY clauses") instead of showing the
+  attachment list.
+- The collapsed sidebar rail had a visible gap at the top where its background didn't reach the
+  edge, unlike the expanded sidebar, making it look unfinished at narrow window widths.
+
 ## [1.1.2]
 
 ### Fixed

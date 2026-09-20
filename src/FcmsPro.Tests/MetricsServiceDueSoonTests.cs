@@ -72,6 +72,7 @@ public class MetricsServiceDueSoonTests
     }
 
     [Theory]
+    [InlineData(CommissionStatus.Completed)]
     [InlineData(CommissionStatus.Delivered)]
     [InlineData(CommissionStatus.Cancelled)]
     public void CommissionDueSoon_AlreadyFinished_IsNotDueSoon(CommissionStatus status)

@@ -71,7 +71,7 @@
                   <TextBlock Grid.Column="1" Text="{Binding Price, StringFormat='{}{0:C2}'}" VerticalAlignment="Center" Margin="8,0" />
                   <TextBlock Grid.Column="2" Text="{Binding Remaining, StringFormat='{}{0:C2} due'}" VerticalAlignment="Center" Margin="8,0" Opacity="0.8" />
                   <TextBlock Grid.Column="3" Text="{Binding Deadline}" VerticalAlignment="Center" Margin="8,0" Opacity="0.7" />
-                  <ComboBox Grid.Column="4" ItemsSource="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).RowStatusOptions}"
+                  <ComboBox Grid.Column="4" ItemsSource="{Binding StatusOptions}"
                             SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" Width="140" Margin="8,0" />
                   <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4">
                     <Button Content="View"
@@ -129,14 +129,29 @@
                             <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
                             <TextBlock Text="{Binding Remaining, StringFormat='{}{0:C2} due'}" FontSize="12" Opacity="0.8" />
                             <TextBlock Text="{Binding Deadline}" FontSize="12" Opacity="0.6" />
-                            <ComboBox ItemsSource="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).RowStatusOptions}"
+                            <!--
+                              $parent[UserControl], not $parent[ItemsControl] -
+                              a kanban card sits inside TWO nested
+                              ItemsControls (columns, then cards within each
+                              column), so $parent[ItemsControl] here finds the
+                              inner cards ItemsControl (whose DataContext is
+                              the KanbanColumnViewModel), not this page's
+                              CommissionsListViewModel. Casting that
+                              KanbanColumnViewModel to CommissionsListViewModel
+                              fails silently, which is what left the dropdown
+                              empty and the View/Edit buttons non-functional -
+                              $parent[UserControl] reaches all the way up to
+                              this file's single root UserControl regardless
+                              of how many ItemsControls sit in between.
+                            -->
+                            <ComboBox ItemsSource="{Binding StatusOptions}"
                                       SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" HorizontalAlignment="Stretch" FontSize="11" />
                             <StackPanel Orientation="Horizontal" Spacing="4">
                               <Button Content="View" FontSize="11" Padding="6,3"
-                                      Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).ViewCommand}"
+                                      Command="{Binding $parent[UserControl].((vm:CommissionsListViewModel)DataContext).ViewCommand}"
                                       CommandParameter="{Binding}" />
                               <Button Content="Edit" FontSize="11" Padding="6,3"
-                                      Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).EditCommand}"
+                                      Command="{Binding $parent[UserControl].((vm:CommissionsListViewModel)DataContext).EditCommand}"
                                       CommandParameter="{Binding}" />
                             </StackPanel>
                           </StackPanel>

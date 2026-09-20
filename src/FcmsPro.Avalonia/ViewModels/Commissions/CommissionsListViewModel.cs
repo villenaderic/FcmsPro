@@ -57,11 +57,9 @@ public partial class CommissionsListViewModel : ObservableObject, ICreatablePage
 
     /// <summary>True once a load has completed and found nothing - drives the empty-state illustration in CommissionsListView.</summary>
     public bool HasNoResults => !IsLoading && Rows.Count == 0;
+    /// <summary>Includes a null "All" entry for the filter dropdown at the top of the page - not used by individual row/card ComboBoxes, which use CommissionRowViewModel.StatusOptions instead.</summary>
     public IReadOnlyList<CommissionStatus?> StatusFilterOptions { get; } =
         new CommissionStatus?[] { null }.Concat(Enum.GetValues<CommissionStatus>().Cast<CommissionStatus?>()).ToList();
-
-    /// <summary>Non-nullable status list for each row's quick-status ComboBox (StatusFilterOptions includes a null "All" entry, which doesn't fit a row's non-nullable SelectedStatus).</summary>
-    public IReadOnlyList<CommissionStatus> RowStatusOptions { get; } = Enum.GetValues<CommissionStatus>();
 
     public CommissionsListViewModel(CommissionService commissionService, IUnitOfWork uow, DialogService dialogService, NavigationService navigation)
     {
