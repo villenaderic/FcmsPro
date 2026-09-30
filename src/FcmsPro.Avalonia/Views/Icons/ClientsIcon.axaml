@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FcmsPro.Avalonia.Views.Icons.ClientsIcon"
+             Width="16" Height="16">
+  <!-- Head + shoulders silhouette, both stroke-only (no Fill) so it reads
+       as an outline consistent with SearchIcon rather than a solid blob. -->
+  <Viewbox Stretch="Uniform">
+    <Canvas Width="24" Height="24">
+      <Ellipse Canvas.Left="8" Canvas.Top="2" Width="8" Height="8"
+                Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" />
+      <Path Data="M 4,22 C 4,15 20,15 20,22"
+            Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" StrokeLineCap="Round" />
+    </Canvas>
+  </Viewbox>
+</UserControl>

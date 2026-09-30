@@ -43,6 +43,17 @@ public partial class QuotesListViewModel : ObservableObject, ICreatablePage
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private Client? _filteredByClient;
     [ObservableProperty] private string? _statusMessage;
+    [ObservableProperty] private ListSortOption _sortOption = ListSortOption.Newest;
+
+    /// <summary>Quotes have a Total and a ValidUntil expiry worth sorting by, on top of the date basics.</summary>
+    public IReadOnlyList<ListSortOption> SortOptions { get; } = new[]
+    {
+        ListSortOption.Newest, ListSortOption.Oldest,
+        ListSortOption.AmountHighToLow, ListSortOption.AmountLowToHigh,
+        ListSortOption.DeadlineSoonest
+    };
+
+    partial void OnSortOptionChanged(ListSortOption value) => _ = LoadAsync();
 
     public ObservableCollection<QuoteRowViewModel> Rows { get; } = new();
 
@@ -103,8 +114,17 @@ public partial class QuotesListViewModel : ObservableObject, ICreatablePage
                     quote.Scope.ToLower().Contains(q));
             }
 
+            IEnumerable<Quote> ordered = SortOption switch
+            {
+                ListSortOption.Oldest => filtered.OrderBy(q => q.CreatedAt),
+                ListSortOption.AmountHighToLow => filtered.OrderByDescending(q => q.Total),
+                ListSortOption.AmountLowToHigh => filtered.OrderBy(q => q.Total),
+                ListSortOption.DeadlineSoonest => filtered.OrderBy(q => q.ValidUntil),
+                _ => filtered.OrderByDescending(q => q.CreatedAt), // Newest (default)
+            };
+
             Rows.Clear();
-            foreach (var quote in filtered.OrderByDescending(q => q.CreatedAt))
+            foreach (var quote in ordered)
             {
                 var clientName = clientsById.TryGetValue(quote.ClientId, out var c) ? c.Name : "(client deleted)";
                 Rows.Add(new QuoteRowViewModel(quote, clientName, today));

@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FcmsPro.Core.Entities;
 using FcmsPro.Core.Interfaces;
-using FcmsPro.Core.Services;
 using FcmsPro.Avalonia.Services;
 
 namespace FcmsPro.Avalonia.ViewModels.Settings;
@@ -22,7 +21,6 @@ namespace FcmsPro.Avalonia.ViewModels.Settings;
 public partial class SettingsViewModel : ObservableObject
 {
     private readonly IUnitOfWork _uow;
-    private readonly AuthService _authService;
     private readonly ThemeService _themeService;
     private readonly NavigationService _navigation;
 
@@ -51,19 +49,14 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _theme = "System";
     [ObservableProperty] private string _accentColor = "#6366F1";
 
-    [ObservableProperty] private string? _newPassword;
-    [ObservableProperty] private string? _confirmPassword;
-    [ObservableProperty] private string? _passwordErrorMessage;
-
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private string? _statusMessage;
 
     public string[] ThemeOptions { get; } = { "System", "Light", "Dark" };
 
-    public SettingsViewModel(IUnitOfWork uow, AuthService authService, ThemeService themeService, NavigationService navigation)
+    public SettingsViewModel(IUnitOfWork uow, ThemeService themeService, NavigationService navigation)
     {
         _uow = uow;
-        _authService = authService;
         _themeService = themeService;
         _navigation = navigation;
         _ = LoadAsync();
@@ -178,32 +171,4 @@ public partial class SettingsViewModel : ObservableObject
         StatusMessage = "Appearance updated.";
     }
 
-    [RelayCommand]
-    private async Task ChangePasswordAsync()
-    {
-        PasswordErrorMessage = null;
-
-        if (string.IsNullOrWhiteSpace(NewPassword) || NewPassword != ConfirmPassword)
-        {
-            PasswordErrorMessage = "Passwords must match and not be empty.";
-            return;
-        }
-
-        IsBusy = true;
-        try
-        {
-            await _authService.ChangePasswordAsync(NewPassword);
-            NewPassword = null;
-            ConfirmPassword = null;
-            StatusMessage = "Password updated.";
-        }
-        catch (Exception ex)
-        {
-            PasswordErrorMessage = ex.Message;
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
 }

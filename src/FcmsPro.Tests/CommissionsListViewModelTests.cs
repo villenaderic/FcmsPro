@@ -10,8 +10,9 @@ using Xunit;
 namespace FcmsPro.Tests;
 
 /// <summary>
-/// Covers CommissionsListViewModel's filter/search logic and kanban-column
-/// grouping - the "kanban logic" the user named as having zero coverage.
+/// Covers CommissionsListViewModel's filter/search logic. Originally also
+/// covered kanban-column grouping before the Kanban board was removed - see
+/// git history for those (now-deleted) cases if that view ever comes back.
 ///
 /// Caveat that applies only to this file: FcmsPro.Avalonia references
 /// Avalonia's NuGet packages, which this sandbox's network can't restore, so
@@ -28,7 +29,7 @@ namespace FcmsPro.Tests;
 /// second load to assert against, rather than relying on that fire-and-forget
 /// call's timing.
 /// </summary>
-public class CommissionsListViewModelKanbanTests
+public class CommissionsListViewModelTests
 {
     private static (CommissionsListViewModel vm, Mock<ICommissionRepository> commissions) BuildViewModel(List<Commission> seedData)
     {
@@ -62,29 +63,6 @@ public class CommissionsListViewModelKanbanTests
     };
 
     [Fact]
-    public async Task ApplyFilterToRows_GroupsEachCommissionIntoItsStatusColumn()
-    {
-        var seed = new List<Commission>
-        {
-            MakeCommission("Sketch A", CommissionStatus.Pending),
-            MakeCommission("Sketch B", CommissionStatus.InProgress),
-            MakeCommission("Sketch C", CommissionStatus.InProgress),
-            MakeCommission("Sketch D", CommissionStatus.Delivered)
-        };
-        var (vm, _) = BuildViewModel(seed);
-
-        await vm.LoadCommand.ExecuteAsync(null);
-
-        var newColumn = vm.KanbanColumns.Single(c => c.Status == CommissionStatus.Pending);
-        var inProgressColumn = vm.KanbanColumns.Single(c => c.Status == CommissionStatus.InProgress);
-        var deliveredColumn = vm.KanbanColumns.Single(c => c.Status == CommissionStatus.Delivered);
-
-        Assert.Single(newColumn.Items);
-        Assert.Equal(2, inProgressColumn.Items.Count);
-        Assert.Single(deliveredColumn.Items);
-    }
-
-    [Fact]
     public async Task ApplyFilterToRows_ExcludesSoftDeletedCommissions()
     {
         var seed = new List<Commission>
@@ -98,13 +76,10 @@ public class CommissionsListViewModelKanbanTests
 
         Assert.Single(vm.Rows);
         Assert.Equal("Visible", vm.Rows[0].Title);
-
-        var newColumn = vm.KanbanColumns.Single(c => c.Status == CommissionStatus.Pending);
-        Assert.Single(newColumn.Items); // deleted item must not leak into the kanban column either
     }
 
     [Fact]
-    public async Task StatusFilter_NarrowsBothTableRowsAndKanbanColumns()
+    public async Task StatusFilter_NarrowsRows()
     {
         var seed = new List<Commission>
         {
@@ -119,14 +94,6 @@ public class CommissionsListViewModelKanbanTests
 
         Assert.Single(vm.Rows);
         Assert.Equal("B", vm.Rows[0].Title);
-        // Filtering is table-row-level (Rows), not column removal - the
-        // kanban columns still exist for every status, just empty for
-        // statuses that don't match. Confirm the matching column still has
-        // its item and a non-matching column is empty.
-        var inProgressColumn = vm.KanbanColumns.Single(c => c.Status == CommissionStatus.InProgress);
-        var newColumn = vm.KanbanColumns.Single(c => c.Status == CommissionStatus.Pending);
-        Assert.Single(inProgressColumn.Items);
-        Assert.Empty(newColumn.Items);
     }
 
     [Fact]
@@ -182,20 +149,5 @@ public class CommissionsListViewModelKanbanTests
         await vm.LoadCommand.ExecuteAsync(null);
 
         Assert.True(vm.HasNoResults);
-    }
-
-    [Fact]
-    public async Task KanbanColumns_ExistForEveryStatusEvenWithNoCommissions()
-    {
-        // Columns are seeded from the enum at construction time (see the
-        // KanbanColumns field initializer), not derived from loaded data -
-        // an empty commission list should still produce one column per
-        // CommissionStatus value, all empty, not zero columns.
-        var (vm, _) = BuildViewModel(new List<Commission>());
-        await vm.LoadCommand.ExecuteAsync(null);
-
-        var expectedStatusCount = Enum.GetValues<CommissionStatus>().Length;
-        Assert.Equal(expectedStatusCount, vm.KanbanColumns.Count);
-        Assert.All(vm.KanbanColumns, c => Assert.Empty(c.Items));
     }
 }

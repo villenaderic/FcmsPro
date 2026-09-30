@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FcmsPro.Avalonia.Views.Icons.DashboardIcon"
+             Width="16" Height="16">
+  <!-- Three bars of increasing height - same primitive-shapes approach as
+       SearchIcon (no font/emoji dependency). -->
+  <Viewbox Stretch="Uniform">
+    <Canvas Width="24" Height="24">
+      <Rectangle Canvas.Left="3" Canvas.Top="13" Width="4" Height="8" Fill="{DynamicResource AppTextSecondaryBrush}" />
+      <Rectangle Canvas.Left="10" Canvas.Top="8" Width="4" Height="13" Fill="{DynamicResource AppTextSecondaryBrush}" />
+      <Rectangle Canvas.Left="17" Canvas.Top="3" Width="4" Height="18" Fill="{DynamicResource AppTextSecondaryBrush}" />
+    </Canvas>
+  </Viewbox>
+</UserControl>

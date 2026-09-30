@@ -128,6 +128,12 @@ public partial class DashboardViewModel : ObservableObject
         }
         catch (System.Exception ex)
         {
+            // Full exception (not just ex.Message) to the log file - this
+            // catch previously swallowed the stack trace and inner
+            // exception entirely, which is exactly the detail needed to
+            // diagnose a SQLite-level failure like "file is not a
+            // database" instead of guessing from the summary alone.
+            Serilog.Log.Error(ex, "Failed to load dashboard data");
             ErrorMessage = $"Could not load dashboard data: {ex.Message}";
         }
         finally

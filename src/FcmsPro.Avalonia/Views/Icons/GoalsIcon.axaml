@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FcmsPro.Avalonia.Views.Icons.GoalsIcon"
+             Width="16" Height="16">
+  <!-- Target/bullseye - two stroked rings plus a solid center dot. -->
+  <Viewbox Stretch="Uniform">
+    <Canvas Width="24" Height="24">
+      <Ellipse Canvas.Left="2" Canvas.Top="2" Width="20" Height="20" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" />
+      <Ellipse Canvas.Left="7" Canvas.Top="7" Width="10" Height="10" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" />
+      <Ellipse Canvas.Left="10" Canvas.Top="10" Width="4" Height="4" Fill="{DynamicResource AppTextSecondaryBrush}" />
+    </Canvas>
+  </Viewbox>
+</UserControl>

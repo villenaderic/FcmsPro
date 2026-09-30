@@ -170,16 +170,6 @@
       <SolidColorBrush x:Key="CalendarViewCalendarItemForeground" Color="{DynamicResource AppTextPrimaryColor}" />
       <SolidColorBrush x:Key="CalendarViewOutOfScopeForeground" Color="{DynamicResource AppTextSecondaryColor}" />
 
-      <!--
-        Used by the kanban card background (CommissionsListView) to sit
-        visually on top of the column's own SystemAltHighColor background -
-        a genuine FluentTheme resource key, but never explicitly defined
-        anywhere in this app, so it was relying entirely on FluentTheme's own
-        built-in default rather than this app's actual palette. Defining it
-        explicitly removes that uncertainty and keeps kanban cards
-        consistent with the rest of the theme system, in both Light and Dark.
-      -->
-      <SolidColorBrush x:Key="SystemChromeMediumLowColor" Color="{DynamicResource AppSurfaceHoverColor}" />
     </ResourceDictionary>
   </Application.Resources>
 
@@ -277,6 +267,30 @@
     </Style>
     <Style Selector="Button:pointerover /template/ ContentPresenter">
       <Setter Property="Background" Value="{DynamicResource AppSurfaceHoverBrush}" />
+    </Style>
+
+    <!--
+      Shared column-header label for every list page's table (Commissions,
+      Clients, Payments, Invoices, Quotes, Expenses, Receipts) - one place
+      to keep them all visually consistent, rather than 7 copies of the
+      same three setters.
+    -->
+    <!--
+      Shared row-hover highlight for every list page's item rows. Background
+      must be set explicitly to Transparent (not left null/default) on each
+      row's own Border for this to fire at all - Avalonia only hit-tests a
+      Border's interior when it has an actual brush (even a transparent
+      one); with no Background set, only the 1px bottom border stroke
+      itself would ever trigger :pointerover, not the row's clickable area.
+    -->
+    <Style Selector="Border.listRow:pointerover">
+      <Setter Property="Background" Value="{DynamicResource AppSurfaceHoverBrush}" />
+    </Style>
+
+    <Style Selector="TextBlock.tableHeader">
+      <Setter Property="FontSize" Value="11" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{DynamicResource AppTextSecondaryBrush}" />
     </Style>
 
     <Style Selector="Button.accent">

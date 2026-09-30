@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FcmsPro.Avalonia.Views.Icons.CommissionsIcon"
+             Width="16" Height="16">
+  <!-- Clipboard with a clip tab and ruled lines - the "list of active work" idea. -->
+  <Viewbox Stretch="Uniform">
+    <Canvas Width="24" Height="24">
+      <Rectangle Canvas.Left="5" Canvas.Top="4" Width="14" Height="17" RadiusX="2" RadiusY="2"
+                 Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" />
+      <Rectangle Canvas.Left="9" Canvas.Top="2" Width="6" Height="3" RadiusX="1" RadiusY="1"
+                 Fill="{DynamicResource AppTextSecondaryBrush}" />
+      <Line StartPoint="8,10" EndPoint="16,10" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="1.5" StrokeLineCap="Round" />
+      <Line StartPoint="8,14" EndPoint="16,14" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="1.5" StrokeLineCap="Round" />
+      <Line StartPoint="8,18" EndPoint="13,18" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="1.5" StrokeLineCap="Round" />
+    </Canvas>
+  </Viewbox>
+</UserControl>

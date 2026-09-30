@@ -71,19 +71,6 @@
         <Button Content="Save Appearance" Command="{Binding SaveAppearanceCommand}" HorizontalAlignment="Left" />
       </StackPanel>
 
-      <!-- Account -->
-      <StackPanel Spacing="8">
-        <TextBlock Text="Account" FontWeight="Bold" FontSize="16" />
-        <TextBlock Text="New Password" FontWeight="SemiBold" />
-        <TextBox Text="{Binding NewPassword, Mode=TwoWay}" PasswordChar="*" />
-        <TextBlock Text="Confirm Password" FontWeight="SemiBold" />
-        <TextBox Text="{Binding ConfirmPassword, Mode=TwoWay}" PasswordChar="*" />
-        <TextBlock Text="{Binding PasswordErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}"
-                   IsVisible="{Binding PasswordErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
-        <Button Content="Change Password" Command="{Binding ChangePasswordCommand}"
-                IsEnabled="{Binding !IsBusy}" HorizontalAlignment="Left" />
-      </StackPanel>
-
       <!-- Advanced -->
       <StackPanel Spacing="8">
         <TextBlock Text="Advanced" FontWeight="Bold" FontSize="16" />

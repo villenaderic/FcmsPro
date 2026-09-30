@@ -94,35 +94,110 @@
         </Button>
         <Border Height="1" Background="{DynamicResource SystemBaseLowColor}" Margin="4,6" />
 
-        <Button Classes="navitem" Content="Dashboard" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Dashboard}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Dashboard}}" />
-        <Button Classes="navitem" Content="Analytics" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Analytics}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Analytics}}" />
-        <Button Classes="navitem" Content="Clients" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Clients}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Clients}}" />
-        <Button Classes="navitem" Content="Commissions" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Commissions}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Commissions}}" />
-        <Button Classes="navitem" Content="Quotes" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Quotes}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Quotes}}" />
-        <Button Classes="navitem" Content="Payments" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Payments}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Payments}}" />
-        <Button Classes="navitem" Content="Receipts" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Receipts}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Receipts}}" />
-        <Button Classes="navitem" Content="Invoices" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Invoices}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Invoices}}" />
-        <Button Classes="navitem" Content="Expenses" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Expenses}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Expenses}}" />
-        <Button Classes="navitem" Content="Goals" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Goals}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Goals}}" />
-        <Button Classes="navitem" Content="Templates" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Templates}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Templates}}" />
+        <!--
+          Content changed from a plain string to inline icon+label
+          StackPanels (matching the Search button above) - the icon itself
+          doesn't recolor on the active state (Classes.active only affects
+          Foreground/Background via App.axaml's Button.navitem.active style,
+          which doesn't reach into a child UserControl's own Stroke/Fill
+          bindings), so the bold white label + tinted background pill still
+          carry the "this is where you are" signal, same as before; the icon
+          adds a scan-by-shape cue next to it.
+        -->
+        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Dashboard}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Dashboard}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:DashboardIcon Width="14" Height="14" />
+            <TextBlock Text="Dashboard" />
+          </StackPanel>
+        </Button>
+        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Analytics}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Analytics}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:AnalyticsIcon Width="14" Height="14" />
+            <TextBlock Text="Analytics" />
+          </StackPanel>
+        </Button>
+        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Clients}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Clients}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:ClientsIcon Width="14" Height="14" />
+            <TextBlock Text="Clients" />
+          </StackPanel>
+        </Button>
+        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Commissions}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Commissions}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:CommissionsIcon Width="14" Height="14" />
+            <TextBlock Text="Commissions" />
+          </StackPanel>
+        </Button>
+        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Quotes}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Quotes}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:QuotesIcon Width="14" Height="14" />
+            <TextBlock Text="Quotes" />
+          </StackPanel>
+        </Button>
+        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Payments}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Payments}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:PaymentsIcon Width="14" Height="14" />
+            <TextBlock Text="Payments" />
+          </StackPanel>
+        </Button>
+        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Receipts}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Receipts}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:ReceiptsIcon Width="14" Height="14" />
+            <TextBlock Text="Receipts" />
+          </StackPanel>
+        </Button>
+        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Invoices}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Invoices}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:InvoicesIcon Width="14" Height="14" />
+            <TextBlock Text="Invoices" />
+          </StackPanel>
+        </Button>
+        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Expenses}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Expenses}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:ExpensesIcon Width="14" Height="14" />
+            <TextBlock Text="Expenses" />
+          </StackPanel>
+        </Button>
+        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Goals}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Goals}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:GoalsIcon Width="14" Height="14" />
+            <TextBlock Text="Goals" />
+          </StackPanel>
+        </Button>
+        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Templates}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Templates}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:TemplatesIcon Width="14" Height="14" />
+            <TextBlock Text="Templates" />
+          </StackPanel>
+        </Button>
 
         <Border Height="1" Background="{DynamicResource SystemBaseLowColor}" Margin="4,10" />
 
-        <Button Classes="navitem" Content="Backup" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Backup}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Backup}}" />
-        <Button Classes="navitem" Content="Settings" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Settings}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Settings}}" />
+        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Backup}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Backup}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:BackupIcon Width="14" Height="14" />
+            <TextBlock Text="Backup" />
+          </StackPanel>
+        </Button>
+        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Settings}"
+                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Settings}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <icons:SettingsIcon Width="14" Height="14" />
+            <TextBlock Text="Settings" />
+          </StackPanel>
+        </Button>
       </StackPanel>
     </StackPanel>
 

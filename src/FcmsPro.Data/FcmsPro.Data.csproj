@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!--
+      Plain Microsoft.EntityFrameworkCore.Sqlite - database encryption
+      (SQLCipher, then SQLite3 Multiple Ciphers) was tried and removed
+      after repeated unresolved failures; see FcmsDbContextOptionsFactory's
+      comment. This is back to the default unencrypted native SQLite bundle.
+    -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>

@@ -8,8 +8,14 @@ namespace FcmsPro.Avalonia.Services;
 /// <summary>
 /// Ports the PWA's two-key shortcut sequences: "g" + letter navigates,
 /// "n" + letter opens a create form, with a 900ms timeout window between the
-/// two keys (Phase 1 audit §3). Single-key shortcuts (/, ?, [, Shift+T, r) are
-/// handled the same way, alongside the sequence buffer.
+/// two keys (Phase 1 audit §3). Single-key shortcuts (/, [) are handled the
+/// same way, alongside the sequence buffer.
+///
+/// ?, Shift+T, and bare "r" were removed - they fired ToggleShortcutsOverlay/
+/// ToggleTheme/RefreshCurrentPage events that nothing ever rendered or
+/// handled, so pressing them was a silent no-op. If a shortcuts-help overlay,
+/// in-shell theme toggle, or page refresh get built later, re-add the
+/// matching case here rather than resurrecting an event with no listener.
 ///
 /// macOS-reserved-binding check (flagged in Phase 1 audit §3 as needing
 /// verification once running on macOS): none of these obviously collide with
@@ -55,10 +61,7 @@ public class KeySequenceService
     private DispatcherTimer? _timeoutTimer;
 
     public event Action? FocusSearchRequested;
-    public event Action? ToggleShortcutsOverlayRequested;
     public event Action? ToggleSidebarRequested;
-    public event Action? ToggleThemeRequested;
-    public event Action? RefreshCurrentPageRequested;
     public event Action<AppPage>? CreateRequested;
 
     public KeySequenceService(NavigationService navigation) => _navigation = navigation;
@@ -106,17 +109,8 @@ public class KeySequenceService
             case Key.Oem2 or Key.Divide when modifiers == KeyModifiers.None: // "/"
                 FocusSearchRequested?.Invoke();
                 return true;
-            case Key.OemQuestion or Key.Oem2 when modifiers == KeyModifiers.Shift: // "?"
-                ToggleShortcutsOverlayRequested?.Invoke();
-                return true;
             case Key.OemOpenBrackets:
                 ToggleSidebarRequested?.Invoke();
-                return true;
-            case Key.T when modifiers == KeyModifiers.Shift:
-                ToggleThemeRequested?.Invoke();
-                return true;
-            case Key.R when modifiers == KeyModifiers.None:
-                RefreshCurrentPageRequested?.Invoke();
                 return true;
             default:
                 return false;

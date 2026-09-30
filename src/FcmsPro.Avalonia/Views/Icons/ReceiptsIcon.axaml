@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FcmsPro.Avalonia.Views.Icons.ReceiptsIcon"
+             Width="16" Height="16">
+  <!-- Slip with ruled lines - deliberately no checkmark and no pen stroke,
+       so it reads as a plain record rather than a draft (Quotes) or a
+       confirmed bill (Invoices). -->
+  <Viewbox Stretch="Uniform">
+    <Canvas Width="24" Height="24">
+      <Rectangle Canvas.Left="5" Canvas.Top="2" Width="14" Height="18" RadiusX="1" RadiusY="1"
+                 Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" />
+      <Line StartPoint="8,7" EndPoint="16,7" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="1.5" StrokeLineCap="Round" />
+      <Line StartPoint="8,11" EndPoint="16,11" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="1.5" StrokeLineCap="Round" />
+      <Line StartPoint="8,15" EndPoint="13,15" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="1.5" StrokeLineCap="Round" />
+    </Canvas>
+  </Viewbox>
+</UserControl>

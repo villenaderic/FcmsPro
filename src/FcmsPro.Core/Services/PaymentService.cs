@@ -54,9 +54,8 @@ public class PaymentService
             // Receipt.ClientName/Phone/Email were never actually populated
             // here - the Receipt was built entirely from `commission`, which
             // only carries ClientId, not the client's actual details. Every
-            // receipt ever generated (A5 and thermal both read the same
-            // Receipt.ClientName field) has been showing a blank client
-            // name because of this.
+            // receipt ever generated has been showing a blank client name
+            // because of this.
             var client = await _uow.Clients.GetByIdAsync(commission.ClientId, ct);
 
             receipt = new Receipt

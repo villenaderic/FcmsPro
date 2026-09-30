@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +24,13 @@ public partial class ClientsListViewModel : ObservableObject, ICreatablePage
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private Client? _selectedClient;
     [ObservableProperty] private string? _errorMessage;
+    [ObservableProperty] private ListSortOption _sortOption = ListSortOption.Newest;
+
+    /// <summary>A Client has no amount/deadline of its own, so only the date and name options make sense here.</summary>
+    public IReadOnlyList<ListSortOption> SortOptions { get; } =
+        new[] { ListSortOption.Newest, ListSortOption.Oldest, ListSortOption.NameAZ, ListSortOption.NameZA };
+
+    partial void OnSortOptionChanged(ListSortOption value) => _ = LoadAsync();
 
     public ObservableCollection<Client> Clients { get; } = new();
 
@@ -48,8 +56,18 @@ public partial class ClientsListViewModel : ObservableObject, ICreatablePage
         try
         {
             var results = await _uow.Clients.SearchAsync(SearchQuery);
+            var filtered = results.Where(c => !c.IsDeleted);
+
+            IOrderedEnumerable<Client> ordered = SortOption switch
+            {
+                ListSortOption.Oldest => filtered.OrderBy(c => c.DateAdded),
+                ListSortOption.NameAZ => filtered.OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase),
+                ListSortOption.NameZA => filtered.OrderByDescending(c => c.Name, StringComparer.OrdinalIgnoreCase),
+                _ => filtered.OrderByDescending(c => c.DateAdded), // Newest (default)
+            };
+
             Clients.Clear();
-            foreach (var c in results.Where(c => !c.IsDeleted).OrderByDescending(c => c.DateAdded))
+            foreach (var c in ordered)
                 Clients.Add(c);
         }
         catch (Exception ex)

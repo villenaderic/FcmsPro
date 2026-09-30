@@ -56,7 +56,10 @@ public class UiPreferences
     public string Theme { get; set; } = "System"; // "Light" | "Dark" | "System"
     public string Density { get; set; } = "Comfortable";
     public string AccentColor { get; set; } = "#6366F1";
-    public string CommissionsView { get; set; } = "Table"; // "Table" | "Kanban"
+    // Unused since the Kanban board was removed - left in place (rather than
+    // a migration to drop the column) since an unread column is harmless and
+    // dropping it isn't worth a schema change of its own.
+    public string CommissionsView { get; set; } = "Table";
     public DateTimeOffset? LastBackupAt { get; set; }
     public bool AutoBackupReminderEnabled { get; set; } = true;
 

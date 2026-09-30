@@ -91,7 +91,7 @@
           <ItemsControl ItemsSource="{Binding Payments}">
             <ItemsControl.ItemTemplate>
               <DataTemplate x:DataType="entities:Payment">
-                <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
                   <Grid ColumnDefinitions="Auto,Auto,*,Auto">
                     <TextBlock Grid.Column="0" Text="{Binding Amount, StringFormat='{}{0:C2}'}" FontWeight="SemiBold" Width="100" />
                     <TextBlock Grid.Column="1" Text="{Binding Method}" Margin="8,0" Opacity="0.7" Width="100" />

@@ -41,9 +41,6 @@ public partial class MainWindowViewModel : ObservableObject
     private bool _isSidebarCollapsed;
 
     [ObservableProperty]
-    private bool _isShortcutsOverlayOpen;
-
-    [ObservableProperty]
     private object? _currentPageViewModel;
 
     private AsyncServiceScope? _currentPageScope;
@@ -66,14 +63,10 @@ public partial class MainWindowViewModel : ObservableObject
         Navigation.NavigationRequested += LoadCurrentPage;
 
         KeySequence.ToggleSidebarRequested += () => IsSidebarCollapsed = !IsSidebarCollapsed;
-        KeySequence.ToggleShortcutsOverlayRequested += () => IsShortcutsOverlayOpen = !IsShortcutsOverlayOpen;
         KeySequence.CreateRequested += OnCreateRequested;
         KeySequence.FocusSearchRequested += () => _ = OpenGlobalSearchAsync();
-        // ToggleThemeRequested / RefreshCurrentPageRequested are wired to
-        // concrete UI behavior once those pages exist - the events already
-        // fire correctly from KeySequenceService today, this is just where
-        // the module phases hook in. FocusSearchRequested ("/") now opens
-        // the global search window (see OpenGlobalSearchAsync below).
+        // FocusSearchRequested ("/") opens the global search window (see
+        // OpenGlobalSearchAsync below).
 
         LoadCurrentPage();
     }

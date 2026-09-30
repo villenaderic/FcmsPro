@@ -1,10 +1,11 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Quotes"
+             xmlns:conv="using:FcmsPro.Avalonia.Converters"
              x:Class="FcmsPro.Avalonia.Views.Quotes.QuotesListView"
              x:DataType="vm:QuotesListViewModel">
 
-  <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" Margin="24">
 
     <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
       <StackPanel Grid.Column="0">
@@ -16,13 +17,33 @@
       <Button Grid.Column="1" Content="+ New Quote" Command="{Binding AddCommand}" Classes="accent" />
     </Grid>
 
-    <TextBox Grid.Row="1" Text="{Binding SearchQuery, Mode=TwoWay}" Margin="0,0,0,12"
-             Watermark="Search by quote # or scope..." MaxWidth="320" HorizontalAlignment="Stretch" />
+    <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+      <TextBox Grid.Column="0" Text="{Binding SearchQuery, Mode=TwoWay}"
+               Watermark="Search by quote # or scope..." MaxWidth="320"
+               HorizontalAlignment="Stretch" Margin="0,0,12,0" />
+      <ComboBox Grid.Column="1" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SortOption, Mode=TwoWay}" Width="170">
+        <ComboBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock Text="{Binding Converter={x:Static conv:ListSortOptionLabelConverter.Instance}}" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+    </Grid>
 
-    <TextBlock Grid.Row="2" Text="{Binding StatusMessage}" Opacity="0.7" FontSize="12" Margin="0,0,0,12"
+    <TextBlock Grid.Row="2" Text="{Binding StatusMessage}" Opacity="0.7" FontSize="12" Margin="0,0,0,8"
                IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
-    <Grid Grid.Row="3">
+    <ProgressBar Grid.Row="3" IsIndeterminate="True" Height="2" Margin="0,0,0,8" IsVisible="{Binding IsLoading}" />
+
+    <Grid Grid.Row="4" ColumnDefinitions="90,*,100,110,Auto,Auto,Auto" Margin="12,0,12,4">
+      <TextBlock Grid.Column="0" Text="Quote #" Classes="tableHeader" />
+      <TextBlock Grid.Column="1" Text="Client / Scope" Classes="tableHeader" Margin="8,0" />
+      <TextBlock Grid.Column="2" Text="Total" Classes="tableHeader" />
+      <TextBlock Grid.Column="3" Text="Status" Classes="tableHeader" />
+      <TextBlock Grid.Column="4" Grid.ColumnSpan="3" Text="Actions" Classes="tableHeader" Margin="12,0,0,0" />
+    </Grid>
+
+    <Grid Grid.Row="5">
       <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
         <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
         <TextBlock Text="No quotes yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
@@ -35,15 +56,24 @@
         <ItemsControl ItemsSource="{Binding Rows}">
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="vm:QuoteRowViewModel">
-              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
-                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto">
-                  <TextBlock Grid.Column="0" Text="{Binding Quote.QuoteNumber}" FontWeight="SemiBold" Width="90" />
+              <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                <Grid ColumnDefinitions="90,*,100,110,Auto,Auto,Auto">
+                  <TextBlock Grid.Column="0" Text="{Binding Quote.QuoteNumber}" FontWeight="SemiBold" />
                   <StackPanel Grid.Column="1" Margin="8,0">
                     <TextBlock Text="{Binding ClientName}" />
                     <TextBlock Text="{Binding Quote.Scope}" Opacity="0.6" FontSize="12" TextWrapping="Wrap" />
                   </StackPanel>
                   <TextBlock Grid.Column="2" Text="{Binding Quote.Total, StringFormat='{}{0:C2}'}" Margin="8,0" FontWeight="SemiBold" />
-                  <TextBlock Grid.Column="3" Text="{Binding EffectiveStatus}" Margin="8,0" Opacity="0.8" />
+                  <!--
+                    Status pill (was plain opacity-dimmed text) - color comes
+                    from StatusBadgeColors' fixed bucket mapping, not the
+                    app's light/dark theme, same as a GitHub/Trello label.
+                  -->
+                  <Border Grid.Column="3" Margin="8,0" Padding="8,3" CornerRadius="10" HorizontalAlignment="Left"
+                          Background="{Binding EffectiveStatus, Converter={x:Static conv:StatusBadgeBackgroundConverter.Instance}}">
+                    <TextBlock Text="{Binding EffectiveStatus}" FontSize="11" FontWeight="SemiBold"
+                               Foreground="{Binding EffectiveStatus, Converter={x:Static conv:StatusBadgeForegroundConverter.Instance}}" />
+                  </Border>
                   <Button Grid.Column="4" Content="Convert"
                           ToolTip.Tip="Convert to Commission"
                           Command="{Binding $parent[ItemsControl].((vm:QuotesListViewModel)DataContext).ConvertToCommissionCommand}"

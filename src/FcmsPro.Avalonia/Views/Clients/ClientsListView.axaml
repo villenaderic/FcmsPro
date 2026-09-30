@@ -2,10 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Clients"
              xmlns:entities="using:FcmsPro.Core.Entities"
+             xmlns:conv="using:FcmsPro.Avalonia.Converters"
              x:Class="FcmsPro.Avalonia.Views.Clients.ClientsListView"
              x:DataType="vm:ClientsListViewModel">
 
-  <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" Margin="24">
 
     <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
       <TextBlock Grid.Column="0" Text="Clients" FontSize="28" FontWeight="Bold" />
@@ -16,16 +17,35 @@
                IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                Margin="0,0,0,12" TextWrapping="Wrap" />
 
-    <TextBox Grid.Row="2" Text="{Binding SearchQuery, Mode=TwoWay}" Margin="0,0,0,12"
-             Watermark="Search by name, email, or phone..." MaxWidth="320" HorizontalAlignment="Stretch" />
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+      <TextBox Grid.Column="0" Text="{Binding SearchQuery, Mode=TwoWay}"
+               Watermark="Search by name, email, or phone..." MaxWidth="320"
+               HorizontalAlignment="Stretch" Margin="0,0,12,0" />
+      <ComboBox Grid.Column="1" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SortOption, Mode=TwoWay}" Width="170">
+        <ComboBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock Text="{Binding Converter={x:Static conv:ListSortOptionLabelConverter.Instance}}" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+    </Grid>
+
+    <ProgressBar Grid.Row="3" IsIndeterminate="True" Height="2" Margin="0,0,0,8" IsVisible="{Binding IsLoading}" />
+
+    <Grid Grid.Row="4" ColumnDefinitions="*,140,200,Auto" Margin="12,0,12,4">
+      <TextBlock Grid.Column="0" Text="Name" Classes="tableHeader" />
+      <TextBlock Grid.Column="1" Text="Phone" Classes="tableHeader" />
+      <TextBlock Grid.Column="2" Text="Email" Classes="tableHeader" />
+      <TextBlock Grid.Column="3" Text="Actions" Classes="tableHeader" Margin="12,0,0,0" />
+    </Grid>
 
     <!--
       Simple stacked-row list for this scaffolding pass rather than a full
-      DataGrid - sortable/filterable columns, pagination, and per-row live
-      stats (commission count / balance) are a reasonable next iteration
-      once this vertical slice is confirmed working end-to-end.
+      DataGrid - pagination and per-row live stats (commission count /
+      balance) are a reasonable next iteration once this vertical slice is
+      confirmed working end-to-end.
     -->
-    <Grid Grid.Row="3">
+    <Grid Grid.Row="5">
       <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
         <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
         <TextBlock Text="No clients yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
@@ -38,8 +58,8 @@
         <ItemsControl ItemsSource="{Binding Clients}">
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="entities:Client">
-              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
-                <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+              <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                <Grid ColumnDefinitions="*,140,200,Auto">
                   <StackPanel Grid.Column="0">
                     <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
                     <TextBlock Text="{Binding ClientType}" Opacity="0.6" FontSize="12" />

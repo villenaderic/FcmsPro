@@ -23,6 +23,16 @@ public partial class PaymentsListViewModel : ObservableObject, ICreatablePage
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private Client? _filteredByClient;
     [ObservableProperty] private string? _errorMessage;
+    [ObservableProperty] private ListSortOption _sortOption = ListSortOption.Newest;
+
+    /// <summary>A Payment has no name/deadline of its own to sort by, just when it happened and how much.</summary>
+    public IReadOnlyList<ListSortOption> SortOptions { get; } = new[]
+    {
+        ListSortOption.Newest, ListSortOption.Oldest,
+        ListSortOption.AmountHighToLow, ListSortOption.AmountLowToHigh
+    };
+
+    partial void OnSortOptionChanged(ListSortOption value) => _ = LoadAsync();
 
     public ObservableCollection<PaymentRowViewModel> Rows { get; } = new();
 
@@ -92,8 +102,16 @@ public partial class PaymentsListViewModel : ObservableObject, ICreatablePage
                     (commissionsById.TryGetValue(p.CommissionId, out var c) && c.Title.ToLower().Contains(q)));
             }
 
+            IOrderedEnumerable<Payment> ordered = SortOption switch
+            {
+                ListSortOption.Oldest => filtered.OrderBy(p => p.CreatedAt),
+                ListSortOption.AmountHighToLow => filtered.OrderByDescending(p => p.Amount),
+                ListSortOption.AmountLowToHigh => filtered.OrderBy(p => p.Amount),
+                _ => filtered.OrderByDescending(p => p.CreatedAt), // Newest (default)
+            };
+
             Rows.Clear();
-            foreach (var p in filtered.OrderByDescending(p => p.CreatedAt))
+            foreach (var p in ordered)
             {
                 var commissionTitle = commissionsById.TryGetValue(p.CommissionId, out var commission)
                     ? commission.Title

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +29,16 @@ public partial class ReceiptsListViewModel : ObservableObject
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private Client? _filteredByClient;
     [ObservableProperty] private string? _statusMessage;
+    [ObservableProperty] private ListSortOption _sortOption = ListSortOption.Newest;
+
+    /// <summary>A Receipt has a date and the amount paid, nothing else worth sorting by.</summary>
+    public IReadOnlyList<ListSortOption> SortOptions { get; } = new[]
+    {
+        ListSortOption.Newest, ListSortOption.Oldest,
+        ListSortOption.AmountHighToLow, ListSortOption.AmountLowToHigh
+    };
+
+    partial void OnSortOptionChanged(ListSortOption value) => _ = LoadAsync();
 
     public ObservableCollection<Receipt> Receipts { get; } = new();
 
@@ -82,8 +93,16 @@ public partial class ReceiptsListViewModel : ObservableObject
                     r.CommissionTitle.ToLower().Contains(q));
             }
 
+            IEnumerable<Receipt> ordered = SortOption switch
+            {
+                ListSortOption.Oldest => filtered.OrderBy(r => r.CreatedAt),
+                ListSortOption.AmountHighToLow => filtered.OrderByDescending(r => r.AmountPaid),
+                ListSortOption.AmountLowToHigh => filtered.OrderBy(r => r.AmountPaid),
+                _ => filtered.OrderByDescending(r => r.CreatedAt), // Newest (default)
+            };
+
             Receipts.Clear();
-            foreach (var r in filtered.OrderByDescending(r => r.CreatedAt))
+            foreach (var r in ordered)
                 Receipts.Add(r);
         }
         catch (Exception ex)
@@ -116,36 +135,6 @@ public partial class ReceiptsListViewModel : ObservableObject
         catch (Exception ex)
         {
             StatusMessage = $"Could not save PDF: {ex.Message}";
-        }
-    }
-
-    /// <summary>
-    /// Narrow-column layout sized for an 80mm thermal roll printer, as an
-    /// alternative to the standard A5 receipt above - same underlying
-    /// Receipt data, different renderer (ReceiptRenderer.RenderThermalPdfAsync).
-    /// Most thermal printer drivers accept a PDF and print it directly, so
-    /// this is still a "save/print a PDF" flow rather than raw ESC/POS
-    /// printer-protocol output.
-    /// </summary>
-    [RelayCommand]
-    private async Task DownloadThermalPdfAsync(Receipt? receipt)
-    {
-        if (receipt is null) return;
-
-        StatusMessage = null;
-        var path = await _dialogService.SaveFileAsync($"{receipt.ReceiptNumber}-thermal.pdf", "Save Thermal Receipt PDF");
-        if (path is null) return;
-
-        try
-        {
-            var businessSettings = await _uow.Settings.GetAppSettingsAsync();
-            var bytes = await _receiptRenderer.RenderThermalPdfAsync(receipt, businessSettings);
-            await System.IO.File.WriteAllBytesAsync(path, bytes);
-            StatusMessage = $"Saved {System.IO.Path.GetFileName(path)}";
-        }
-        catch (Exception ex)
-        {
-            StatusMessage = $"Could not save thermal PDF: {ex.Message}";
         }
     }
 }

@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FcmsPro.Avalonia.Views.Icons.SettingsIcon"
+             Width="16" Height="16">
+  <!-- Simplified gear/dial - a ring with four radiating ticks, rather than
+       a fully-detailed gear-tooth outline (not worth the extra Path
+       complexity/risk at 16x16, where the difference isn't visible anyway). -->
+  <Viewbox Stretch="Uniform">
+    <Canvas Width="24" Height="24">
+      <Ellipse Canvas.Left="7" Canvas.Top="7" Width="10" Height="10" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" />
+      <Line StartPoint="12,1" EndPoint="12,6" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" StrokeLineCap="Round" />
+      <Line StartPoint="12,18" EndPoint="12,23" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" StrokeLineCap="Round" />
+      <Line StartPoint="1,12" EndPoint="6,12" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" StrokeLineCap="Round" />
+      <Line StartPoint="18,12" EndPoint="23,12" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" StrokeLineCap="Round" />
+    </Canvas>
+  </Viewbox>
+</UserControl>

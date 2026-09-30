@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FcmsPro.Avalonia.Views.Icons.BackupIcon"
+             Width="16" Height="16">
+  <!-- Upward arrow off a tray - saving a copy elsewhere. Mirrors
+       ExpensesIcon's downward arrow so the two read as opposites. -->
+  <Viewbox Stretch="Uniform">
+    <Canvas Width="24" Height="24">
+      <Line StartPoint="12,15" EndPoint="12,3" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" StrokeLineCap="Round" />
+      <Polyline Points="7,8 12,3 17,8" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2"
+                StrokeLineCap="Round" StrokeJoin="Round" />
+      <Line StartPoint="4,20" EndPoint="20,20" Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" StrokeLineCap="Round" />
+    </Canvas>
+  </Viewbox>
+</UserControl>

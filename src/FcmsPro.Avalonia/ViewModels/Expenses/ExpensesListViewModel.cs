@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +22,16 @@ public partial class ExpensesListViewModel : ObservableObject, ICreatablePage
     [ObservableProperty] private string _searchQuery = string.Empty;
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private string? _errorMessage;
+    [ObservableProperty] private ListSortOption _sortOption = ListSortOption.Newest;
+
+    /// <summary>An Expense has a date and an amount, nothing else worth sorting by.</summary>
+    public IReadOnlyList<ListSortOption> SortOptions { get; } = new[]
+    {
+        ListSortOption.Newest, ListSortOption.Oldest,
+        ListSortOption.AmountHighToLow, ListSortOption.AmountLowToHigh
+    };
+
+    partial void OnSortOptionChanged(ListSortOption value) => _ = LoadAsync();
 
     public ObservableCollection<Expense> Expenses { get; } = new();
 
@@ -62,8 +73,16 @@ public partial class ExpensesListViewModel : ObservableObject, ICreatablePage
                 filtered = filtered.Where(e => e.Description.ToLower().Contains(q));
             }
 
+            IEnumerable<Expense> ordered = SortOption switch
+            {
+                ListSortOption.Oldest => filtered.OrderBy(e => e.Date),
+                ListSortOption.AmountHighToLow => filtered.OrderByDescending(e => e.Amount),
+                ListSortOption.AmountLowToHigh => filtered.OrderBy(e => e.Amount),
+                _ => filtered.OrderByDescending(e => e.Date), // Newest (default)
+            };
+
             Expenses.Clear();
-            foreach (var e in filtered.OrderByDescending(e => e.Date))
+            foreach (var e in ordered)
                 Expenses.Add(e);
 
             OnPropertyChanged(nameof(FilteredTotal));

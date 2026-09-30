@@ -1,10 +1,11 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Payments"
+             xmlns:conv="using:FcmsPro.Avalonia.Converters"
              x:Class="FcmsPro.Avalonia.Views.Payments.PaymentsListView"
              x:DataType="vm:PaymentsListViewModel">
 
-  <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" Margin="24">
 
     <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
       <StackPanel Grid.Column="0">
@@ -20,10 +21,31 @@
                IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                Margin="0,0,0,12" TextWrapping="Wrap" />
 
-    <TextBox Grid.Row="2" Text="{Binding SearchQuery, Mode=TwoWay}" Margin="0,0,0,12"
-             Watermark="Search by reference number or commission..." MaxWidth="320" HorizontalAlignment="Stretch" />
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+      <TextBox Grid.Column="0" Text="{Binding SearchQuery, Mode=TwoWay}"
+               Watermark="Search by reference number or commission..." MaxWidth="320"
+               HorizontalAlignment="Stretch" Margin="0,0,12,0" />
+      <ComboBox Grid.Column="1" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SortOption, Mode=TwoWay}" Width="170">
+        <ComboBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock Text="{Binding Converter={x:Static conv:ListSortOptionLabelConverter.Instance}}" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+    </Grid>
 
-    <Grid Grid.Row="3">
+    <ProgressBar Grid.Row="3" IsIndeterminate="True" Height="2" Margin="0,0,0,8" IsVisible="{Binding IsLoading}" />
+
+    <Grid Grid.Row="4" ColumnDefinitions="*,*,100,110,100,Auto" Margin="12,0,12,4">
+      <TextBlock Grid.Column="0" Text="Commission" Classes="tableHeader" />
+      <TextBlock Grid.Column="1" Text="Client" Classes="tableHeader" />
+      <TextBlock Grid.Column="2" Text="Amount" Classes="tableHeader" />
+      <TextBlock Grid.Column="3" Text="Method" Classes="tableHeader" />
+      <TextBlock Grid.Column="4" Text="Date" Classes="tableHeader" />
+      <TextBlock Grid.Column="5" Text="Actions" Classes="tableHeader" Margin="12,0,0,0" />
+    </Grid>
+
+    <Grid Grid.Row="5">
       <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
         <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
         <TextBlock Text="No payments yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
@@ -36,8 +58,8 @@
         <ItemsControl ItemsSource="{Binding Rows}">
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="vm:PaymentRowViewModel">
-              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
-                <Grid ColumnDefinitions="*,*,Auto,Auto,Auto,Auto">
+              <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                <Grid ColumnDefinitions="*,*,100,110,100,Auto">
                   <TextBlock Grid.Column="0" Text="{Binding CommissionTitle}" FontWeight="SemiBold"
                              Margin="0,0,8,0" TextWrapping="Wrap" />
                   <TextBlock Grid.Column="1" Text="{Binding ClientName}" Opacity="0.8"

@@ -14,18 +14,20 @@ public static class OnboardingConstants
     public const string CurrentTermsVersion = "1.0";
 }
 
-public enum OnboardingStep { Welcome, Terms, DataLocation, AdminSetup, Ready }
+public enum OnboardingStep { Welcome, Terms, DataLocation, Ready }
 
 /// <summary>
 /// Wizard shell for the first-run flow: Welcome -> Terms -> Data Location ->
-/// Admin Setup -> Ready. Each step is a lightweight child ViewModel; this class
-/// just tracks position and persists the terminal state (terms acceptance,
-/// admin account) via IUnitOfWork/AuthService.
+/// Ready. Each step is a lightweight child ViewModel; this class just tracks
+/// position and persists the terminal state (terms acceptance) via
+/// IUnitOfWork. There is no admin-account/login step here - that whole
+/// feature (including the database-encryption attempt tied to it) was
+/// removed after repeated unresolved failures; see
+/// FcmsDbContextOptionsFactory's comment for why.
 /// </summary>
 public partial class OnboardingFlowViewModel : ObservableObject
 {
     private readonly IUnitOfWork _uow;
-    private readonly Core.Services.AuthService _authService;
 
     [ObservableProperty]
     private OnboardingStep _currentStep = OnboardingStep.Welcome;
@@ -39,7 +41,6 @@ public partial class OnboardingFlowViewModel : ObservableObject
     public bool IsWelcomeStep => CurrentStep == OnboardingStep.Welcome;
     public bool IsTermsStep => CurrentStep == OnboardingStep.Terms;
     public bool IsDataLocationStep => CurrentStep == OnboardingStep.DataLocation;
-    public bool IsAdminSetupStep => CurrentStep == OnboardingStep.AdminSetup;
     public bool IsReadyStep => CurrentStep == OnboardingStep.Ready;
 
     partial void OnCurrentStepChanged(OnboardingStep value)
@@ -47,7 +48,6 @@ public partial class OnboardingFlowViewModel : ObservableObject
         OnPropertyChanged(nameof(IsWelcomeStep));
         OnPropertyChanged(nameof(IsTermsStep));
         OnPropertyChanged(nameof(IsDataLocationStep));
-        OnPropertyChanged(nameof(IsAdminSetupStep));
         OnPropertyChanged(nameof(IsReadyStep));
     }
 
@@ -58,21 +58,11 @@ public partial class OnboardingFlowViewModel : ObservableObject
     private string? _selectedDataDirectory;
 
     [ObservableProperty]
-    private string _adminUsername = string.Empty;
-
-    [ObservableProperty]
-    private string _adminPassword = string.Empty;
-
-    [ObservableProperty]
-    private string _adminPasswordConfirm = string.Empty;
-
-    [ObservableProperty]
     private string? _errorMessage;
 
-    public OnboardingFlowViewModel(IUnitOfWork uow, Core.Services.AuthService authService)
+    public OnboardingFlowViewModel(IUnitOfWork uow)
     {
         _uow = uow;
-        _authService = authService;
         SelectedDataDirectory = Data.FcmsPaths.GetAppDataDirectory();
     }
 
@@ -99,29 +89,7 @@ public partial class OnboardingFlowViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ConfirmDataLocation() => CurrentStep = OnboardingStep.AdminSetup;
-
-    [RelayCommand]
-    private async Task CreateAdminAccountAsync()
-    {
-        ErrorMessage = null;
-
-        if (AdminPassword != AdminPasswordConfirm)
-        {
-            ErrorMessage = "Passwords do not match.";
-            return;
-        }
-
-        try
-        {
-            await _authService.SetupAdminAccountAsync(AdminUsername, AdminPassword);
-            CurrentStep = OnboardingStep.Ready;
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = ex.Message;
-        }
-    }
+    private void ConfirmDataLocation() => CurrentStep = OnboardingStep.Ready;
 
     [RelayCommand]
     private void GoBack()
@@ -130,7 +98,6 @@ public partial class OnboardingFlowViewModel : ObservableObject
         {
             OnboardingStep.Terms => OnboardingStep.Welcome,
             OnboardingStep.DataLocation => OnboardingStep.Terms,
-            OnboardingStep.AdminSetup => OnboardingStep.DataLocation,
             _ => CurrentStep
         };
     }

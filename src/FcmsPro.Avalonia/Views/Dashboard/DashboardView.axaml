@@ -4,101 +4,167 @@
              x:Class="FcmsPro.Avalonia.Views.Dashboard.DashboardView"
              x:DataType="vm:DashboardViewModel">
 
-  <StackPanel Margin="24" Spacing="20">
-    <TextBlock Text="Dashboard" FontSize="28" FontWeight="Bold" />
+  <UserControl.Styles>
+    <!--
+      Local to this view rather than added to App.axaml's global styles -
+      this is the one page that needs a two-tier card hierarchy, so it's
+      scoped here instead of growing the shared style surface every other
+      page also has to load.
+    -->
+    <Style Selector="Border.heroCard">
+      <Setter Property="Background" Value="{DynamicResource SystemAltHighColor}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="Padding" Value="22,20" />
+      <Setter Property="BoxShadow" Value="0 2 12 0 #14000000" />
+    </Style>
+    <Style Selector="Border.heroCard.profit">
+      <!-- The one number on this page that gets a colored accent edge -
+           net profit is the single figure a freelancer opens this page to
+           check first, so it's the one card that visually says "look here"
+           rather than sitting at equal weight with everything else. -->
+      <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
+      <Setter Property="BorderThickness" Value="1.5" />
+    </Style>
+    <Style Selector="TextBlock.heroLabel">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{DynamicResource AppTextSecondaryBrush}" />
+    </Style>
+    <Style Selector="TextBlock.heroValue">
+      <Setter Property="FontSize" Value="34" />
+      <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <Style Selector="Border.tileCard">
+      <Setter Property="Background" Value="{DynamicResource SystemAltHighColor}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemBaseLowColor}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="Padding" Value="16" />
+      <Setter Property="Margin" Value="0,0,12,0" />
+    </Style>
+    <Style Selector="TextBlock.tileLabel">
+      <Setter Property="Opacity" Value="0.6" />
+      <Setter Property="FontSize" Value="12" />
+    </Style>
+    <Style Selector="TextBlock.tileValue">
+      <Setter Property="FontSize" Value="22" />
+      <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+  </UserControl.Styles>
 
-    <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}" TextWrapping="Wrap"
-               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+  <Grid RowDefinitions="Auto,*">
+    <TextBlock Grid.Row="0" Text="Dashboard" FontSize="28" FontWeight="Bold" Margin="24,24,24,0" />
 
     <!--
-      Uses the dark-theme-appropriate warning colors defined in App.axaml
-      (AppWarningBgColor/AppWarningTextColor) rather than a hardcoded light
-      background - the previous #FFF3CD light-yellow background combined
-      with the app-wide TextBlock Foreground override (near-white) would
-      have rendered this banner's text almost invisible.
-
-      Now covers overdue invoices as well as overdue commissions (previously
-      commissions only), and is clickable - since Dashboard is the app's
-      default landing page, this banner is effectively the closest thing to
-      a startup notification the app has without real OS toast integration.
+      ProgressBar (IsIndeterminate), not a spinner control - Avalonia's
+      built-in ProgressBar already supports IsIndeterminate out of the box,
+      so this needed no new control or template, just actually binding
+      IsLoading to something visible for the first time. Sits directly under
+      the title so it reads as "the page below is refreshing," not as its
+      own separate element.
     -->
-    <Button Background="{DynamicResource AppWarningBgColor}" CornerRadius="8" Padding="12,10"
-            IsVisible="{Binding HasOverdue}" Command="{Binding GoToOverdueItemsCommand}"
-            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0">
-      <TextBlock Text="{Binding OverdueSummaryText}"
-                 FontWeight="SemiBold" Foreground="{DynamicResource AppWarningTextColor}" />
-    </Button>
+    <ProgressBar Grid.Row="0" IsIndeterminate="True" Height="2" Margin="24,60,24,0"
+                 VerticalAlignment="Bottom" IsVisible="{Binding IsLoading}" />
 
-    <!--
-      Same banner pattern as the overdue one above, but for items that
-      haven't passed their deadline yet - "still time to act" rather than
-      "already late". Blue (AppDueSoonBgColor/TextColor) rather than amber so
-      the two are visually distinct at a glance; deliberately never shows
-      the same item as the overdue banner (MetricsService's due-soon checks
-      exclude anything already overdue).
-    -->
-    <Button Background="{DynamicResource AppDueSoonBgColor}" CornerRadius="8" Padding="12,10"
-            IsVisible="{Binding HasDueSoon}" Command="{Binding GoToDueSoonItemsCommand}"
-            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0">
-      <TextBlock Text="{Binding DueSoonSummaryText}"
-                 FontWeight="SemiBold" Foreground="{DynamicResource AppDueSoonTextColor}" />
-    </Button>
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+      <StackPanel Margin="24" Spacing="20">
 
-    <WrapPanel ItemWidth="220" ItemHeight="100">
-      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
-        <StackPanel>
-          <TextBlock Text="Total Income" Opacity="0.6" FontSize="12" />
-          <TextBlock Text="{Binding TotalIncome, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" />
-        </StackPanel>
-      </Border>
-      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
-        <StackPanel>
-          <TextBlock Text="This Month" Opacity="0.6" FontSize="12" />
-          <TextBlock Text="{Binding ThisMonthIncome, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" />
-        </StackPanel>
-      </Border>
-      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
-        <StackPanel>
-          <TextBlock Text="Pending Balance" Opacity="0.6" FontSize="12" />
-          <TextBlock Text="{Binding PendingBalance, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" />
-        </StackPanel>
-      </Border>
-      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
-        <StackPanel>
-          <TextBlock Text="Net Profit" Opacity="0.6" FontSize="12" />
-          <TextBlock Text="{Binding NetProfit, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" />
-        </StackPanel>
-      </Border>
-      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
-        <StackPanel>
-          <TextBlock Text="Completion Rate" Opacity="0.6" FontSize="12" />
-          <TextBlock Text="{Binding CompletionRatePercent, StringFormat='{}{0:N0}%'}" FontSize="24" FontWeight="Bold" />
-        </StackPanel>
-      </Border>
-      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
-        <StackPanel>
-          <TextBlock Text="Overdue" Opacity="0.6" FontSize="12" />
-          <TextBlock Text="{Binding OverdueCount}" FontSize="24" FontWeight="Bold" />
-        </StackPanel>
-      </Border>
-      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
-        <StackPanel>
-          <TextBlock Text="Overdue Invoices" Opacity="0.6" FontSize="12" />
-          <TextBlock Text="{Binding OverdueInvoiceCount}" FontSize="24" FontWeight="Bold" />
-        </StackPanel>
-      </Border>
-      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
-        <StackPanel>
-          <TextBlock Text="Due Soon" Opacity="0.6" FontSize="12" />
-          <TextBlock Text="{Binding DueSoonCount}" FontSize="24" FontWeight="Bold" />
-        </StackPanel>
-      </Border>
-      <Border Background="{DynamicResource SystemAltHighColor}" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="4">
-        <StackPanel>
-          <TextBlock Text="Invoices Due Soon" Opacity="0.6" FontSize="12" />
-          <TextBlock Text="{Binding DueSoonInvoiceCount}" FontSize="24" FontWeight="Bold" />
-        </StackPanel>
-      </Border>
-    </WrapPanel>
-  </StackPanel>
+        <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}" TextWrapping="Wrap"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+        <!--
+          Uses the dark-theme-appropriate warning colors defined in App.axaml
+          (AppWarningBgColor/AppWarningTextColor) rather than a hardcoded light
+          background - the previous #FFF3CD light-yellow background combined
+          with the app-wide TextBlock Foreground override (near-white) would
+          have rendered this banner's text almost invisible.
+
+          Covers overdue invoices as well as overdue commissions, and is
+          clickable - since Dashboard is the app's default landing page, this
+          banner is effectively the closest thing to a startup notification
+          the app has without real OS toast integration. It's also now the
+          ONLY place overdue/due-soon counts appear on this page - see the
+          removed-tiles note below.
+        -->
+        <Button Background="{DynamicResource AppWarningBgColor}" CornerRadius="8" Padding="12,10"
+                IsVisible="{Binding HasOverdue}" Command="{Binding GoToOverdueItemsCommand}"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0">
+          <TextBlock Text="{Binding OverdueSummaryText}"
+                     FontWeight="SemiBold" Foreground="{DynamicResource AppWarningTextColor}" />
+        </Button>
+
+        <!--
+          Same banner pattern as the overdue one above, but for items that
+          haven't passed their deadline yet - "still time to act" rather than
+          "already late". Blue (AppDueSoonBgColor/TextColor) rather than amber
+          so the two are visually distinct at a glance; deliberately never
+          shows the same item as the overdue banner (MetricsService's
+          due-soon checks exclude anything already overdue).
+        -->
+        <Button Background="{DynamicResource AppDueSoonBgColor}" CornerRadius="8" Padding="12,10"
+                IsVisible="{Binding HasDueSoon}" Command="{Binding GoToDueSoonItemsCommand}"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0">
+          <TextBlock Text="{Binding DueSoonSummaryText}"
+                     FontWeight="SemiBold" Foreground="{DynamicResource AppDueSoonTextColor}" />
+        </Button>
+
+        <!--
+          Hero row: the two numbers someone actually opens this page to
+          check - what's left after expenses, and what's come in overall.
+          Previously these sat as two of nine identical-weight tiles in one
+          flat WrapPanel, level with "Completion Rate" - no visual signal
+          that profit matters more than a rate stat. Net Profit also gets
+          the accent-colored border (Border.heroCard.profit) as the single
+          "look here first" cue on the page.
+        -->
+        <Grid ColumnDefinitions="*,*">
+          <Border Grid.Column="0" Classes="heroCard profit" Margin="0,0,10,0">
+            <StackPanel Spacing="6">
+              <TextBlock Text="NET PROFIT" Classes="heroLabel" />
+              <TextBlock Text="{Binding NetProfit, StringFormat='{}{0:C2}'}" Classes="heroValue" />
+            </StackPanel>
+          </Border>
+          <Border Grid.Column="1" Classes="heroCard" Margin="10,0,0,0">
+            <StackPanel Spacing="6">
+              <TextBlock Text="TOTAL INCOME" Classes="heroLabel" />
+              <TextBlock Text="{Binding TotalIncome, StringFormat='{}{0:C2}'}" Classes="heroValue" />
+            </StackPanel>
+          </Border>
+        </Grid>
+
+        <!--
+          Secondary row: still worth having on the page, just not shouting
+          as loud as the two above. Overdue/Overdue Invoices/Due Soon/Due
+          Soon Invoices tiles that used to sit here were removed entirely -
+          every one of those four numbers is already shown, in clearer
+          sentence form ("3 commissions and 2 invoices are overdue"), by the
+          two banners above. Repeating the same counts as bare numbers below
+          didn't add information, just visual noise.
+        -->
+        <WrapPanel ItemWidth="200" ItemHeight="88">
+          <Border Classes="tileCard">
+            <StackPanel>
+              <TextBlock Text="This Month" Classes="tileLabel" />
+              <TextBlock Text="{Binding ThisMonthIncome, StringFormat='{}{0:C2}'}" Classes="tileValue" />
+            </StackPanel>
+          </Border>
+          <Border Classes="tileCard">
+            <StackPanel>
+              <TextBlock Text="Pending Balance" Classes="tileLabel" />
+              <TextBlock Text="{Binding PendingBalance, StringFormat='{}{0:C2}'}" Classes="tileValue" />
+            </StackPanel>
+          </Border>
+          <Border Classes="tileCard">
+            <StackPanel>
+              <TextBlock Text="Completion Rate" Classes="tileLabel" />
+              <TextBlock Text="{Binding CompletionRatePercent, StringFormat='{}{0:N0}%'}" Classes="tileValue" />
+            </StackPanel>
+          </Border>
+        </WrapPanel>
+
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
 </UserControl>

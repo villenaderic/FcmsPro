@@ -189,6 +189,9 @@ public partial class AnalyticsViewModel : ObservableObject
         }
         catch (Exception ex)
         {
+            // Full exception, not just ex.Message - see the matching note
+            // in DashboardViewModel.
+            Serilog.Log.Error(ex, "Failed to load analytics data");
             ErrorMessage = $"Could not load analytics: {ex.Message}";
         }
         finally

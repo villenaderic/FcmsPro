@@ -13,7 +13,7 @@ public enum ImportMode { Merge, Replace }
 /// Confirmed compatible in Phase 1 audit §3 - this is also the entry point for
 /// PWA-data import (same format, just targeting SQLite instead of IndexedDB and
 /// the AppSettings table instead of localStorage). The `auth` store is always
-/// skipped on import, matching PWA behavior - see AuthService remarks.
+/// skipped on import - there's no admin account/login in this app.
 /// </summary>
 public class BackupService
 {

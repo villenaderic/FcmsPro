@@ -30,7 +30,7 @@
         <ItemsControl ItemsSource="{Binding Templates}">
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="entities:CommissionTemplate">
-              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+              <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
                 <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto">
                   <StackPanel Grid.Column="0">
                     <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />

@@ -13,9 +13,7 @@ namespace FcmsPro.Avalonia.ViewModels.Backup;
 /// as the PWA's Backup module (Phase 1 audit §3) - this is also the
 /// PWA-data-import entry point mentioned throughout the migration prompt,
 /// just targeting SQLite instead of IndexedDB. The `auth` store is always
-/// skipped on import (matches PWA behavior, see AuthService remarks) - a
-/// PWA-imported backup will NOT carry over the old admin password, so the
-/// app still requires the normal first-run admin setup flow separately.
+/// skipped on import - there's no admin account/login in this app.
 /// </summary>
 public partial class BackupViewModel : ObservableObject
 {

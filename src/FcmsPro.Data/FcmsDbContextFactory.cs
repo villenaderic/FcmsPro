@@ -92,13 +92,27 @@ public static class FcmsPaths
 
 public static class FcmsDbContextOptionsFactory
 {
-    public static DbContextOptions<FcmsDbContext> Create(string? dbPathOverride = null)
+    // Plain, unencrypted SQLite - no Password keyword, no custom cipher
+    // provider. An encrypted-database attempt (login password doubling as
+    // the SQLCipher key) went through several rounds here and never
+    // reached a working state - every attempt failed with the same
+    // "file is not a database" error even after two independent,
+    // documentation-backed fixes, which means there was a deeper mismatch
+    // somewhere between how the key was set and how it was later read that
+    // couldn't be pinned down without actually being able to run the app.
+    // Removed entirely rather than left half-working.
+    public static string BuildConnectionString(string? dbPathOverride = null)
     {
         var dbPath = dbPathOverride ?? FcmsPaths.GetDatabasePath();
+        return $"Data Source={dbPath}";
+    }
+
+    public static DbContextOptions<FcmsDbContext> Create(string? dbPathOverride = null)
+    {
         var builder = new DbContextOptionsBuilder<FcmsDbContext>();
         // WAL mode set via a raw pragma the first time the connection opens -
         // see FcmsDbContext startup call in App composition root (Phase 3 Avalonia).
-        builder.UseSqlite($"Data Source={dbPath};Cache=Shared");
+        builder.UseSqlite(BuildConnectionString(dbPathOverride));
         return builder.Options;
     }
 }

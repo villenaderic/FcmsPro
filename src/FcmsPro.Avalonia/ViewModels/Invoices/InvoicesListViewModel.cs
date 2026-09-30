@@ -48,6 +48,17 @@ public partial class InvoicesListViewModel : ObservableObject, ICreatablePage
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private Client? _filteredByClient;
     [ObservableProperty] private string? _statusMessage;
+    [ObservableProperty] private ListSortOption _sortOption = ListSortOption.Newest;
+
+    /// <summary>Invoices have both a Total and a DueDate worth sorting by, on top of the date/name basics.</summary>
+    public IReadOnlyList<ListSortOption> SortOptions { get; } = new[]
+    {
+        ListSortOption.Newest, ListSortOption.Oldest,
+        ListSortOption.AmountHighToLow, ListSortOption.AmountLowToHigh,
+        ListSortOption.DeadlineSoonest
+    };
+
+    partial void OnSortOptionChanged(ListSortOption value) => _ = LoadAsync();
 
     public ObservableCollection<InvoiceRowViewModel> Rows { get; } = new();
 
@@ -107,8 +118,17 @@ public partial class InvoicesListViewModel : ObservableObject, ICreatablePage
                     i.Description.ToLower().Contains(q));
             }
 
+            IEnumerable<Invoice> ordered = SortOption switch
+            {
+                ListSortOption.Oldest => filtered.OrderBy(i => i.CreatedAt),
+                ListSortOption.AmountHighToLow => filtered.OrderByDescending(i => i.Total),
+                ListSortOption.AmountLowToHigh => filtered.OrderBy(i => i.Total),
+                ListSortOption.DeadlineSoonest => filtered.OrderBy(i => i.DueDate),
+                _ => filtered.OrderByDescending(i => i.CreatedAt), // Newest (default)
+            };
+
             Rows.Clear();
-            foreach (var i in filtered.OrderByDescending(i => i.CreatedAt))
+            foreach (var i in ordered)
             {
                 var clientName = clientsById.TryGetValue(i.ClientId, out var c) ? c.Name : "(client deleted)";
                 Rows.Add(new InvoiceRowViewModel(i, clientName, today));

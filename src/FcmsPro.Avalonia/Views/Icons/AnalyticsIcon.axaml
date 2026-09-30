@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FcmsPro.Avalonia.Views.Icons.AnalyticsIcon"
+             Width="16" Height="16">
+  <!-- Upward trend line. -->
+  <Viewbox Stretch="Uniform">
+    <Canvas Width="24" Height="24">
+      <Polyline Points="3,18 9,11 13,15 21,4"
+                Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2"
+                StrokeJoin="Round" StrokeLineCap="Round" />
+    </Canvas>
+  </Viewbox>
+</UserControl>

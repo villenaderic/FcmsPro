@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,13 +15,9 @@ using FcmsPro.Avalonia.ViewModels.Shell;
 namespace FcmsPro.Avalonia.ViewModels.Commissions;
 
 /// <summary>
-/// Supports both a Table view (default) and a Kanban board grouped by
-/// status, toggled via ViewMode and persisted to UiPreferences.
-/// CommissionsView. Both views share the same CommissionRowViewModel
-/// instances (KanbanColumns just buckets Rows by status rather than holding
-/// separate copies), so the quick-status-change wiring
-/// (StatusChangeRequested/OnRowStatusChangeRequested below) and every other
-/// row-level command works identically in either view.
+/// Table view of Commissions (a Kanban board alternate view previously
+/// lived alongside this - removed as the higher-bug-surface, lower-value of
+/// the two views; Table covers the same data and status-change workflow).
 /// </summary>
 public partial class CommissionsListViewModel : ObservableObject, ICreatablePage
 {
@@ -34,26 +31,19 @@ public partial class CommissionsListViewModel : ObservableObject, ICreatablePage
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private Client? _filteredByClient; // set when deep-linked from a Client profile
     [ObservableProperty] private string? _errorMessage;
-    [ObservableProperty] private string _viewMode = "Table"; // "Table" | "Kanban" - persisted via UiPreferences.CommissionsView
+    [ObservableProperty] private ListSortOption _sortOption = ListSortOption.Newest;
 
-    public bool IsTableView => ViewMode == "Table";
-    public bool IsKanbanView => ViewMode == "Kanban";
-
-    /// <summary>Combines "this view is selected" with "there's something to show" - Avalonia bindings can't easily AND two properties inline, so these are precomputed instead of an error-prone nested-binding expression.</summary>
-    public bool ShowTableView => IsTableView && !HasNoResults;
-    public bool ShowKanbanView => IsKanbanView && !HasNoResults;
-
-    partial void OnViewModeChanged(string value)
+    /// <summary>Sort choices that make sense for a Commission: it has a price and an optional deadline, so both are offered alongside the name/date basics.</summary>
+    public IReadOnlyList<ListSortOption> SortOptions { get; } = new[]
     {
-        OnPropertyChanged(nameof(IsTableView));
-        OnPropertyChanged(nameof(IsKanbanView));
-        OnPropertyChanged(nameof(ShowTableView));
-        OnPropertyChanged(nameof(ShowKanbanView));
-    }
+        ListSortOption.Newest, ListSortOption.Oldest,
+        ListSortOption.AmountHighToLow, ListSortOption.AmountLowToHigh,
+        ListSortOption.DeadlineSoonest, ListSortOption.NameAZ
+    };
+
+    partial void OnSortOptionChanged(ListSortOption value) => ApplyFilterToRows();
 
     public ObservableCollection<CommissionRowViewModel> Rows { get; } = new();
-    public ObservableCollection<KanbanColumnViewModel> KanbanColumns { get; } =
-        new(Enum.GetValues<CommissionStatus>().Select(s => new KanbanColumnViewModel(s)));
 
     /// <summary>True once a load has completed and found nothing - drives the empty-state illustration in CommissionsListView.</summary>
     public bool HasNoResults => !IsLoading && Rows.Count == 0;
@@ -68,48 +58,10 @@ public partial class CommissionsListViewModel : ObservableObject, ICreatablePage
         _dialogService = dialogService;
         _navigation = navigation;
 
-        _ = LoadViewModePreferenceAsync();
-
         if (navigation.NavigationParameter is Guid clientId)
             _ = LoadForClientAsync(clientId);
         else
             _ = LoadAsync();
-    }
-
-    private async Task LoadViewModePreferenceAsync()
-    {
-        try
-        {
-            var prefs = await _uow.Settings.GetUiPreferencesAsync();
-            if (prefs.CommissionsView is "Table" or "Kanban")
-                ViewMode = prefs.CommissionsView;
-        }
-        catch
-        {
-            // Non-critical display preference - if this fails, staying on
-            // the "Table" default is a fine fallback, not worth an error
-            // banner on an otherwise-successful page load.
-        }
-    }
-
-    [RelayCommand]
-    private async Task SetViewModeAsync(string mode)
-    {
-        if (mode is not ("Table" or "Kanban") || mode == ViewMode) return;
-        ViewMode = mode;
-
-        try
-        {
-            var prefs = await _uow.Settings.GetUiPreferencesAsync();
-            prefs.CommissionsView = mode;
-            await _uow.Settings.SaveUiPreferencesAsync(prefs);
-            await _uow.SaveChangesAsync();
-        }
-        catch
-        {
-            // Non-critical - worst case the preference doesn't stick across
-            // restarts, but the view has already switched for this session.
-        }
     }
 
     private async Task LoadForClientAsync(Guid clientId)
@@ -151,8 +103,6 @@ public partial class CommissionsListViewModel : ObservableObject, ICreatablePage
         {
             IsLoading = false;
             OnPropertyChanged(nameof(HasNoResults));
-            OnPropertyChanged(nameof(ShowTableView));
-            OnPropertyChanged(nameof(ShowKanbanView));
         }
     }
 
@@ -172,19 +122,30 @@ public partial class CommissionsListViewModel : ObservableObject, ICreatablePage
         }
 
         Rows.Clear();
-        foreach (var col in KanbanColumns)
-            col.Items.Clear();
 
-        foreach (var c in filtered.OrderByDescending(c => c.DateAdded))
+        foreach (var c in OrderCommissions(filtered))
         {
             var row = new CommissionRowViewModel(c);
             row.StatusChangeRequested += OnRowStatusChangeRequested;
             Rows.Add(row);
-
-            var column = KanbanColumns.FirstOrDefault(k => k.Status == c.Status);
-            column?.Items.Add(row);
         }
     }
+
+    /// <summary>
+    /// DeadlineSoonest puts nulls (no deadline set) last regardless of sort
+    /// direction - "soonest" has no meaningful answer for a commission
+    /// without one, so it reads better parked at the end than sorted as if
+    /// it were the earliest possible date.
+    /// </summary>
+    private IEnumerable<Commission> OrderCommissions(IEnumerable<Commission> source) => SortOption switch
+    {
+        ListSortOption.Oldest => source.OrderBy(c => c.DateAdded),
+        ListSortOption.AmountHighToLow => source.OrderByDescending(c => c.Price),
+        ListSortOption.AmountLowToHigh => source.OrderBy(c => c.Price),
+        ListSortOption.DeadlineSoonest => source.OrderBy(c => c.Deadline is null).ThenBy(c => c.Deadline),
+        ListSortOption.NameAZ => source.OrderBy(c => c.Title, StringComparer.OrdinalIgnoreCase),
+        _ => source.OrderByDescending(c => c.DateAdded), // Newest (default)
+    };
 
     private async void OnRowStatusChangeRequested(CommissionRowViewModel row, CommissionStatus previousStatus)
     {

@@ -1,10 +1,11 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Commissions"
+             xmlns:conv="using:FcmsPro.Avalonia.Converters"
              x:Class="FcmsPro.Avalonia.Views.Commissions.CommissionsListView"
              x:DataType="vm:CommissionsListViewModel">
 
-  <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="24">
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" Margin="24">
 
     <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
       <StackPanel Grid.Column="0">
@@ -20,31 +21,53 @@
                IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                Margin="0,0,0,12" TextWrapping="Wrap" />
 
-    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,8">
       <!-- Nested Grid (not a horizontal StackPanel) so the search box can
            actually shrink on a narrow window - a StackPanel never resizes
            its children below their set width, regardless of available
            space, which is what made this row overflow past the window edge
            at narrow widths. The status dropdown keeps a fixed width since
            its own label text is short and doesn't benefit from shrinking. -->
-      <Grid Grid.Column="0" ColumnDefinitions="*,Auto" Margin="0,0,12,0">
-        <TextBox Grid.Column="0" Text="{Binding SearchQuery, Mode=TwoWay}"
-                  Watermark="Search title or service type..." MaxWidth="280"
-                  HorizontalAlignment="Stretch" Margin="0,0,12,0" />
-        <ComboBox Grid.Column="1" ItemsSource="{Binding StatusFilterOptions}" SelectedItem="{Binding StatusFilter, Mode=TwoWay}"
-                  PlaceholderText="All statuses" Width="160" />
-      </Grid>
-      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="0">
-        <Button Content="Table" Padding="12,6" CornerRadius="6,0,0,6"
-                Classes.accent="{Binding IsTableView}"
-                Command="{Binding SetViewModeCommand}" CommandParameter="Table" />
-        <Button Content="Kanban" Padding="12,6" CornerRadius="0,6,6,0"
-                Classes.accent="{Binding IsKanbanView}"
-                Command="{Binding SetViewModeCommand}" CommandParameter="Kanban" />
-      </StackPanel>
+      <TextBox Grid.Column="0" Text="{Binding SearchQuery, Mode=TwoWay}"
+                Watermark="Search title or service type..." MaxWidth="280"
+                HorizontalAlignment="Stretch" Margin="0,0,12,0" />
+      <ComboBox Grid.Column="1" ItemsSource="{Binding StatusFilterOptions}" SelectedItem="{Binding StatusFilter, Mode=TwoWay}"
+                PlaceholderText="All statuses" Width="160" Margin="0,0,12,0" />
+      <ComboBox Grid.Column="2" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SortOption, Mode=TwoWay}"
+                Width="170">
+        <ComboBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock Text="{Binding Converter={x:Static conv:ListSortOptionLabelConverter.Instance}}" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
     </Grid>
 
-    <Grid Grid.Row="3">
+    <!--
+      IsIndeterminate ProgressBar bound to IsLoading - previously tracked by
+      every list ViewModel but never actually shown anywhere, so a slow load
+      just looked like a frozen page. Same thin-bar pattern used on every
+      other list view in the app now.
+    -->
+    <ProgressBar Grid.Row="3" IsIndeterminate="True" Height="2" Margin="0,0,0,8" IsVisible="{Binding IsLoading}" />
+
+    <!--
+      Column header row - labels the Price/Remaining/Deadline/Status columns
+      below it. Widths mirror the matching columns in the row template
+      exactly (both were previously "Auto", which sized independently per-
+      row and never lined up with a header row anyway) so the two now stay
+      in lockstep.
+    -->
+    <Grid Grid.Row="4" ColumnDefinitions="*,90,110,90,140,Auto" Margin="12,0,12,4">
+      <TextBlock Grid.Column="0" Text="Title" Classes="tableHeader" />
+      <TextBlock Grid.Column="1" Text="Price" Classes="tableHeader" />
+      <TextBlock Grid.Column="2" Text="Remaining" Classes="tableHeader" />
+      <TextBlock Grid.Column="3" Text="Deadline" Classes="tableHeader" />
+      <TextBlock Grid.Column="4" Text="Status" Classes="tableHeader" />
+      <TextBlock Grid.Column="5" Text="Actions" Classes="tableHeader" Margin="12,0,0,0" />
+    </Grid>
+
+    <Grid Grid.Row="5">
       <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
         <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
         <TextBlock Text="No commissions yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
@@ -56,14 +79,15 @@
       <!--
         Table view. Each row's status ComboBox goes through
         CommissionRowViewModel.SelectedStatus so the recurrence-spawn rule
-        can snapshot the previous status correctly.
+        can snapshot the previous status correctly. Column widths (90/110/
+        90/140) match the header row above exactly.
       -->
-      <ScrollViewer IsVisible="{Binding ShowTableView}">
+      <ScrollViewer IsVisible="{Binding !HasNoResults}">
         <ItemsControl ItemsSource="{Binding Rows}">
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="vm:CommissionRowViewModel">
-              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
-                <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto">
+              <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                <Grid ColumnDefinitions="*,90,110,90,140,Auto">
                   <StackPanel Grid.Column="0">
                     <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
                     <TextBlock Text="{Binding Priority}" Opacity="0.5" FontSize="11" />
@@ -72,7 +96,7 @@
                   <TextBlock Grid.Column="2" Text="{Binding Remaining, StringFormat='{}{0:C2} due'}" VerticalAlignment="Center" Margin="8,0" Opacity="0.8" />
                   <TextBlock Grid.Column="3" Text="{Binding Deadline}" VerticalAlignment="Center" Margin="8,0" Opacity="0.7" />
                   <ComboBox Grid.Column="4" ItemsSource="{Binding StatusOptions}"
-                            SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" Width="140" Margin="8,0" />
+                            SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" Width="130" Margin="8,0" />
                   <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4">
                     <Button Content="View"
                             Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).ViewCommand}"
@@ -88,78 +112,6 @@
                             CommandParameter="{Binding}" Classes="destructive" />
                   </StackPanel>
                 </Grid>
-              </Border>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </ScrollViewer>
-
-      <!--
-        Kanban board. One column per CommissionStatus (KanbanColumns is
-        prebuilt with all 6 in enum order, populated in
-        CommissionsListViewModel.ApplyFilterToRows). Cards use the SAME
-        CommissionRowViewModel instances as the table above, so the status
-        ComboBox on each card goes through the identical SelectedStatus /
-        StatusChangeRequested wiring - moving a card between columns is just
-        changing that ComboBox, then LoadAsync rebuilds both views from the
-        refreshed data.
-      -->
-      <ScrollViewer IsVisible="{Binding ShowKanbanView}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-        <ItemsControl ItemsSource="{Binding KanbanColumns}">
-          <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-              <StackPanel Orientation="Horizontal" Spacing="12" />
-            </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
-          <ItemsControl.ItemTemplate>
-            <DataTemplate x:DataType="vm:KanbanColumnViewModel">
-              <Border Width="260" Background="{DynamicResource SystemAltHighColor}"
-                      BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="1" CornerRadius="8" Padding="10">
-                <StackPanel Spacing="8">
-                  <StackPanel Orientation="Horizontal" Spacing="6">
-                    <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" />
-                    <TextBlock Text="{Binding Items.Count}" Opacity="0.5" />
-                  </StackPanel>
-
-                  <ItemsControl ItemsSource="{Binding Items}">
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate x:DataType="vm:CommissionRowViewModel">
-                        <Border Background="{DynamicResource SystemChromeMediumLowColor}" CornerRadius="6" Padding="10" Margin="0,0,0,8">
-                          <StackPanel Spacing="6">
-                            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
-                            <TextBlock Text="{Binding Remaining, StringFormat='{}{0:C2} due'}" FontSize="12" Opacity="0.8" />
-                            <TextBlock Text="{Binding Deadline}" FontSize="12" Opacity="0.6" />
-                            <!--
-                              $parent[UserControl], not $parent[ItemsControl] -
-                              a kanban card sits inside TWO nested
-                              ItemsControls (columns, then cards within each
-                              column), so $parent[ItemsControl] here finds the
-                              inner cards ItemsControl (whose DataContext is
-                              the KanbanColumnViewModel), not this page's
-                              CommissionsListViewModel. Casting that
-                              KanbanColumnViewModel to CommissionsListViewModel
-                              fails silently, which is what left the dropdown
-                              empty and the View/Edit buttons non-functional -
-                              $parent[UserControl] reaches all the way up to
-                              this file's single root UserControl regardless
-                              of how many ItemsControls sit in between.
-                            -->
-                            <ComboBox ItemsSource="{Binding StatusOptions}"
-                                      SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" HorizontalAlignment="Stretch" FontSize="11" />
-                            <StackPanel Orientation="Horizontal" Spacing="4">
-                              <Button Content="View" FontSize="11" Padding="6,3"
-                                      Command="{Binding $parent[UserControl].((vm:CommissionsListViewModel)DataContext).ViewCommand}"
-                                      CommandParameter="{Binding}" />
-                              <Button Content="Edit" FontSize="11" Padding="6,3"
-                                      Command="{Binding $parent[UserControl].((vm:CommissionsListViewModel)DataContext).EditCommand}"
-                                      CommandParameter="{Binding}" />
-                            </StackPanel>
-                          </StackPanel>
-                        </Border>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
-                </StackPanel>
               </Border>
             </DataTemplate>
           </ItemsControl.ItemTemplate>

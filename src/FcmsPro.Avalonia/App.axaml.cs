@@ -14,7 +14,6 @@ using FcmsPro.Pdf;
 using FcmsPro.Avalonia.Services;
 using FcmsPro.Avalonia.ViewModels.Shell;
 using FcmsPro.Avalonia.ViewModels.Onboarding;
-using FcmsPro.Avalonia.ViewModels.Auth;
 using FcmsPro.Avalonia.Views.Shell;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
@@ -110,9 +109,11 @@ public partial class App : Application
             // first-run flow implementation.
         }
 
+        var startupWindow = await ResolveStartupWindowAsync();
+
         if (desktop is not null)
         {
-            desktop.MainWindow = await ResolveStartupWindowAsync();
+            desktop.MainWindow = startupWindow;
             desktop.MainWindow.Show();
 
             // Hand shutdown behavior back to the normal
@@ -141,22 +142,43 @@ public partial class App : Application
 
     /// <summary>
     /// Routes to the correct first window based on app state:
-    /// Terms not accepted -> Onboarding flow (Welcome -> Terms -> Data Location -> Admin Setup -> Ready)
-    /// Terms accepted but no admin account -> Admin Setup (shouldn't normally happen, defensive)
-    /// Admin account exists -> Login
-    /// (Login success hands off to the MainWindow shell.)
+    /// Terms not accepted -> Onboarding flow (Welcome -> Terms -> Data Location -> Ready)
+    /// Terms accepted -> MainWindow shell directly (no login gate)
     /// </summary>
     private async Task<global::Avalonia.Controls.Window> ResolveStartupWindowAsync()
     {
-        // CreateAsyncScope + await using: this scope resolves IUnitOfWork
-        // (via AuthService and directly), and UnitOfWork only implements
-        // IAsyncDisposable - synchronously disposing this scope threw
-        // "type only implements IAsyncDisposable. Use DisposeAsync to
-        // dispose the container." on every single startup. This was the
-        // actual cause of the app silently exiting with no window.
+        // CreateAsyncScope + await using: this scope resolves IUnitOfWork,
+        // and UnitOfWork only implements IAsyncDisposable - synchronously
+        // disposing this scope threw "type only implements
+        // IAsyncDisposable. Use DisposeAsync to dispose the container." on
+        // every single startup. This was the actual cause of the app
+        // silently exiting with no window.
         await using var scope = Services.CreateAsyncScope();
         var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
+        await ApplyPersistedSessionStateAsync(scope.ServiceProvider, uow);
+
+        var terms = await uow.Terms.GetLatestAsync();
+        var hasAcceptedCurrentTerms = terms is { Accepted: true } && terms.TermsVersion == OnboardingConstants.CurrentTermsVersion;
+
+        if (!hasAcceptedCurrentTerms)
+        {
+            var onboardingVm = Services.GetRequiredService<OnboardingFlowViewModel>();
+            return new Views.Onboarding.OnboardingWindow { DataContext = onboardingVm };
+        }
+
+        var mainVm = Services.GetRequiredService<MainWindowViewModel>();
+        return new Views.Shell.MainWindow { DataContext = mainVm };
+    }
+
+    /// <summary>
+    /// Appearance/currency, trash purge, recurring-expense spawn - once-per-
+    /// launch housekeeping that runs right after DB access is confirmed
+    /// working, before the terms/onboarding check above decides which
+    /// window to show.
+    /// </summary>
+    public static async Task ApplyPersistedSessionStateAsync(IServiceProvider scopedProvider, IUnitOfWork uow)
+    {
         // Re-apply persisted appearance (theme/accent) and currency-symbol
         // culture on every launch. Previously these were only ever applied
         // in-memory when the user hit Save on the Settings page - saved to
@@ -170,7 +192,7 @@ public partial class App : Application
             AppCulture.Apply(settings.CurrencySymbol);
 
             var prefs = await uow.Settings.GetUiPreferencesAsync();
-            scope.ServiceProvider.GetRequiredService<ThemeService>().Apply(prefs.Theme, prefs.AccentColor);
+            scopedProvider.GetRequiredService<ThemeService>().Apply(prefs.Theme, prefs.AccentColor);
         }
         catch (Exception ex)
         {
@@ -183,36 +205,13 @@ public partial class App : Application
         // longer than 30 days (TrashService.PurgeExpiredAsync already
         // swallows its own errors internally - never worth blocking
         // startup over a failed purge).
-        await scope.ServiceProvider.GetRequiredService<TrashService>().PurgeExpiredAsync();
+        await scopedProvider.GetRequiredService<TrashService>().PurgeExpiredAsync();
 
         // Spawn any recurring expenses (software subscriptions, retainers,
         // etc.) whose next scheduled occurrence has arrived since the app
         // was last opened. Same "swallow errors, never block startup" policy
         // as the trash purge above - see ExpenseService.ProcessDueRecurrencesAsync.
-        await scope.ServiceProvider.GetRequiredService<ExpenseService>().ProcessDueRecurrencesAsync();
-
-        var terms = await uow.Terms.GetLatestAsync();
-        var hasAcceptedCurrentTerms = terms is { Accepted: true } && terms.TermsVersion == OnboardingConstants.CurrentTermsVersion;
-
-        if (!hasAcceptedCurrentTerms)
-        {
-            var onboardingVm = Services.GetRequiredService<OnboardingFlowViewModel>();
-            return new Views.Onboarding.OnboardingWindow { DataContext = onboardingVm };
-        }
-
-        var authService = scope.ServiceProvider.GetRequiredService<AuthService>();
-        if (!await authService.IsAdminAccountSetUpAsync())
-        {
-            // Defensive path: terms were accepted in a prior run but no admin
-            // account exists (e.g. app was closed mid-onboarding). Reuse the
-            // same wizard, jumped forward to the Admin Setup step.
-            var resumeVm = Services.GetRequiredService<OnboardingFlowViewModel>();
-            resumeVm.CurrentStep = OnboardingStep.AdminSetup;
-            return new Views.Onboarding.OnboardingWindow { DataContext = resumeVm };
-        }
-
-        var loginVm = Services.GetRequiredService<LoginViewModel>();
-        return new Views.Auth.LoginWindow { DataContext = loginVm };
+        await scopedProvider.GetRequiredService<ExpenseService>().ProcessDueRecurrencesAsync();
     }
 
     private static void ConfigureDiagnosticLogging()
@@ -233,7 +232,7 @@ public partial class App : Application
     {
         // Data layer
         services.AddDbContext<FcmsDbContext>(opt =>
-            opt.UseSqlite($"Data Source={FcmsPaths.GetDatabasePath()};Cache=Shared"));
+            opt.UseSqlite(FcmsDbContextOptionsFactory.BuildConnectionString()));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Core services
@@ -246,7 +245,6 @@ public partial class App : Application
         services.AddScoped<ExpenseService>();
         services.AddScoped<GlobalSearchService>();
         services.AddScoped<TemplateService>();
-        services.AddScoped<AuthService>();
         services.AddScoped<MetricsService>();
         services.AddScoped<TaxSummaryService>();
         services.AddScoped<TrashService>();
@@ -267,7 +265,6 @@ public partial class App : Application
 
         // ViewModels (Transient - fresh state each navigation)
         services.AddTransient<OnboardingFlowViewModel>();
-        services.AddTransient<LoginViewModel>();
         services.AddTransient<MainWindowViewModel>();
 
         // Clients module (Phase 4)

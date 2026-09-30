@@ -6,7 +6,7 @@ using FcmsPro.Core.Enums;
 namespace FcmsPro.Avalonia.ViewModels.Commissions;
 
 /// <summary>
-/// Wraps a Commission for the list/kanban row so the quick-status dropdown
+/// Wraps a Commission for the list row so the quick-status dropdown
 /// can snapshot the PREVIOUS status before it changes - required by
 /// CommissionService.QuickStatusChangeAsync, which needs to know what the
 /// status was transitioning FROM to correctly apply the recurrence-spawn

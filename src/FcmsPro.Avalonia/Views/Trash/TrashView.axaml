@@ -30,7 +30,7 @@
         <ItemsControl ItemsSource="{Binding Items}">
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="svc:TrashItem">
-              <Border BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+              <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
                 <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
                   <Border Grid.Column="0" Background="{DynamicResource SystemAltHighColor}" CornerRadius="4" Padding="6,2" Margin="0,0,12,0">
                     <TextBlock Text="{Binding Type}" FontSize="11" />
