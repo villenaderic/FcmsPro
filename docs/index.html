@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCMS Pro | Freelance Commission Management System</title>
+    <meta name="description" content="A professional, native, offline-first commission and payment management system for freelancers.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --surface-color: #1a2235;
+            --surface-hover: #232d42;
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --accent-glow: rgba(59, 130, 246, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Abstract Background Elements */
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: var(--primary-color);
+            filter: blur(150px);
+            opacity: 0.15;
+            border-radius: 50%;
+            top: -200px;
+            left: -200px;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .bg-glow-2 {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: #8b5cf6;
+            filter: blur(150px);
+            opacity: 0.15;
+            border-radius: 50%;
+            bottom: -100px;
+            right: -100px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 32px 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 24px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-main);
+        }
+
+        /* Hero Section */
+        header {
+            padding: 100px 0 80px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 48px;
+        }
+
+        /* Downloads */
+        .downloads {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            background-color: var(--surface-color);
+            color: var(--text-main);
+            border-color: var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--surface-hover);
+            border-color: var(--text-muted);
+            transform: translateY(-2px);
+        }
+
+        .btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Icons */
+        .os-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        
+        .os-img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        /* Features */
+        .features {
+            padding: 80px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .feature-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Instructions */
+        .instructions {
+            padding: 60px 0 100px;
+        }
+        
+        .instructions h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .step {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+            background: var(--surface-color);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .step-content h3 {
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+            margin-top: 10px;
+        }
+
+        .step-content p {
+            color: var(--text-muted);
+        }
+        
+        /* Loading Text for Buttons */
+        .loading-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 12px;
+            text-align: center;
+            display: block;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .btn { width: 100%; justify-content: center; }
+            .step { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+
+    <div class="container">
+        <nav>
+            <div class="logo">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--primary-color)">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zm0 7.5l-6.5-3.25L12 3.5l6.5 2.75L12 9.5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                FCMS <span>Pro</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#instructions">Instructions</a>
+                <a href="https://github.com/villenaderic/FcmsPro" target="_blank">GitHub</a>
+            </div>
+        </nav>
+
+        <header>
+            <h1>Your Freelance Business,<br>Perfectly Managed.</h1>
+            <p class="subtitle">A lightning-fast, native desktop application for tracking clients, commissions, and payments. Everything is stored locally. No subscriptions, no cloud syncing.</p>
+            
+            <div class="downloads">
+                <!-- Download links will be dynamically populated via GitHub API -->
+                <a id="btn-win" href="https://github.com/villenaderic/FcmsPro/releases/latest" class="btn btn-primary disabled">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg" alt="Windows Logo" class="os-icon" style="filter: brightness(0) invert(1);" />
+                    Download for Windows
+                </a>
+                <a id="btn-mac" href="https://github.com/villenaderic/FcmsPro/releases/latest" class="btn btn-secondary disabled">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg" alt="Mac Logo" class="os-icon" style="filter: brightness(0) invert(1);" />
+                    Download for Mac
+                </a>
+                <a id="btn-lin" href="https://github.com/villenaderic/FcmsPro/releases/latest" class="btn btn-secondary disabled">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Linux Logo" class="os-icon" />
+                    Download for Linux
+                </a>
+            </div>
+            <span class="loading-text" id="version-text">Fetching latest release from GitHub...</span>
+        </header>
+
+        <section id="features" class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <h3 class="feature-title">Lightning Fast UI</h3>
+                <p class="feature-desc">Built with Avalonia UI for native performance. FCMS Pro launches instantly and handles thousands of records without a sweat.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                <h3 class="feature-title">Local & Private</h3>
+                <p class="feature-desc">Your clients and finances are yours. All data is securely stored locally in an offline SQLite database. No cloud accounts required.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+                </div>
+                <h3 class="feature-title">Atomic Backups</h3>
+                <p class="feature-desc">Never lose your work. Effortlessly create automated, atomic backup snapshots of your database with a single click in the app.</p>
+            </div>
+        </section>
+
+        <section id="instructions" class="instructions">
+            <h2>How to Get Started</h2>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Download & Extract</h3>
+                    <p>Download the latest release for your operating system using the buttons above. Extract the ZIP file to a folder of your choice.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Run the Application</h3>
+                    <p>Inside the extracted folder, double-click the <strong>FcmsPro</strong> executable. No installation required — it runs completely standalone.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Onboarding Tour</h3>
+                    <p>When you launch the app for the first time, an interactive onboarding tour will guide you through creating your first client and tracking a commission.</p>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>&copy; 2026 FCMS Pro. Open Source on GitHub.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Fetch latest release from GitHub API
+        const GITHUB_REPO = "villenaderic/FcmsPro";
+        
+        async function fetchLatestRelease() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases/latest`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const data = await response.json();
+                const version = data.tag_name;
+                const assets = data.assets;
+                
+                document.getElementById('version-text').textContent = `Latest Release: ${version}`;
+                
+                // We map OS keywords to button IDs
+                const osMapping = [
+                    { keyword: 'win', id: 'btn-win' },
+                    { keyword: 'osx', id: 'btn-mac' },
+                    { keyword: 'mac', id: 'btn-mac' },
+                    { keyword: 'linux', id: 'btn-lin' }
+                ];
+                
+                let foundWin = false;
+                let foundMac = false;
+                let foundLin = false;
+
+                // Extract exactly the extensions we want depending on OS
+                assets.forEach(asset => {
+                    const name = asset.name.toLowerCase();
+                    const url = asset.browser_download_url;
+                    
+                    if (name.endsWith('.exe') && !foundWin) {
+                        enableButton('btn-win', url);
+                        foundWin = true;
+                    } else if (name.endsWith('.dmg') && !foundMac) {
+                        enableButton('btn-mac', url);
+                        foundMac = true;
+                    } else if (name.endsWith('.deb') && !foundLin) {
+                        enableButton('btn-lin', url);
+                        foundLin = true;
+                    }
+                });
+                
+                // Keep the direct download link but construct the expected name if not found via API,
+                // this ensures it triggers a download prompt for the file instead of opening github
+                const baseURL = `https://github.com/${GITHUB_REPO}/releases/download/${version}`;
+                
+                if (!foundWin) setFallback('btn-win', `${baseURL}/FcmsPro_${version}_windows.exe`);
+                if (!foundMac) setFallback('btn-mac', `${baseURL}/FcmsPro_${version}_macos.dmg`);
+                if (!foundLin) setFallback('btn-lin', `${baseURL}/FcmsPro_${version}_linux.deb`);
+                
+            } catch (error) {
+                console.error("Failed to fetch release info:", error);
+                document.getElementById('version-text').textContent = "Failed to load latest release details. Downloads might not work if the files haven't finished building yet.";
+                // In case API fails, we point it directly to the latest download release format
+                setFallback('btn-win', `https://github.com/${GITHUB_REPO}/releases/latest/download/FcmsPro_windows.exe`);
+                setFallback('btn-mac', `https://github.com/${GITHUB_REPO}/releases/latest/download/FcmsPro_macos.dmg`);
+                setFallback('btn-lin', `https://github.com/${GITHUB_REPO}/releases/latest/download/FcmsPro_linux.deb`);
+            }
+        }
+        
+        function enableButton(id, url) {
+            const btn = document.getElementById(id);
+            if (btn) {
+                btn.href = url;
+                btn.classList.remove('disabled');
+            }
+        }
+        
+        function setFallback(id, url) {
+            const btn = document.getElementById(id);
+            if (btn) {
+                btn.href = url;
+                btn.classList.remove('disabled');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', fetchLatestRelease);
+    </script>
+</body>
+</html>
