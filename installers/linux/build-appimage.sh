@@ -11,7 +11,7 @@
 set -euo pipefail
 
 APP_NAME="FcmsPro"
-VERSION="1.2.3"
+VERSION="1.2.4"
 RID="linux-x64"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../src/FcmsPro.Avalonia" && pwd)"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

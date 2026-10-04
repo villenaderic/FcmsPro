@@ -3,6 +3,10 @@
 All notable changes to FCMS Pro are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.4]
+- Added complete app-data wipe on uninstall to ensure fresh restarts without manual cleanup.
+- Added a new Quick Start guide into the initial onboarding flow.
+
 ## [1.2.3]
 - Added `VersionInfoCompany` and `VersionInfoCopyright` directives to the Windows setup installer.
 

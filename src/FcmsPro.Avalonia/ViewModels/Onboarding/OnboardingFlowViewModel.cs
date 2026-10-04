@@ -14,7 +14,7 @@ public static class OnboardingConstants
     public const string CurrentTermsVersion = "1.0";
 }
 
-public enum OnboardingStep { Welcome, Terms, DataLocation, Ready }
+public enum OnboardingStep { Welcome, Terms, DataLocation, Guide, Ready }
 
 /// <summary>
 /// Wizard shell for the first-run flow: Welcome -> Terms -> Data Location ->
@@ -41,6 +41,7 @@ public partial class OnboardingFlowViewModel : ObservableObject
     public bool IsWelcomeStep => CurrentStep == OnboardingStep.Welcome;
     public bool IsTermsStep => CurrentStep == OnboardingStep.Terms;
     public bool IsDataLocationStep => CurrentStep == OnboardingStep.DataLocation;
+    public bool IsGuideStep => CurrentStep == OnboardingStep.Guide;
     public bool IsReadyStep => CurrentStep == OnboardingStep.Ready;
 
     partial void OnCurrentStepChanged(OnboardingStep value)
@@ -48,6 +49,7 @@ public partial class OnboardingFlowViewModel : ObservableObject
         OnPropertyChanged(nameof(IsWelcomeStep));
         OnPropertyChanged(nameof(IsTermsStep));
         OnPropertyChanged(nameof(IsDataLocationStep));
+        OnPropertyChanged(nameof(IsGuideStep));
         OnPropertyChanged(nameof(IsReadyStep));
     }
 
@@ -88,8 +90,10 @@ public partial class OnboardingFlowViewModel : ObservableObject
         CurrentStep = OnboardingStep.DataLocation;
     }
 
+    private void ConfirmDataLocation() => CurrentStep = OnboardingStep.Guide;
+
     [RelayCommand]
-    private void ConfirmDataLocation() => CurrentStep = OnboardingStep.Ready;
+    private void ConfirmGuide() => CurrentStep = OnboardingStep.Ready;
 
     [RelayCommand]
     private void GoBack()
@@ -98,6 +102,8 @@ public partial class OnboardingFlowViewModel : ObservableObject
         {
             OnboardingStep.Terms => OnboardingStep.Welcome,
             OnboardingStep.DataLocation => OnboardingStep.Terms,
+            OnboardingStep.Guide => OnboardingStep.DataLocation,
+            OnboardingStep.Ready => OnboardingStep.Guide,
             _ => CurrentStep
         };
     }

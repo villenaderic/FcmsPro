@@ -44,6 +44,18 @@
         </Border>
       </StackPanel>
 
+      <StackPanel Spacing="16" VerticalAlignment="Center" IsVisible="{Binding IsGuideStep}">
+        <TextBlock Text="Quick Start Guide" FontSize="24" FontWeight="Bold" />
+        <TextBlock TextWrapping="Wrap" Margin="0,0,0,8"
+                   Text="Welcome! Since this is a completely offline app, you're the master of your own data. Here is how you should start:" />
+        <StackPanel Spacing="8">
+            <TextBlock Text="1. Create a Client on the Clients page." FontWeight="SemiBold" />
+            <TextBlock Text="2. Go to Commissions and start your first project." FontWeight="SemiBold" />
+            <TextBlock Text="3. Add payments inside the commission as you receive them." FontWeight="SemiBold" />
+            <TextBlock Text="4. Regularly export a Backup file so you never lose your work." FontWeight="SemiBold" />
+        </StackPanel>
+      </StackPanel>
+
       <StackPanel Spacing="16" VerticalAlignment="Center" IsVisible="{Binding IsReadyStep}">
         <TextBlock Text="You're All Set" FontSize="24" FontWeight="Bold" />
         <TextBlock TextWrapping="Wrap"
@@ -58,6 +70,7 @@
       <Button Content="Get Started" Command="{Binding GoToTermsCommand}" IsVisible="{Binding IsWelcomeStep}" Classes="accent" />
       <Button Content="I Accept" Command="{Binding AcceptTermsCommand}" IsVisible="{Binding IsTermsStep}" Classes="accent" />
       <Button Content="Continue" Command="{Binding ConfirmDataLocationCommand}" IsVisible="{Binding IsDataLocationStep}" Classes="accent" />
+      <Button Content="Continue to App" Command="{Binding ConfirmGuideCommand}" IsVisible="{Binding IsGuideStep}" Classes="accent" />
       <Button Content="Finish" Command="{Binding FinishCommand}" IsVisible="{Binding IsReadyStep}" Classes="accent" />
     </StackPanel>
 

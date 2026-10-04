@@ -8,7 +8,7 @@
 ; Output: .\Output\FcmsPro-Setup-{version}.exe
 
 #define MyAppName "FCMS Pro"
-#define MyAppVersion "1.2.3"
+#define MyAppVersion "1.2.4"
 #define MyAppPublisher "Roderic Villena"
 #define MyAppExeName "FcmsPro.exe"
 
@@ -53,3 +53,6 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+
+[UninstallDelete]
+Type: filesandordirs; Name: "{appdata}\FcmsPro"
