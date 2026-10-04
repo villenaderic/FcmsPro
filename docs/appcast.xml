@@ -3,12 +3,12 @@
   <channel>
     <title>FCMS Pro Updates</title>
     <item>
-      <title>v1.6.1</title>
-      <pubDate>Sun, 04 Oct 2026 08:15:41 -0000</pubDate>
-      <sparkle:releaseNotesLink>https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.1</sparkle:releaseNotesLink>
-      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.1/FcmsPro-1.6.1-arm64.dmg" sparkle:version="1.6.1" sparkle:os="macos" length="49604246" type="application/octet-stream" />
-      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.1/FcmsPro-Setup-1.6.1.exe" sparkle:version="1.6.1" sparkle:os="windows" length="38851929" type="application/octet-stream" />
-      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.1/fcmspro_1.6.1_amd64.deb" sparkle:version="1.6.1" sparkle:os="linux" length="38719248" type="application/octet-stream" />
+      <title>v1.6.2</title>
+      <pubDate>Sun, 04 Oct 2026 08:57:02 -0000</pubDate>
+      <sparkle:releaseNotesLink>https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.2</sparkle:releaseNotesLink>
+      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.2/FcmsPro-1.6.2-arm64.dmg" sparkle:version="1.6.2" sparkle:os="macos" length="49603668" type="application/octet-stream" />
+      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.2/FcmsPro-Setup-1.6.2.exe" sparkle:version="1.6.2" sparkle:os="windows" length="38852182" type="application/octet-stream" />
+      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.2/fcmspro_1.6.2_amd64.deb" sparkle:version="1.6.2" sparkle:os="linux" length="38721002" type="application/octet-stream" />
     </item>
   </channel>
 </rss>
