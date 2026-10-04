@@ -23,8 +23,7 @@ public class UpdateService
             
             _sparkle = new SparkleUpdater(appcastUrl, new Ed25519Checker(SecurityMode.Unsafe))
             {
-                UIFactory = new UIFactory(null), // Avalonia UI factory
-                ShowsUIOnMainThread = true,
+                UIFactory = new UIFactory(null!), // Avalonia UI factory
                 RelaunchAfterUpdate = true,
             };
 

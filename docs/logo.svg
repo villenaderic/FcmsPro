@@ -1,0 +1,8 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Top diamond -->
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2 L22 7 L12 12 L2 7 Z M12 4.5 L7 7 L12 9.5 L17 7 Z" fill="#3b82f6"/>
+  <!-- Middle V -->
+  <path d="M2 11 L12 16 L22 11 L12 13.5 Z" fill="#3b82f6" />
+  <!-- Bottom V -->
+  <path d="M2 15 L12 20 L22 15 L12 17.5 Z" fill="#3b82f6" />
+</svg>
