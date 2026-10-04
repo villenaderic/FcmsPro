@@ -47,31 +47,7 @@ public static class DatabaseInitializer
         if (!await db.GoalSettings.AnyAsync(ct))
             db.GoalSettings.Add(new GoalSettings { Id = 1 });
 
-        if (!await db.Clients.AnyAsync(ct))
-        {
-            var sampleClient = new Client
-            {
-                Id = Guid.NewGuid(),
-                Name = "Sample Client (Jane Smith)",
-                Email = "jane@example.com",
-                DateAdded = DateTimeOffset.UtcNow,
-                UpdatedAt = DateTimeOffset.UtcNow
-            };
-            db.Clients.Add(sampleClient);
 
-            db.Commissions.Add(new Commission
-            {
-                Id = Guid.NewGuid(),
-                ClientId = sampleClient.Id,
-                Title = "Sample Logo Design",
-                Price = 500,
-                DownPayment = 250,
-                Deadline = DateOnly.FromDateTime(DateTime.Today.AddDays(7)),
-                Status = FcmsPro.Core.Enums.CommissionStatus.InProgress,
-                DateAdded = DateTimeOffset.UtcNow,
-                UpdatedAt = DateTimeOffset.UtcNow
-            });
-        }
 
         await db.SaveChangesAsync(ct);
     }
