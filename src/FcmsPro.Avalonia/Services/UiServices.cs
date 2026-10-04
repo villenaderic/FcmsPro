@@ -63,6 +63,11 @@ public partial class NavigationService : ObservableObject
         CurrentPage = page;
         NavigationRequested?.Invoke();
     }
+
+    /// <summary>Raised when something (e.g. Settings > Replay tour) wants the guided tour (re)started.</summary>
+    public event Action? TourRequested;
+
+    public void RequestTour() => TourRequested?.Invoke();
 }
 
 /// <summary>

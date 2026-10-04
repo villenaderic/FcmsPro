@@ -148,4 +148,25 @@ public class TrashService
             repo.Remove(e);
         return expired.Count > 0;
     }
+
+    public async Task EmptyTrashAsync(CancellationToken ct = default)
+    {
+        var anyChanges = false;
+        anyChanges |= await EmptyEntityAsync(_uow.Clients, ct);
+        anyChanges |= await EmptyEntityAsync(_uow.Commissions, ct);
+        anyChanges |= await EmptyEntityAsync(_uow.Payments, ct);
+        anyChanges |= await EmptyEntityAsync(_uow.Expenses, ct);
+
+        if (anyChanges)
+            await _uow.SaveChangesAsync(ct);
+    }
+
+    private static async Task<bool> EmptyEntityAsync<T>(IRepository<T> repo, CancellationToken ct) where T : class, ISoftDeletable
+    {
+        var all = await repo.GetAllAsync(ct);
+        var trashed = all.Where(e => e.IsDeleted).ToList();
+        foreach (var e in trashed)
+            repo.Remove(e);
+        return trashed.Count > 0;
+    }
 }

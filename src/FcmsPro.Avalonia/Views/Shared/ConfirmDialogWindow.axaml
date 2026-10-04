@@ -15,7 +15,7 @@
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
       <Button Content="{Binding CancelLabel}" Click="OnCancelClick" />
       <Button Content="{Binding ConfirmLabel}" Click="OnConfirmClick"
-              Classes.destructive="{Binding IsDestructive}" Classes="accent" />
+              Classes.destructive="{Binding IsDestructive}" Classes="accent" IsDefault="True" />
     </StackPanel>
   </StackPanel>
 </Window>

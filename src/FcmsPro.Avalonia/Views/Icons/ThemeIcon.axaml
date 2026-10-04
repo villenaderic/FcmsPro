@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FcmsPro.Avalonia.Views.Icons.ThemeIcon"
+             Width="16" Height="16">
+  <Viewbox Stretch="Uniform">
+    <Canvas Width="24" Height="24">
+      <Path Data="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+            Stroke="{DynamicResource AppTextSecondaryBrush}" StrokeThickness="2" StrokeLineCap="Round" StrokeJoin="Round" Fill="Transparent"/>
+    </Canvas>
+  </Viewbox>
+</UserControl>

@@ -101,5 +101,29 @@ public partial class TrashViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task EmptyTrashAsync()
+    {
+        var confirmed = await _dialogService.ConfirmAsync(
+            "Empty Trash?",
+            "All items in the trash will be permanently deleted. This cannot be undone.",
+            isDestructive: true,
+            confirmLabel: "Empty Trash");
+        if (!confirmed) return;
+
+        ErrorMessage = null;
+        IsLoading = true;
+        try
+        {
+            await _trashService.EmptyTrashAsync();
+            await LoadAsync();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Could not empty trash: {ex.Message}";
+            IsLoading = false;
+        }
+    }
+
+    [RelayCommand]
     private void BackToSettings() => _navigation.NavigateTo(AppPage.Settings);
 }

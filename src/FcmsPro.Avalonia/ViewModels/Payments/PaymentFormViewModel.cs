@@ -133,6 +133,10 @@ public partial class PaymentFormViewModel : ObservableObject
         {
             ErrorMessage = ex.Message;
         }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Could not save payment: {ex.Message}";
+        }
         finally
         {
             IsBusy = false;

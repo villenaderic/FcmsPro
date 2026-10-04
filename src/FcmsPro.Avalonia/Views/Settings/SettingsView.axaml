@@ -42,8 +42,7 @@
       <!-- Appearance -->
       <StackPanel Spacing="8">
         <TextBlock Text="Appearance" FontWeight="Bold" FontSize="16" />
-        <TextBlock Text="Theme" FontWeight="SemiBold" />
-        <ComboBox ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding Theme, Mode=TwoWay}" Width="160" HorizontalAlignment="Left" />
+
         <TextBlock Text="Accent Color (hex)" FontWeight="SemiBold" />
         <TextBox Text="{Binding AccentColor, Mode=TwoWay}" Width="120" HorizontalAlignment="Left" />
         <Button Content="Save Appearance" Command="{Binding SaveAppearanceCommand}" HorizontalAlignment="Left" />

@@ -17,11 +17,9 @@
         <Animation Duration="0:0:0.5" Easing="CubicEaseOut" FillMode="Both">
           <KeyFrame Cue="0%">
             <Setter Property="Opacity" Value="0.0" />
-            <Setter Property="RenderTransform" Value="scale(0.95) translateY(10px)" />
           </KeyFrame>
           <KeyFrame Cue="100%">
             <Setter Property="Opacity" Value="1.0" />
-            <Setter Property="RenderTransform" Value="scale(1) translateY(0px)" />
           </KeyFrame>
         </Animation>
       </Style.Animations>
@@ -65,11 +63,9 @@
         <Animation Duration="0:0:0.6" Easing="CubicEaseOut" FillMode="Both">
           <KeyFrame Cue="0%">
             <Setter Property="Opacity" Value="0.0" />
-            <Setter Property="RenderTransform" Value="scale(0.95) translateY(10px)" />
           </KeyFrame>
           <KeyFrame Cue="100%">
             <Setter Property="Opacity" Value="1.0" />
-            <Setter Property="RenderTransform" Value="scale(1) translateY(0px)" />
           </KeyFrame>
         </Animation>
       </Style.Animations>

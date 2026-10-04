@@ -30,7 +30,7 @@
       <StackPanel Spacing="12" IsVisible="{Binding IsTermsStep}">
         <TextBlock Text="Terms &amp; Data Handling" FontSize="20" FontWeight="Bold" />
         <ScrollViewer Height="280" Background="{DynamicResource SystemAltHighColor}" Padding="12">
-          <TextBlock TextWrapping="Wrap" Text="FCMS Pro stores all of your business data - clients, commissions, payments, and everything else - locally on this computer, in a SQLite database file in your app data folder. Nothing is sent to any external server; there is no cloud sync, and the app developer has no access to your data.&#10;&#10;You are responsible for backing up your own data (see the Backup page once you're in the app) - if this computer is lost, reformatted, or the app data folder is deleted without a backup, your data cannot be recovered.&#10;&#10;By continuing, you acknowledge you've read and understood the above." />
+          <TextBlock TextWrapping="Wrap" Text="FCMS Pro operates strictly as a local application. All business data, including clients, commissions, and financial records, is stored exclusively on this computer within a local SQLite database. No data is transmitted to external servers, cloud synchronization is not utilized, and the application developers have no access to your information.&#10;&#10;Data retention and security are solely your responsibility. It is highly recommended to perform regular backups using the in-app Backup utility. In the event of hardware failure, system reformatting, or accidental deletion of the application data folder, unbacked-up data cannot be recovered.&#10;&#10;By proceeding, you acknowledge that you have read, understood, and accept these terms." />
         </ScrollViewer>
         <CheckBox Content="I've read and accept the above" IsChecked="{Binding TermsAccepted, Mode=TwoWay}" />
       </StackPanel>
@@ -67,11 +67,11 @@
     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,16,0,0">
       <Button Content="Back" Command="{Binding GoBackCommand}" IsVisible="{Binding !IsWelcomeStep}" />
 
-      <Button Content="Get Started" Command="{Binding GoToTermsCommand}" IsVisible="{Binding IsWelcomeStep}" Classes="accent" />
-      <Button Content="I Accept" Command="{Binding AcceptTermsCommand}" IsVisible="{Binding IsTermsStep}" Classes="accent" />
-      <Button Content="Continue" Command="{Binding ConfirmDataLocationCommand}" IsVisible="{Binding IsDataLocationStep}" Classes="accent" />
-      <Button Content="Continue to App" Command="{Binding ConfirmGuideCommand}" IsVisible="{Binding IsGuideStep}" Classes="accent" />
-      <Button Content="Finish" Command="{Binding FinishCommand}" IsVisible="{Binding IsReadyStep}" Classes="accent" />
+      <Button Content="Get Started" Command="{Binding GoToTermsCommand}" IsVisible="{Binding IsWelcomeStep}" Classes="accent" IsDefault="True" />
+      <Button Content="I Accept" Command="{Binding AcceptTermsCommand}" IsVisible="{Binding IsTermsStep}" Classes="accent" IsDefault="True" />
+      <Button Content="Continue" Command="{Binding ConfirmDataLocationCommand}" IsVisible="{Binding IsDataLocationStep}" Classes="accent" IsDefault="True" />
+      <Button Content="Continue to App" Command="{Binding ConfirmGuideCommand}" IsVisible="{Binding IsGuideStep}" Classes="accent" IsDefault="True" />
+      <Button Content="Finish" Command="{Binding FinishCommand}" IsVisible="{Binding IsReadyStep}" Classes="accent" IsDefault="True" />
     </StackPanel>
 
   </Grid>

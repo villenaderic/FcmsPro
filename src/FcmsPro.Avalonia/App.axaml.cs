@@ -134,32 +134,12 @@ public partial class App : Application
 
             desktop.ShutdownRequested += (_, _) =>
             {
-                // Run auto-backup synchronously (bounded) so it completes before process exit
-                Task.Run(() => RunAutoBackupAsync(Services)).Wait(TimeSpan.FromSeconds(10));
-                
+                // The rotating auto-backup is already taken by MainWindow.OnClosing
+                // before the window closes - doing it again here wrote a second
+                // backup on every exit (halving the effective retention).
                 _lifetimeCts.Cancel();
                 Log.CloseAndFlush();
             };
-        }
-    }
-
-    private static async Task RunAutoBackupAsync(IServiceProvider sp)
-    {
-        try
-        {
-            await using var scope = sp.CreateAsyncScope();
-            var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-            var prefs = await uow.Settings.GetUiPreferencesAsync();
-            if (prefs.AutoBackupOnCloseEnabled)
-            {
-                var backupService = scope.ServiceProvider.GetRequiredService<BackupService>();
-                var backupsDir = System.IO.Path.Combine(FcmsPaths.GetAppDataDirectory(), "Backups");
-                await backupService.WriteRotatingBackupAsync(backupsDir, prefs.AutoBackupKeepCount);
-            }
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "Failed to run auto-backup on shutdown");
         }
     }
 

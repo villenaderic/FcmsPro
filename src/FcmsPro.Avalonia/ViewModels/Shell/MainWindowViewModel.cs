@@ -15,6 +15,7 @@ using FcmsPro.Avalonia.ViewModels.Settings;
 using FcmsPro.Avalonia.ViewModels.Logs;
 using FcmsPro.Avalonia.ViewModels.Trash;
 using FcmsPro.Avalonia.ViewModels.Backup;
+using FcmsPro.Avalonia.ViewModels.Tour;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FcmsPro.Avalonia.ViewModels.Shell;
@@ -32,6 +33,9 @@ public partial class MainWindowViewModel : ObservableObject
     public NavigationService Navigation { get; }
     public KeySequenceService KeySequence { get; }
     private readonly DialogService _dialogService;
+
+    /// <summary>Step-by-step guided tour overlay state (see Views/Tour/TourOverlay).</summary>
+    public AppTourViewModel Tour { get; } = new();
 
     [ObservableProperty]
     private bool _isSidebarCollapsed;
@@ -60,6 +64,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         KeySequence.ToggleSidebarRequested += () => IsSidebarCollapsed = !IsSidebarCollapsed;
         KeySequence.CreateRequested += OnCreateRequested;
+        Navigation.TourRequested += Tour.Start;
         KeySequence.FocusSearchRequested += () => _ = OpenGlobalSearchAsync();
         // FocusSearchRequested ("/") opens the global search window (see
         // OpenGlobalSearchAsync below).
@@ -84,12 +89,21 @@ public partial class MainWindowViewModel : ObservableObject
     private void ToggleSidebar() => IsSidebarCollapsed = !IsSidebarCollapsed;
 
     [RelayCommand]
-    private void ToggleTheme()
+    private async Task ToggleThemeAsync()
     {
         if (global::Avalonia.Application.Current is not { } app) return;
-        app.RequestedThemeVariant = app.ActualThemeVariant == global::Avalonia.Styling.ThemeVariant.Dark 
+        var newTheme = app.ActualThemeVariant == global::Avalonia.Styling.ThemeVariant.Dark 
             ? global::Avalonia.Styling.ThemeVariant.Light 
             : global::Avalonia.Styling.ThemeVariant.Dark;
+        
+        app.RequestedThemeVariant = newTheme;
+
+        await using var scope = App.Services.CreateAsyncScope();
+        var uow = scope.ServiceProvider.GetRequiredService<FcmsPro.Core.Interfaces.IUnitOfWork>();
+        var prefs = await uow.Settings.GetUiPreferencesAsync();
+        prefs.Theme = newTheme == global::Avalonia.Styling.ThemeVariant.Light ? "Light" : "Dark";
+        await uow.Settings.SaveUiPreferencesAsync(prefs);
+        await uow.SaveChangesAsync();
     }
 
     [RelayCommand]

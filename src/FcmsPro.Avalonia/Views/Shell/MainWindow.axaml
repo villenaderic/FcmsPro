@@ -28,6 +28,7 @@
         xmlns:backupVm="using:FcmsPro.Avalonia.ViewModels.Backup"
         xmlns:backupViews="using:FcmsPro.Avalonia.Views.Backup"
         xmlns:svc="using:FcmsPro.Avalonia.Services"
+        xmlns:tour="using:FcmsPro.Avalonia.Views.Tour"
         x:Class="FcmsPro.Avalonia.Views.Shell.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="FCMS Pro"
@@ -35,6 +36,7 @@
         MinWidth="640" MinHeight="480"
         WindowStartupLocation="CenterScreen">
 
+  <Grid>
   <Grid ColumnDefinitions="Auto,Auto,*">
 
     <!-- Slim rail shown only when the sidebar is collapsed - the sole
@@ -79,7 +81,7 @@
       </Grid>
 
       <StackPanel Margin="8,0" Spacing="2">
-        <Button Classes="navitem" HorizontalContentAlignment="Left" Command="{Binding OpenGlobalSearchCommand}"
+        <Button x:Name="NavSearch" Classes="navitem" HorizontalContentAlignment="Left" Command="{Binding OpenGlobalSearchCommand}"
                 ToolTip.Tip="Search everything (/)">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <icons:SearchIcon Width="13" Height="13" VerticalAlignment="Center" />
@@ -98,28 +100,28 @@
           carry the "this is where you are" signal, same as before; the icon
           adds a scan-by-shape cue next to it.
         -->
-        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Dashboard}"
+        <Button x:Name="NavDashboard" Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Dashboard}"
                 Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Dashboard}}">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <icons:DashboardIcon Width="14" Height="14" />
             <TextBlock Text="Dashboard" />
           </StackPanel>
         </Button>
-        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Analytics}"
+        <Button x:Name="NavAnalytics" Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Analytics}"
                 Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Analytics}}">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <icons:AnalyticsIcon Width="14" Height="14" />
             <TextBlock Text="Analytics" />
           </StackPanel>
         </Button>
-        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Clients}"
+        <Button x:Name="NavClients" Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Clients}"
                 Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Clients}}">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <icons:ClientsIcon Width="14" Height="14" />
             <TextBlock Text="Clients" />
           </StackPanel>
         </Button>
-        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Commissions}"
+        <Button x:Name="NavCommissions" Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Commissions}"
                 Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Commissions}}">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <icons:CommissionsIcon Width="14" Height="14" />
@@ -127,7 +129,7 @@
           </StackPanel>
         </Button>
 
-        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Payments}"
+        <Button x:Name="NavPayments" Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Payments}"
                 Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Payments}}">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <icons:PaymentsIcon Width="14" Height="14" />
@@ -135,14 +137,14 @@
           </StackPanel>
         </Button>
 
-        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Expenses}"
+        <Button x:Name="NavExpenses" Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Expenses}"
                 Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Expenses}}">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <icons:ExpensesIcon Width="14" Height="14" />
             <TextBlock Text="Expenses" />
           </StackPanel>
         </Button>
-        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Goals}"
+        <Button x:Name="NavGoals" Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Goals}"
                 Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Goals}}">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <icons:GoalsIcon Width="14" Height="14" />
@@ -151,23 +153,23 @@
         </Button>
 
 
-        <Button Classes="navitem" Command="{Binding ToggleThemeCommand}">
+        <Button x:Name="NavTheme" Classes="navitem" Command="{Binding ToggleThemeCommand}">
           <StackPanel Orientation="Horizontal" Spacing="8">
-            <TextBlock Text="&#9728;" FontFamily="Segoe UI Emoji" VerticalAlignment="Center" FontSize="14" />
+            <icons:ThemeIcon Width="14" Height="14" />
             <TextBlock Text="Toggle Theme" />
           </StackPanel>
         </Button>
 
         <Border Height="1" Background="{DynamicResource SystemBaseLowColor}" Margin="4,10" />
 
-        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Backup}"
+        <Button x:Name="NavBackup" Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Backup}"
                 Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Backup}}">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <icons:BackupIcon Width="14" Height="14" />
             <TextBlock Text="Backup" />
           </StackPanel>
         </Button>
-        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Settings}"
+        <Button x:Name="NavSettings" Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Settings}"
                 Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Settings}}">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <icons:SettingsIcon Width="14" Height="14" />
@@ -259,5 +261,10 @@
     </Border>
     </ScrollViewer>
 
+  </Grid>
+
+  <!-- Guided tour: dim + animated spotlight + step card. DataContext is
+       set from MainWindow.axaml.cs (to MainWindowViewModel.Tour). -->
+  <tour:TourOverlay x:Name="TourLayer" />
   </Grid>
 </Window>

@@ -18,6 +18,12 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        DataContextChanged += (_, _) =>
+        {
+            if (DataContext is MainWindowViewModel vm)
+                TourLayer.DataContext = vm.Tour;
+        };
+
         _windowStateService.Restore(this);
         Closing += OnClosing;
 

@@ -103,7 +103,7 @@ public class CommissionService
             Description = source.Description,
             ClientNote = source.ClientNote,
             Price = source.Price,
-            DownPayment = source.DownPayment,
+            DownPayment = 0m,
             // Full price owed again - payments/down payment are NOT carried over (matches PWA).
             Remaining = source.Price,
             Deadline = AddRecurInterval(baseDate, source.RecurFrequency),
@@ -136,7 +136,7 @@ public class CommissionService
             ClientNote = source.ClientNote,
             Price = source.Price,
             DownPayment = source.DownPayment,
-            Remaining = source.Price,
+            Remaining = Math.Max(0, source.Price - source.DownPayment),
             Deadline = source.Deadline,
             Status = CommissionStatus.Pending,
             Priority = source.Priority,

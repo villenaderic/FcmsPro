@@ -41,7 +41,11 @@ public class BackupService
             var json = await ExportAllAsync(ct);
             var fileName = $"auto-{DateTime.UtcNow:yyyyMMdd-HHmmss}.json";
             var path = System.IO.Path.Combine(backupsDir, fileName);
-            await System.IO.File.WriteAllTextAsync(path, json, ct);
+            // Write to a temp file then move, so a crash/power loss mid-write
+            // never leaves a truncated file that looks like a valid backup.
+            var tempPath = path + ".tmp";
+            await System.IO.File.WriteAllTextAsync(tempPath, json, ct);
+            System.IO.File.Move(tempPath, path, overwrite: true);
 
             var existing = System.IO.Directory.GetFiles(backupsDir, "auto-*.json")
                 .OrderByDescending(f => f)
@@ -96,15 +100,29 @@ public class BackupService
 
     public async Task ImportAllAsync(string json, ImportMode mode, CancellationToken ct = default)
     {
-        var import = JsonSerializer.Deserialize<BackupExport>(json)
-            ?? throw new InvalidOperationException("Backup file could not be read.");
+        BackupExport? import;
+        try
+        {
+            import = JsonSerializer.Deserialize<BackupExport>(json);
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidOperationException("That file isn't a valid FCMS Pro backup.", ex);
+        }
+
+        if (import is null)
+            throw new InvalidOperationException("Backup file could not be read.");
+        if (import.Meta is null || !string.Equals(import.Meta.App, "FcmsPro", StringComparison.Ordinal))
+            throw new InvalidOperationException("That file wasn't created by FCMS Pro.");
+        if (import.Meta.Version > SupportedBackupVersion)
+            throw new InvalidOperationException("That backup was created by a newer version of FCMS Pro. Please update the app first.");
 
         await _uow.ExecuteInTransactionAsync(async () =>
         {
-            await ImportEntitiesAsync(import.Clients, _uow.Clients, mode, ct);
-            await ImportEntitiesAsync(import.Commissions, _uow.Commissions, mode, ct);
-            await ImportEntitiesAsync(import.Payments, _uow.Payments, mode, ct);
-            await ImportEntitiesAsync(import.Expenses, _uow.Expenses, mode, ct);
+            await ImportEntitiesAsync(import.Clients, _uow.Clients, c => c.Id, mode, ct);
+            await ImportEntitiesAsync(import.Commissions, _uow.Commissions, c => c.Id, mode, ct);
+            await ImportEntitiesAsync(import.Payments, _uow.Payments, p => p.Id, mode, ct);
+            await ImportEntitiesAsync(import.Expenses, _uow.Expenses, e => e.Id, mode, ct);
 
             // Settings only restored in Replace mode, never merged - matches PWA behavior.
             if (mode == ImportMode.Replace)
@@ -130,22 +148,54 @@ public class BackupService
         }, ct);
     }
 
-    private static async Task ImportEntitiesAsync<T>(
+    private const int SupportedBackupVersion = 1;
+
+    private async Task ImportEntitiesAsync<T>(
         List<T>? incoming,
         IRepository<T> repo,
+        Func<T, Guid> keyOf,
         ImportMode mode,
         CancellationToken ct) where T : class
     {
         if (incoming is null) return;
 
+        var existing = await repo.GetAllAsync(ct);
+
         if (mode == ImportMode.Replace)
         {
-            foreach (var existing in await repo.GetAllAsync(ct))
-                repo.Remove(existing);
+            foreach (var old in existing)
+                repo.Remove(old);
+
+            // Flush the deletes before adding: the incoming rows normally reuse
+            // the same primary keys, and EF's change tracker refuses two
+            // instances with one key ("cannot be tracked because another
+            // instance with the same key value is already being tracked").
+            await _uow.SaveChangesAsync(ct);
+            existing = new List<T>();
         }
 
+        var existingIds = existing.Select(keyOf).ToHashSet();
+
+        // De-duplicate within the file itself (last occurrence wins) and skip
+        // rows with no usable key rather than failing the whole import.
+        var unique = new Dictionary<Guid, T>();
         foreach (var entity in incoming)
-            await repo.AddAsync(entity, ct);
+        {
+            var key = keyOf(entity);
+            if (key == Guid.Empty) continue;
+            unique[key] = entity;
+        }
+
+        foreach (var (key, entity) in unique)
+        {
+            // Merge: a matching ID overwrites the existing record (this is what
+            // the import confirmation dialog tells the user will happen)
+            // instead of failing with a duplicate-key error.
+            if (existingIds.Contains(key))
+                repo.Update(entity);
+            else
+                await repo.AddAsync(entity, ct);
+        }
     }
 }
 

@@ -35,13 +35,10 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string? _serviceTypesCsv;
 
 
-    [ObservableProperty] private string _theme = "System";
     [ObservableProperty] private string _accentColor = "#6366F1";
 
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private string? _statusMessage;
-
-    public string[] ThemeOptions { get; } = { "System", "Light", "Dark" };
 
     public SettingsViewModel(IUnitOfWork uow, ThemeService themeService, NavigationService navigation)
     {
@@ -76,7 +73,7 @@ public partial class SettingsViewModel : ObservableObject
             ServiceTypesCsv = TryDeserializeCsv(settings.ServiceTypesJson);
 
             var prefs = await _uow.Settings.GetUiPreferencesAsync();
-            Theme = prefs.Theme;
+
             AccentColor = prefs.AccentColor;
         }
         catch (Exception ex)
@@ -141,12 +138,11 @@ public partial class SettingsViewModel : ObservableObject
     private async Task SaveAppearanceAsync()
     {
         var prefs = await _uow.Settings.GetUiPreferencesAsync();
-        prefs.Theme = Theme;
         prefs.AccentColor = AccentColor;
         await _uow.Settings.SaveUiPreferencesAsync(prefs);
         await _uow.SaveChangesAsync();
 
-        _themeService.Apply(Theme, AccentColor);
+        _themeService.Apply(prefs.Theme, AccentColor);
         StatusMessage = "Appearance updated.";
     }
 

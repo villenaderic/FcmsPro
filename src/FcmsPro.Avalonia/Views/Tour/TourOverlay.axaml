@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FcmsPro.Avalonia.ViewModels.Tour"
+             xmlns:tour="using:FcmsPro.Avalonia.Views.Tour"
+             x:Class="FcmsPro.Avalonia.Views.Tour.TourOverlay"
+             x:DataType="vm:AppTourViewModel"
+             Background="{x:Null}"
+             IsVisible="False">
+
+  <Grid>
+    <!-- Click-swallowing layer: nearly transparent but hit-testable, so the
+         app underneath can't be interacted with while the tour runs. -->
+    <Border Background="#01000000" />
+
+    <!-- Animated dim + spotlight + pulse + arrow. -->
+    <tour:TourSpotlight x:Name="Spotlight" />
+
+    <!-- Step card. Margin/Opacity transitions give it the glide + fade
+         between steps; TourOverlay.axaml.cs sets the target position. -->
+    <Border x:Name="Card"
+            Width="360"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            Padding="20"
+            CornerRadius="14"
+            BorderThickness="1"
+            BorderBrush="{DynamicResource AppAccentBrush}"
+            Background="{DynamicResource AppSurfaceBrush}"
+            BoxShadow="0 18 48 0 #80000000"
+            Opacity="0">
+      <Border.Transitions>
+        <Transitions>
+          <DoubleTransition Property="Opacity" Duration="0:0:0.22" />
+          <ThicknessTransition Property="Margin" Duration="0:0:0.4" Easing="CubicEaseOut" />
+        </Transitions>
+      </Border.Transitions>
+
+      <StackPanel Spacing="12">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Text="{Binding StepLabel}"
+                     FontSize="11" FontWeight="SemiBold"
+                     Foreground="{DynamicResource AppAccentBrush}"
+                     VerticalAlignment="Center" />
+          <Button Grid.Column="1" Content="✕" Padding="6,2"
+                  Background="Transparent" BorderThickness="0"
+                  ToolTip.Tip="Skip tour (Esc)"
+                  Command="{Binding SkipCommand}" />
+        </Grid>
+
+        <ProgressBar Minimum="0" Maximum="100" Height="4" CornerRadius="2"
+                     Value="{Binding ProgressPercent}"
+                     Foreground="{DynamicResource AppAccentBrush}" />
+
+        <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding Body}" TextWrapping="Wrap" LineHeight="20"
+                   Foreground="{DynamicResource AppTextSecondaryBrush}" />
+
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,6,0,0">
+          <Button Grid.Column="0" Content="Skip tour"
+                  Background="Transparent" BorderThickness="0"
+                  Foreground="{DynamicResource AppTextSecondaryBrush}"
+                  Command="{Binding SkipCommand}" />
+          <Button Grid.Column="2" Content="Back" Margin="0,0,8,0"
+                  IsVisible="{Binding !IsFirst}"
+                  Command="{Binding BackCommand}" />
+          <Button Grid.Column="3" Classes="accent" Content="{Binding NextLabel}"
+                  MinWidth="84"
+                  Command="{Binding NextCommand}" />
+        </Grid>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

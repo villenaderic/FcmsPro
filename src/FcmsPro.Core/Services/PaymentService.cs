@@ -33,6 +33,28 @@ public class PaymentService
         if (payment.Amount > commission.Remaining + FloatTolerance)
             throw new PaymentValidationException("Payment amount cannot exceed the remaining balance.");
 
+        await _uow.ExecuteInTransactionAsync(async () =>
+        {
+            payment.CommissionId = commission.Id;
+            payment.ClientId = commission.ClientId;
+            payment.CreatedAt = DateTimeOffset.UtcNow;
+            await _uow.Payments.AddAsync(payment, ct);
+
+            // The new payment isn't saved yet, so it's not in this sum - add it explicitly.
+            var alreadyPaid = await _uow.Payments.SumForCommissionExcludingAsync(commission.Id, null, ct);
+            commission.Remaining = Math.Max(0, commission.Price - commission.DownPayment - alreadyPaid - payment.Amount);
+            commission.UpdatedAt = DateTimeOffset.UtcNow;
+            _uow.Commissions.Update(commission);
+
+            await _uow.AuditLogs.AddAsync(new AuditLog
+            {
+                Type = AuditLogType.Create,
+                Message = $"Recorded payment of {payment.Amount:N2} for {commission.Title}"
+            }, ct);
+
+            await _uow.SaveChangesAsync(ct);
+        }, ct);
+
         return payment;
     }
 

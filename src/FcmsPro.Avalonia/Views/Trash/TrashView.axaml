@@ -10,11 +10,17 @@
     <Button Grid.Row="0" Content="&#8592; Back to Settings" Command="{Binding BackToSettingsCommand}"
             Background="Transparent" BorderThickness="0" Padding="0" Margin="0,0,0,8" HorizontalAlignment="Left" />
 
-    <StackPanel Grid.Row="1" Spacing="4" Margin="0,0,0,12">
-      <TextBlock Text="Trash" FontSize="28" FontWeight="Bold" />
-      <TextBlock Text="Deleted clients, commissions, payments, expenses, quotes, and invoices land here and can be restored for 30 days before they're automatically removed for good."
-                 Opacity="0.6" TextWrapping="Wrap" />
-    </StackPanel>
+    <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+      <StackPanel Grid.Column="0" Spacing="4">
+        <TextBlock Text="Trash" FontSize="28" FontWeight="Bold" />
+        <TextBlock Text="Items remain here for 30 days before they're permanently deleted."
+                   Opacity="0.6" TextWrapping="Wrap" />
+      </StackPanel>
+      <Button Grid.Column="1" Content="Empty Trash" Classes="danger" 
+              VerticalAlignment="Top" Margin="16,0,0,0"
+              IsVisible="{Binding !HasNoItems}"
+              Command="{Binding EmptyTrashCommand}" />
+    </Grid>
 
     <TextBlock Grid.Row="2" Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}"
                IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
