@@ -3,6 +3,9 @@
 All notable changes to FCMS Pro are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.3]
+- Added `VersionInfoCompany` and `VersionInfoCopyright` directives to the Windows setup installer.
+
 ## [1.2.2]
 - Added Author, Company, and Product metadata to the executable to help build SmartScreen reputation.
 

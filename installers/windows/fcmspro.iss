@@ -8,7 +8,7 @@
 ; Output: .\Output\FcmsPro-Setup-{version}.exe
 
 #define MyAppName "FCMS Pro"
-#define MyAppVersion "1.2.2"
+#define MyAppVersion "1.2.3"
 #define MyAppPublisher "Roderic Villena"
 #define MyAppExeName "FcmsPro.exe"
 
@@ -19,6 +19,10 @@ AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
+VersionInfoCompany={#MyAppPublisher}
+VersionInfoProductName={#MyAppName}
+VersionInfoProductVersion={#MyAppVersion}
+VersionInfoCopyright=Copyright (C) 2024 {#MyAppPublisher}
 DisableProgramGroupPage=yes
 ; Icon file: generated from the app-icon-source.png design asset via
 ; installers/../src/FcmsPro.Avalonia/Assets/app.ico (multi-resolution ICO).
