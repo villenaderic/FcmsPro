@@ -90,6 +90,7 @@ public partial class OnboardingFlowViewModel : ObservableObject
         CurrentStep = OnboardingStep.DataLocation;
     }
 
+    [RelayCommand]
     private void ConfirmDataLocation() => CurrentStep = OnboardingStep.Guide;
 
     [RelayCommand]
