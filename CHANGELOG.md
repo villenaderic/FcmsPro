@@ -3,6 +3,12 @@
 All notable changes to FCMS Pro are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.1]
+
+### Fixed
+- Fixed GitHub Actions release displaying duplicate older artifacts by bumping version to properly trigger a fresh release creation.
+- Re-fixed unit tests broken by module removals.
+
 ## [1.2.0]
 
 ### Removed
