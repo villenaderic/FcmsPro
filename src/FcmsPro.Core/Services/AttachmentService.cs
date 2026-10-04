@@ -134,21 +134,5 @@ public class AttachmentService
     public Task RemoveAsync(ClientAttachment attachment, string directory, CancellationToken ct = default) =>
         RemoveCoreAsync(_uow.ClientAttachments, attachment, directory, ct);
 
-    public Task<InvoiceAttachment> AddForInvoiceAsync(
-        Guid invoiceId, string sourceFilePath, string targetDirectory, string? caption = null, CancellationToken ct = default) =>
-        AddCoreAsync(_uow.InvoiceAttachments,
-            new InvoiceAttachment { InvoiceId = invoiceId, Caption = caption },
-            sourceFilePath, targetDirectory, ct);
 
-    public Task RemoveAsync(InvoiceAttachment attachment, string directory, CancellationToken ct = default) =>
-        RemoveCoreAsync(_uow.InvoiceAttachments, attachment, directory, ct);
-
-    public Task<QuoteAttachment> AddForQuoteAsync(
-        Guid quoteId, string sourceFilePath, string targetDirectory, string? caption = null, CancellationToken ct = default) =>
-        AddCoreAsync(_uow.QuoteAttachments,
-            new QuoteAttachment { QuoteId = quoteId, Caption = caption },
-            sourceFilePath, targetDirectory, ct);
-
-    public Task RemoveAsync(QuoteAttachment attachment, string directory, CancellationToken ct = default) =>
-        RemoveCoreAsync(_uow.QuoteAttachments, attachment, directory, ct);
 }

@@ -32,7 +32,7 @@ public partial class ClientsListViewModel : ObservableObject, ICreatablePage
 
     partial void OnSortOptionChanged(ListSortOption value) => _ = LoadAsync();
 
-    public ObservableCollection<Client> Clients { get; } = new();
+    [ObservableProperty] private ObservableCollection<Client> _clients = new();
 
     /// <summary>True once a load has completed and found nothing - drives the empty-state illustration in ClientsListView.</summary>
     public bool HasNoResults => !IsLoading && Clients.Count == 0;
@@ -66,9 +66,10 @@ public partial class ClientsListViewModel : ObservableObject, ICreatablePage
                 _ => filtered.OrderByDescending(c => c.DateAdded), // Newest (default)
             };
 
-            Clients.Clear();
+            var newClients = new ObservableCollection<Client>();
             foreach (var c in ordered)
-                Clients.Add(c);
+                newClients.Add(c);
+            Clients = newClients;
         }
         catch (Exception ex)
         {
@@ -132,8 +133,16 @@ public partial class ClientsListViewModel : ObservableObject, ICreatablePage
 
         if (!confirmed) return;
 
-        await _clientService.DeleteAsync(client);
-        await LoadAsync();
+        IsLoading = true;
+        try
+        {
+            await _clientService.DeleteAsync(client);
+        }
+        finally
+        {
+            // LoadAsync will set IsLoading = false when it finishes
+            await LoadAsync();
+        }
     }
 
     [RelayCommand]

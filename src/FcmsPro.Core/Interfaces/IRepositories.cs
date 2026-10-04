@@ -39,25 +39,7 @@ public interface IClientAttachmentRepository : IRepository<ClientAttachment>
     Task<List<ClientAttachment>> GetByClientIdAsync(Guid clientId, CancellationToken ct = default);
 }
 
-public interface IInvoiceAttachmentRepository : IRepository<InvoiceAttachment>
-{
-    Task<List<InvoiceAttachment>> GetByInvoiceIdAsync(Guid invoiceId, CancellationToken ct = default);
-}
-
-public interface IQuoteAttachmentRepository : IRepository<QuoteAttachment>
-{
-    Task<List<QuoteAttachment>> GetByQuoteIdAsync(Guid quoteId, CancellationToken ct = default);
-}
-
-public interface IReceiptRepository : IRepository<Receipt>
-{
-    Task<Receipt?> GetByPaymentIdAsync(Guid paymentId, CancellationToken ct = default);
-}
-
-public interface IInvoiceRepository : IRepository<Invoice> { }
-public interface IQuoteRepository : IRepository<Quote> { }
 public interface IExpenseRepository : IRepository<Expense> { }
-public interface ITemplateRepository : IRepository<CommissionTemplate> { }
 public interface IAuditLogRepository : IRepository<AuditLog> { }
 
 public interface ICounterRepository
@@ -102,13 +84,7 @@ public interface IUnitOfWork
     IPaymentRepository Payments { get; }
     ICommissionAttachmentRepository CommissionAttachments { get; }
     IClientAttachmentRepository ClientAttachments { get; }
-    IInvoiceAttachmentRepository InvoiceAttachments { get; }
-    IQuoteAttachmentRepository QuoteAttachments { get; }
-    IReceiptRepository Receipts { get; }
-    IInvoiceRepository Invoices { get; }
-    IQuoteRepository Quotes { get; }
     IExpenseRepository Expenses { get; }
-    ITemplateRepository Templates { get; }
     IAuditLogRepository AuditLogs { get; }
     ICounterRepository Counters { get; }
     ISettingsRepository Settings { get; }

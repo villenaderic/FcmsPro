@@ -43,7 +43,7 @@ public partial class PaymentFormViewModel : ObservableObject
     /// <summary>Convenience display value bound in the form so the user can see the balance before typing an amount.</summary>
     public decimal SelectedCommissionRemaining => SelectedCommission?.Remaining ?? 0m;
 
-    public event Action<Payment, Receipt>? Saved;
+    public event Action<Payment>? Saved;
     public event Action? Cancelled;
 
     public PaymentFormViewModel(PaymentService paymentService, IUnitOfWork uow, Guid? preselectedCommissionId = null)
@@ -72,7 +72,7 @@ public partial class PaymentFormViewModel : ObservableObject
             // Only commissions with an outstanding balance are worth recording a
             // payment against - matches the PWA's payment amount validation,
             // which rejects amounts exceeding Remaining anyway.
-            var payable = all.Where(c => c.Remaining > 0).OrderBy(c => c.Title);
+            var payable = all.Where(c => c.Remaining > 0 && !c.IsDeleted).OrderBy(c => c.Title);
 
             AvailableCommissions.Clear();
             foreach (var c in payable)
@@ -126,8 +126,8 @@ public partial class PaymentFormViewModel : ObservableObject
                 Notes = Notes
             };
 
-            var (savedPayment, receipt) = await _paymentService.RecordPaymentAsync(payment, SelectedCommission, businessSettings);
-            Saved?.Invoke(savedPayment, receipt);
+            var savedPayment = await _paymentService.RecordPaymentAsync(payment, SelectedCommission, businessSettings);
+            Saved?.Invoke(savedPayment);
         }
         catch (PaymentValidationException ex)
         {

@@ -3,7 +3,7 @@ using FcmsPro.Core.Interfaces;
 
 namespace FcmsPro.Core.Services;
 
-public enum GlobalSearchResultType { Client, Commission, Invoice, Quote, Expense }
+public enum GlobalSearchResultType { Client, Commission, Expense }
 
 /// <summary>
 /// One matched row. ClientId is populated for every type except Expense
@@ -11,7 +11,6 @@ public enum GlobalSearchResultType { Client, Commission, Invoice, Quote, Expense
 /// link: Client results reopen that client's profile directly
 /// (AppPage.Clients + client Id, same mechanism "View Client" already uses),
 /// Commission results reopen the commission detail page directly
-/// (AppPage.CommissionDetail + commission Id, ditto), but Invoice/Quote/
 /// Expense have no dedicated detail page in this app yet, so those results
 /// navigate to the matching list page filtered to the client (or
 /// unfiltered, for Expenses) rather than to the exact row - the closest
@@ -71,23 +70,7 @@ public class GlobalSearchService
                 c.Title,
                 c.ServiceType is { Length: > 0 } st ? $"{st} · {c.Status}" : c.Status.ToString())));
 
-        var invoices = await _uow.Invoices.GetAllAsync(ct);
-        results.AddRange(invoices
-            .Where(i => !i.IsDeleted && Matches(q, i.InvoiceNumber, i.Description, i.PoNumber, i.Notes))
-            .Take(MaxResultsPerType)
-            .Select(i => new GlobalSearchResult(
-                GlobalSearchResultType.Invoice, i.Id, i.ClientId,
-                i.InvoiceNumber,
-                i.Description)));
 
-        var quotes = await _uow.Quotes.GetAllAsync(ct);
-        results.AddRange(quotes
-            .Where(qt => !qt.IsDeleted && Matches(q, qt.QuoteNumber, qt.Scope, qt.ServiceType, qt.Terms))
-            .Take(MaxResultsPerType)
-            .Select(qt => new GlobalSearchResult(
-                GlobalSearchResultType.Quote, qt.Id, qt.ClientId,
-                qt.QuoteNumber,
-                qt.Scope)));
 
         var expenses = await _uow.Expenses.GetAllAsync(ct);
         results.AddRange(expenses

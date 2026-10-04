@@ -3,14 +3,13 @@ using FcmsPro.Core.Interfaces;
 
 namespace FcmsPro.Core.Services;
 
-public enum TrashItemType { Client, Commission, Payment, Expense, Quote, Invoice }
+public enum TrashItemType { Client, Commission, Payment, Expense }
 
 public record TrashItem(TrashItemType Type, Guid Id, string DisplayName, string Detail, DateTimeOffset DeletedAt);
 
 /// <summary>
-/// Unified restore/permanently-delete/purge over the 6 entities that
-/// implement ISoftDeletable (Client, Commission, Payment, Expense, Quote,
-/// Invoice). Each entity type still goes through its own strongly-typed
+/// implement ISoftDeletable (Client, Commission, Payment, Expense).
+/// Each entity type still goes through its own strongly-typed
 /// repository (IUnitOfWork.Clients, .Commissions, etc.) - this service just
 /// presents them as one flat list for the Trash page rather than requiring
 /// six separate UI sections.
@@ -50,13 +49,7 @@ public class TrashService
         items.AddRange(expenses.Where(e => e.IsDeleted)
             .Select(e => new TrashItem(TrashItemType.Expense, e.Id, e.Description, $"{symbol}{e.Amount:N2}", e.DeletedAt ?? e.UpdatedAt)));
 
-        var quotes = await _uow.Quotes.GetAllAsync(ct);
-        items.AddRange(quotes.Where(q => q.IsDeleted)
-            .Select(q => new TrashItem(TrashItemType.Quote, q.Id, q.QuoteNumber, $"{symbol}{q.Total:N2}", q.DeletedAt ?? q.UpdatedAt)));
 
-        var invoices = await _uow.Invoices.GetAllAsync(ct);
-        items.AddRange(invoices.Where(i => i.IsDeleted)
-            .Select(i => new TrashItem(TrashItemType.Invoice, i.Id, i.InvoiceNumber, $"{symbol}{i.Total:N2}", i.DeletedAt ?? i.UpdatedAt)));
 
         return items.OrderByDescending(i => i.DeletedAt).ToList();
     }
@@ -77,12 +70,7 @@ public class TrashService
             case TrashItemType.Expense:
                 await RestoreEntityAsync(_uow.Expenses, id, ct);
                 break;
-            case TrashItemType.Quote:
-                await RestoreEntityAsync(_uow.Quotes, id, ct);
-                break;
-            case TrashItemType.Invoice:
-                await RestoreEntityAsync(_uow.Invoices, id, ct);
-                break;
+
         }
         await _uow.SaveChangesAsync(ct);
     }
@@ -103,12 +91,7 @@ public class TrashService
             case TrashItemType.Expense:
                 await RemoveEntityAsync(_uow.Expenses, id, ct);
                 break;
-            case TrashItemType.Quote:
-                await RemoveEntityAsync(_uow.Quotes, id, ct);
-                break;
-            case TrashItemType.Invoice:
-                await RemoveEntityAsync(_uow.Invoices, id, ct);
-                break;
+
         }
         await _uow.SaveChangesAsync(ct);
     }
@@ -130,8 +113,7 @@ public class TrashService
             anyChanges |= await PurgeEntityAsync(_uow.Commissions, cutoff, ct);
             anyChanges |= await PurgeEntityAsync(_uow.Payments, cutoff, ct);
             anyChanges |= await PurgeEntityAsync(_uow.Expenses, cutoff, ct);
-            anyChanges |= await PurgeEntityAsync(_uow.Quotes, cutoff, ct);
-            anyChanges |= await PurgeEntityAsync(_uow.Invoices, cutoff, ct);
+
 
             if (anyChanges)
                 await _uow.SaveChangesAsync(ct);

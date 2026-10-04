@@ -12,12 +12,9 @@ public class CommissionValidationException : Exception
 public class CommissionService
 {
     private readonly IUnitOfWork _uow;
-    private readonly InvoiceService _invoiceService;
-
-    public CommissionService(IUnitOfWork uow, InvoiceService invoiceService)
+    public CommissionService(IUnitOfWork uow)
     {
         _uow = uow;
-        _invoiceService = invoiceService;
     }
 
     public async Task<Commission> CreateAsync(Commission commission, CancellationToken ct = default)
@@ -78,51 +75,9 @@ public class CommissionService
         }
 
         await _uow.SaveChangesAsync(ct);
-
-        // Runs after the SaveChangesAsync above (not before) because
-        // InvoiceService.CreateAsync does its own separate SaveChangesAsync
-        // and reads commission.Remaining via the repository - keeping this
-        // commission's own update fully persisted first avoids any chance of
-        // the auto-generated invoice being created against not-yet-committed
-        // state if something upstream changes this method's ordering later.
-        if (justDelivered)
-            await MaybeAutoCreateInvoiceAsync(commission, ct);
     }
 
-    /// <summary>
-    /// Opt-in (AppSettings.AutoInvoiceOnDelivery, default off): when a
-    /// commission is marked Delivered and still has money owed, generate a
-    /// Draft invoice for the remaining balance automatically instead of
-    /// requiring a manual "New Invoice" step. Skips silently if the setting
-    /// is off, nothing is owed, or an invoice already exists for this
-    /// commission (so flipping a commission back and forth through Delivered
-    /// can't spam duplicate invoices).
-    /// </summary>
-    private async Task MaybeAutoCreateInvoiceAsync(Commission commission, CancellationToken ct)
-    {
-        var settings = await _uow.Settings.GetAppSettingsAsync(ct);
-        if (!settings.AutoInvoiceOnDelivery) return;
-        if (commission.Remaining <= 0) return;
 
-        var existing = await _uow.Invoices.GetAllAsync(ct);
-        if (existing.Any(i => i.CommissionId == commission.Id)) return;
-
-        var issueDate = DateOnly.FromDateTime(DateTime.UtcNow);
-        await _invoiceService.CreateAsync(new Invoice
-        {
-            ClientId = commission.ClientId,
-            CommissionId = commission.Id,
-            Description = $"Balance due for: {commission.Title}",
-            Subtotal = commission.Remaining,
-            Discount = 0,
-            Tax = 0,
-            IssueDate = issueDate,
-            DueDate = issueDate.AddDays(Math.Max(0, settings.InvoiceDueDays)),
-            Status = InvoiceStatus.Draft,
-            Terms = settings.InvoiceTerms,
-            Notes = settings.InvoiceNotes
-        }, ct);
-    }
 
     /// <summary>
     /// Same spawn logic as UpdateAsync, exposed separately for the inline

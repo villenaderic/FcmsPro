@@ -21,27 +21,21 @@
                IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                Margin="0,0,0,12" TextWrapping="Wrap" />
 
-    <Grid Grid.Row="2" ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,8">
-      <!-- Nested Grid (not a horizontal StackPanel) so the search box can
-           actually shrink on a narrow window - a StackPanel never resizes
-           its children below their set width, regardless of available
-           space, which is what made this row overflow past the window edge
-           at narrow widths. The status dropdown keeps a fixed width since
-           its own label text is short and doesn't benefit from shrinking. -->
-      <TextBox Grid.Column="0" Text="{Binding SearchQuery, Mode=TwoWay}"
-                Watermark="Search title or service type..." MaxWidth="280"
-                HorizontalAlignment="Stretch" Margin="0,0,12,0" />
-      <ComboBox Grid.Column="1" ItemsSource="{Binding StatusFilterOptions}" SelectedItem="{Binding StatusFilter, Mode=TwoWay}"
-                PlaceholderText="All statuses" Width="160" Margin="0,0,12,0" />
-      <ComboBox Grid.Column="2" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SortOption, Mode=TwoWay}"
-                Width="170">
+    <WrapPanel Grid.Row="2" Margin="0,0,0,8">
+      <TextBox Text="{Binding SearchQuery, Mode=TwoWay}"
+                Watermark="Search title or service type..." Width="260"
+                Margin="0,0,12,8" />
+      <ComboBox ItemsSource="{Binding StatusFilterOptions}" SelectedItem="{Binding StatusFilter, Mode=TwoWay}"
+                PlaceholderText="All statuses" Width="160" Margin="0,0,12,8" />
+      <ComboBox ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SortOption, Mode=TwoWay}"
+                Width="170" Margin="0,0,0,8">
         <ComboBox.ItemTemplate>
           <DataTemplate>
             <TextBlock Text="{Binding Converter={x:Static conv:ListSortOptionLabelConverter.Instance}}" />
           </DataTemplate>
         </ComboBox.ItemTemplate>
       </ComboBox>
-    </Grid>
+    </WrapPanel>
 
     <!--
       IsIndeterminate ProgressBar bound to IsLoading - previously tracked by
@@ -51,73 +45,74 @@
     -->
     <ProgressBar Grid.Row="3" IsIndeterminate="True" Height="2" Margin="0,0,0,8" IsVisible="{Binding IsLoading}" />
 
-    <!--
-      Column header row - labels the Price/Remaining/Deadline/Status columns
-      below it. Widths mirror the matching columns in the row template
-      exactly (both were previously "Auto", which sized independently per-
-      row and never lined up with a header row anyway) so the two now stay
-      in lockstep.
-    -->
-    <Grid Grid.Row="4" ColumnDefinitions="*,90,110,90,140,Auto" Margin="12,0,12,4">
-      <TextBlock Grid.Column="0" Text="Title" Classes="tableHeader" />
-      <TextBlock Grid.Column="1" Text="Price" Classes="tableHeader" />
-      <TextBlock Grid.Column="2" Text="Remaining" Classes="tableHeader" />
-      <TextBlock Grid.Column="3" Text="Deadline" Classes="tableHeader" />
-      <TextBlock Grid.Column="4" Text="Status" Classes="tableHeader" />
-      <TextBlock Grid.Column="5" Text="Actions" Classes="tableHeader" Margin="12,0,0,0" />
-    </Grid>
+    <StackPanel Grid.Row="4" Grid.RowSpan="2" IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
+      <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
+      <TextBlock Text="No commissions yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+      <TextBlock Text="Create your first commission to start tracking its status, balance, and payments."
+                 TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
+      <Button Content="+ New Commission" Command="{Binding AddCommand}" Classes="accent" HorizontalAlignment="Center" Margin="0,4,0,0" />
+    </StackPanel>
 
-    <Grid Grid.Row="5">
-      <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
-        <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
-        <TextBlock Text="No commissions yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
-        <TextBlock Text="Create your first commission to start tracking its status, balance, and payments."
-                   TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
-        <Button Content="+ New Commission" Command="{Binding AddCommand}" Classes="accent" HorizontalAlignment="Center" Margin="0,4,0,0" />
-      </StackPanel>
+    <ScrollViewer Grid.Row="4" Grid.RowSpan="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" IsVisible="{Binding !HasNoResults}">
+      <Grid MinWidth="950">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-      <!--
-        Table view. Each row's status ComboBox goes through
-        CommissionRowViewModel.SelectedStatus so the recurrence-spawn rule
-        can snapshot the previous status correctly. Column widths (90/110/
-        90/140) match the header row above exactly.
-      -->
-      <ScrollViewer IsVisible="{Binding !HasNoResults}">
-        <ItemsControl ItemsSource="{Binding Rows}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate x:DataType="vm:CommissionRowViewModel">
-              <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
-                <Grid ColumnDefinitions="*,90,110,90,140,Auto">
-                  <StackPanel Grid.Column="0">
-                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
-                    <TextBlock Text="{Binding Priority}" Opacity="0.5" FontSize="11" />
-                  </StackPanel>
-                  <TextBlock Grid.Column="1" Text="{Binding Price, StringFormat='{}{0:C2}'}" VerticalAlignment="Center" Margin="8,0" />
-                  <TextBlock Grid.Column="2" Text="{Binding Remaining, StringFormat='{}{0:C2} due'}" VerticalAlignment="Center" Margin="8,0" Opacity="0.8" />
-                  <TextBlock Grid.Column="3" Text="{Binding Deadline}" VerticalAlignment="Center" Margin="8,0" Opacity="0.7" />
-                  <ComboBox Grid.Column="4" ItemsSource="{Binding StatusOptions}"
-                            SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" Width="130" Margin="8,0" />
-                  <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4">
-                    <Button Content="View"
-                            Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).ViewCommand}"
-                            CommandParameter="{Binding}" />
-                    <Button Content="Edit"
-                            Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).EditCommand}"
-                            CommandParameter="{Binding}" />
-                    <Button Content="Duplicate"
-                            Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).DuplicateCommand}"
-                            CommandParameter="{Binding}" />
-                    <Button Content="Delete"
-                            Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).DeleteCommand}"
-                            CommandParameter="{Binding}" Classes="destructive" />
-                  </StackPanel>
-                </Grid>
-              </Border>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </ScrollViewer>
-    </Grid>
+        <!--
+          Column header row - labels the Price/Remaining/Deadline/Status columns
+          below it. Widths mirror the matching columns in the row template
+          exactly (both were previously "Auto", which sized independently per-
+          row and never lined up with a header row anyway) so the two now stay
+          in lockstep.
+        -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,90,110,90,140,270" Margin="12,0,12,4">
+          <TextBlock Grid.Column="0" Text="Title" Classes="tableHeader" />
+          <TextBlock Grid.Column="1" Text="Price" Classes="tableHeader" Margin="8,0" />
+          <TextBlock Grid.Column="2" Text="Remaining" Classes="tableHeader" Margin="8,0" />
+          <TextBlock Grid.Column="3" Text="Deadline" Classes="tableHeader" Margin="8,0" />
+          <TextBlock Grid.Column="4" Text="Status" Classes="tableHeader" Margin="8,0" />
+          <TextBlock Grid.Column="5" Text="Actions" Classes="tableHeader" />
+        </Grid>
+
+        <ScrollViewer Grid.Row="1">
+          <ItemsControl ItemsSource="{Binding Rows}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:CommissionRowViewModel">
+                  <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                    <Grid ColumnDefinitions="*,90,110,90,140,270">
+                      <StackPanel Grid.Column="0">
+                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding Priority}" Opacity="0.5" FontSize="11" />
+                      </StackPanel>
+                      <TextBlock Grid.Column="1" Text="{Binding Price, StringFormat='{}{0:C2}'}" VerticalAlignment="Center" Margin="8,0" />
+                      <TextBlock Grid.Column="2" Text="{Binding Remaining, StringFormat='{}{0:C2} due'}" VerticalAlignment="Center" Margin="8,0" Opacity="0.8" />
+                      <TextBlock Grid.Column="3" Text="{Binding Deadline}" VerticalAlignment="Center" Margin="8,0" Opacity="0.7" />
+                      <ComboBox Grid.Column="4" ItemsSource="{Binding StatusOptions}"
+                                SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" Width="130" Margin="8,0" />
+                      <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4">
+                        <Button Content="View"
+                                Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).ViewCommand}"
+                                CommandParameter="{Binding}" />
+                        <Button Content="Edit"
+                                Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).EditCommand}"
+                                CommandParameter="{Binding}" />
+                        <Button Content="Duplicate"
+                                Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).DuplicateCommand}"
+                                CommandParameter="{Binding}" />
+                        <Button Content="Delete"
+                                Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).DeleteCommand}"
+                                CommandParameter="{Binding}" Classes="destructive" />
+                      </StackPanel>
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+      </Grid>
+    </ScrollViewer>
 
   </Grid>
 </UserControl>

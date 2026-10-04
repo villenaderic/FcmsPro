@@ -153,54 +153,11 @@ public class ClientAttachmentRepository : EfRepository<ClientAttachment>, IClien
     }
 }
 
-public class InvoiceAttachmentRepository : EfRepository<InvoiceAttachment>, IInvoiceAttachmentRepository
-{
-    public InvoiceAttachmentRepository(FcmsDbContext db) : base(db) { }
 
-    public async Task<List<InvoiceAttachment>> GetByInvoiceIdAsync(Guid invoiceId, CancellationToken ct = default)
-    {
-        var attachments = await Set.AsNoTracking().Where(a => a.InvoiceId == invoiceId).ToListAsync(ct);
-        return attachments.OrderByDescending(a => a.UploadedAt).ToList();
-    }
-}
-
-public class QuoteAttachmentRepository : EfRepository<QuoteAttachment>, IQuoteAttachmentRepository
-{
-    public QuoteAttachmentRepository(FcmsDbContext db) : base(db) { }
-
-    public async Task<List<QuoteAttachment>> GetByQuoteIdAsync(Guid quoteId, CancellationToken ct = default)
-    {
-        var attachments = await Set.AsNoTracking().Where(a => a.QuoteId == quoteId).ToListAsync(ct);
-        return attachments.OrderByDescending(a => a.UploadedAt).ToList();
-    }
-}
-
-public class ReceiptRepository : EfRepository<Receipt>, IReceiptRepository
-{
-    public ReceiptRepository(FcmsDbContext db) : base(db) { }
-
-    public async Task<Receipt?> GetByPaymentIdAsync(Guid paymentId, CancellationToken ct = default) =>
-        await Set.FirstOrDefaultAsync(r => r.PaymentId == paymentId, ct);
-}
-
-public class InvoiceRepository : EfRepository<Invoice>, IInvoiceRepository
-{
-    public InvoiceRepository(FcmsDbContext db) : base(db) { }
-}
-
-public class QuoteRepository : EfRepository<Quote>, IQuoteRepository
-{
-    public QuoteRepository(FcmsDbContext db) : base(db) { }
-}
 
 public class ExpenseRepository : EfRepository<Expense>, IExpenseRepository
 {
     public ExpenseRepository(FcmsDbContext db) : base(db) { }
-}
-
-public class TemplateRepository : EfRepository<CommissionTemplate>, ITemplateRepository
-{
-    public TemplateRepository(FcmsDbContext db) : base(db) { }
 }
 
 public class AuditLogRepository : EfRepository<AuditLog>, IAuditLogRepository

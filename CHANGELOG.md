@@ -3,6 +3,20 @@
 All notable changes to FCMS Pro are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.0]
+
+### Removed
+- Removed Invoices, Quotes, Receipts, and Templates modules completely to transition the app into a leaner, offline CRM for solo freelancers.
+
+### Fixed
+- Fixed dashboard KPI metrics to properly exclude payments associated with deleted clients/commissions.
+
+### Changed
+- Added loading animations (ProgressBar) to client, commission, and expense deletion.
+- Migrated primary lists to WrapPanel to ensure components wrap elegantly when resizing the window.
+- Updated text across Backup and Onboarding pages to remove legacy references and clarify features.
+- Added default sample data generation (1 Client, 1 Commission, App Settings) upon creation of a new database.
+
 ## [1.1.3]
 
 ### Fixed

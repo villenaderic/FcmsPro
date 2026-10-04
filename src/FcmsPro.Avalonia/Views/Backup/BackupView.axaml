@@ -16,7 +16,7 @@
 
     <StackPanel Spacing="8">
       <TextBlock Text="Export" FontWeight="Bold" FontSize="16" />
-      <TextBlock Text="Save all your data (clients, commissions, payments, invoices, and more) to a single file."
+      <TextBlock Text="Save all your data (clients, commissions, payments, and expenses) to a single file."
                  Opacity="0.7" TextWrapping="Wrap" />
       <Button Content="Export Backup" Command="{Binding ExportCommand}" IsEnabled="{Binding !IsBusy}"
               Classes="accent" HorizontalAlignment="Left" />
@@ -24,18 +24,16 @@
 
     <StackPanel Spacing="8">
       <TextBlock Text="Import" FontWeight="Bold" FontSize="16" />
-      <TextBlock Text="Restore from a backup file, including one exported from the web/PWA version of this app."
+      <TextBlock Text="Restore from a previously exported backup file."
                  Opacity="0.7" TextWrapping="Wrap" />
       <CheckBox Content="Replace all data instead of merging" IsChecked="{Binding ImportAsReplace, Mode=TwoWay}" />
       <Button Content="Import Backup..." Command="{Binding ImportCommand}" IsEnabled="{Binding !IsBusy}"
               HorizontalAlignment="Left" />
-      <TextBlock Text="Note: your admin password is never included in a backup, for either export or import. If you import a backup from the web version, you'll keep using your current desktop password."
-                 Opacity="0.6" FontSize="11" TextWrapping="Wrap" />
     </StackPanel>
 
     <StackPanel Spacing="8">
       <TextBlock Text="Automatic Backup" FontWeight="Bold" FontSize="16" />
-      <TextBlock Text="Silently saves a copy of your data every time you close the app, kept separately from the backups you export above. This lives on the same computer, so it protects against accidental deletion or a bad import - not against losing the machine itself. Still export a copy somewhere else (external drive, cloud folder) every so often for real disaster recovery."
+      <TextBlock Text="Silently saves a copy of your data every time you close the app, kept separately from your manual exports. This protects against accidental deletion, but does not protect against losing this computer. You should still periodically export a backup to an external drive or cloud storage for full disaster recovery."
                  Opacity="0.7" TextWrapping="Wrap" />
       <CheckBox Content="Automatically back up on close" IsChecked="{Binding AutoBackupOnCloseEnabled, Mode=TwoWay}" />
       <StackPanel Orientation="Horizontal" Spacing="8" IsEnabled="{Binding AutoBackupOnCloseEnabled}">

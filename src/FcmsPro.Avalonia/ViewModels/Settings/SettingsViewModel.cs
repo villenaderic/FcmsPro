@@ -33,18 +33,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string? _tin;
     [ObservableProperty] private string _currencySymbol = "\u20b1";
     [ObservableProperty] private string? _serviceTypesCsv;
-    [ObservableProperty] private string? _receiptFooter;
-    [ObservableProperty] private string? _invoiceTerms;
-    [ObservableProperty] private string? _invoiceNotes;
-    [ObservableProperty] private string? _quoteTerms;
 
-    [ObservableProperty] private bool _autoInvoiceOnDelivery;
-
-    /// <summary>decimal? to match NumericUpDown.Value's type, not int - see
-    /// TemplateFormViewModel.DeadlineDays for the same established pattern
-    /// and why binding this directly as an int was already flagged and
-    /// fixed as a real bug elsewhere in this app.</summary>
-    [ObservableProperty] private decimal? _invoiceDueDays = 14;
 
     [ObservableProperty] private string _theme = "System";
     [ObservableProperty] private string _accentColor = "#6366F1";
@@ -83,12 +72,7 @@ public partial class SettingsViewModel : ObservableObject
             Website = settings.Website;
             Tin = settings.Tin;
             CurrencySymbol = settings.CurrencySymbol;
-            ReceiptFooter = settings.ReceiptFooter;
-            InvoiceTerms = settings.InvoiceTerms;
-            InvoiceNotes = settings.InvoiceNotes;
-            QuoteTerms = settings.QuoteTerms;
-            AutoInvoiceOnDelivery = settings.AutoInvoiceOnDelivery;
-            InvoiceDueDays = settings.InvoiceDueDays;
+
             ServiceTypesCsv = TryDeserializeCsv(settings.ServiceTypesJson);
 
             var prefs = await _uow.Settings.GetUiPreferencesAsync();
@@ -136,12 +120,7 @@ public partial class SettingsViewModel : ObservableObject
             settings.Website = Website;
             settings.Tin = Tin;
             settings.CurrencySymbol = CurrencySymbol;
-            settings.ReceiptFooter = ReceiptFooter;
-            settings.InvoiceTerms = InvoiceTerms;
-            settings.InvoiceNotes = InvoiceNotes;
-            settings.QuoteTerms = QuoteTerms;
-            settings.AutoInvoiceOnDelivery = AutoInvoiceOnDelivery;
-            settings.InvoiceDueDays = (int)Math.Max(0, InvoiceDueDays ?? 14);
+
 
             var serviceTypes = (ServiceTypesCsv ?? string.Empty)
                 .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);

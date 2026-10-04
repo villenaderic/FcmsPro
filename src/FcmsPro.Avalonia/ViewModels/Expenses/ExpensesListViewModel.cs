@@ -33,7 +33,7 @@ public partial class ExpensesListViewModel : ObservableObject, ICreatablePage
 
     partial void OnSortOptionChanged(ListSortOption value) => _ = LoadAsync();
 
-    public ObservableCollection<Expense> Expenses { get; } = new();
+    [ObservableProperty] private ObservableCollection<Expense> _expenses = new();
 
     /// <summary>True once a load has completed and found nothing - drives the empty-state illustration in ExpensesListView.</summary>
     public bool HasNoResults => !IsLoading && Expenses.Count == 0;
@@ -81,9 +81,10 @@ public partial class ExpensesListViewModel : ObservableObject, ICreatablePage
                 _ => filtered.OrderByDescending(e => e.Date), // Newest (default)
             };
 
-            Expenses.Clear();
+            var newExpenses = new ObservableCollection<Expense>();
             foreach (var e in ordered)
-                Expenses.Add(e);
+                newExpenses.Add(e);
+            Expenses = newExpenses;
 
             OnPropertyChanged(nameof(FilteredTotal));
         }
@@ -134,7 +135,14 @@ public partial class ExpensesListViewModel : ObservableObject, ICreatablePage
             isDestructive: true, confirmLabel: "Delete");
         if (!confirmed) return;
 
-        await _expenseService.DeleteAsync(expense);
-        await LoadAsync();
+        IsLoading = true;
+        try
+        {
+            await _expenseService.DeleteAsync(expense);
+        }
+        finally
+        {
+            await LoadAsync();
+        }
     }
 }

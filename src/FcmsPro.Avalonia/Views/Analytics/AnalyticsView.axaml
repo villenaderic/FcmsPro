@@ -54,31 +54,31 @@
 
       <!-- Tax / year-end summary -->
       <StackPanel Spacing="8">
-        <Grid ColumnDefinitions="*,Auto,Auto">
-          <TextBlock Grid.Column="0" Text="Income &amp; Expense Summary" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" />
-          <ComboBox Grid.Column="1" ItemsSource="{Binding AvailableYears}" SelectedItem="{Binding SelectedYear, Mode=TwoWay}"
-                    Width="110" Margin="0,0,8,0" />
-          <Button Grid.Column="2" Content="Export PDF" Command="{Binding ExportTaxSummaryCommand}"
-                  IsEnabled="{Binding !IsExportingTaxSummary}" Classes="accent" />
-        </Grid>
+        <WrapPanel Margin="0,0,0,8">
+          <TextBlock Text="Income &amp; Expense Summary" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" Margin="0,0,12,8" />
+          <ComboBox ItemsSource="{Binding AvailableYears}" SelectedItem="{Binding SelectedYear, Mode=TwoWay}"
+                    Width="110" Margin="0,0,8,8" />
+          <Button Content="Export PDF" Command="{Binding ExportTaxSummaryCommand}"
+                  IsEnabled="{Binding !IsExportingTaxSummary}" Classes="accent" Margin="0,0,0,8" />
+        </WrapPanel>
 
         <TextBlock Text="{Binding TaxSummaryStatusMessage}" Opacity="0.7" FontSize="12" TextWrapping="Wrap"
                    IsVisible="{Binding TaxSummaryStatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
-        <StackPanel Orientation="Horizontal" Spacing="32" Margin="0,4,0,8">
-          <StackPanel>
+        <WrapPanel Margin="0,4,0,8">
+          <StackPanel Margin="0,0,32,16">
             <TextBlock Text="Total Income" Opacity="0.6" FontSize="12" />
             <TextBlock Text="{Binding TaxSummary.TotalIncome, StringFormat='{}{0:C2}'}" FontSize="18" FontWeight="Bold" />
           </StackPanel>
-          <StackPanel>
+          <StackPanel Margin="0,0,32,16">
             <TextBlock Text="Total Expenses" Opacity="0.6" FontSize="12" />
             <TextBlock Text="{Binding TaxSummary.TotalExpenses, StringFormat='{}{0:C2}'}" FontSize="18" FontWeight="Bold" />
           </StackPanel>
-          <StackPanel>
+          <StackPanel Margin="0,0,32,16">
             <TextBlock Text="Net Profit" Opacity="0.6" FontSize="12" />
             <TextBlock Text="{Binding TaxSummary.NetProfit, StringFormat='{}{0:C2}'}" FontSize="18" FontWeight="Bold" />
           </StackPanel>
-        </StackPanel>
+        </WrapPanel>
 
         <TextBlock Text="By Quarter" Opacity="0.7" FontSize="13" FontWeight="SemiBold" Margin="0,4,0,0" />
         <ItemsControl ItemsSource="{Binding TaxSummary.Quarters}">

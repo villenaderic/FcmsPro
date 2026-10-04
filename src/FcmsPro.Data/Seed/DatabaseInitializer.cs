@@ -25,40 +25,53 @@ public static class DatabaseInitializer
         await db.Database.ExecuteSqlRawAsync("PRAGMA synchronous=NORMAL;", ct);
         await db.Database.ExecuteSqlRawAsync("PRAGMA foreign_keys=OFF;", ct); // soft references by design, see Commission/Payment configs
 
-        if (!await db.Templates.AnyAsync(ct))
-        {
-            foreach (var seed in TemplateService.DefaultTemplates)
-            {
-                db.Templates.Add(new CommissionTemplate
-                {
-                    Id = Guid.NewGuid(),
-                    Name = seed.Name,
-                    ServiceType = seed.ServiceType,
-                    Price = seed.Price,
-                    DownPayment = seed.DownPayment,
-                    DeadlineDays = seed.DeadlineDays,
-                    Description = seed.Description,
-                    IsDefault = true,
-                    CreatedAt = DateTimeOffset.UtcNow,
-                    UpdatedAt = DateTimeOffset.UtcNow
-                });
-            }
-        }
 
-        foreach (var counterName in new[] { "quote_seq", "invoice_seq", "receipt_seq" })
-        {
-            if (!await db.Counters.AnyAsync(c => c.Name == counterName, ct))
-                db.Counters.Add(new Counter { Name = counterName, Value = 0 });
-        }
+
+
 
         if (!await db.AppSettings.AnyAsync(ct))
-            db.AppSettings.Add(new AppSettings { Id = 1 });
+        {
+            db.AppSettings.Add(new AppSettings 
+            { 
+                Id = 1,
+                BusinessName = "My Freelance Studio",
+                FreelancerName = "John Doe",
+                ServiceTypesJson = "[\"Illustration\", \"UI/UX Design\", \"Logo Design\"]",
+                PaymentMethodsJson = "[\"Cash\", \"Bank Transfer\", \"PayPal\"]"
+            });
+        }
 
         if (!await db.UiPreferences.AnyAsync(ct))
             db.UiPreferences.Add(new UiPreferences { Id = 1 });
 
         if (!await db.GoalSettings.AnyAsync(ct))
             db.GoalSettings.Add(new GoalSettings { Id = 1 });
+
+        if (!await db.Clients.AnyAsync(ct))
+        {
+            var sampleClient = new Client
+            {
+                Id = Guid.NewGuid(),
+                Name = "Sample Client (Jane Smith)",
+                Email = "jane@example.com",
+                DateAdded = DateTimeOffset.UtcNow,
+                UpdatedAt = DateTimeOffset.UtcNow
+            };
+            db.Clients.Add(sampleClient);
+
+            db.Commissions.Add(new Commission
+            {
+                Id = Guid.NewGuid(),
+                ClientId = sampleClient.Id,
+                Title = "Sample Logo Design",
+                Price = 500,
+                DownPayment = 250,
+                Deadline = DateOnly.FromDateTime(DateTime.Today.AddDays(7)),
+                Status = FcmsPro.Core.Enums.CommissionStatus.InProgress,
+                DateAdded = DateTimeOffset.UtcNow,
+                UpdatedAt = DateTimeOffset.UtcNow
+            });
+        }
 
         await db.SaveChangesAsync(ct);
     }

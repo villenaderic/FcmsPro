@@ -10,11 +10,7 @@ public class FcmsDbContext : DbContext
     public DbSet<Client> Clients => Set<Client>();
     public DbSet<Commission> Commissions => Set<Commission>();
     public DbSet<Payment> Payments => Set<Payment>();
-    public DbSet<Receipt> Receipts => Set<Receipt>();
-    public DbSet<Invoice> Invoices => Set<Invoice>();
-    public DbSet<Quote> Quotes => Set<Quote>();
     public DbSet<Expense> Expenses => Set<Expense>();
-    public DbSet<CommissionTemplate> Templates => Set<CommissionTemplate>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<Counter> Counters => Set<Counter>();
     public DbSet<AppSettings> AppSettings => Set<AppSettings>();
@@ -24,8 +20,6 @@ public class FcmsDbContext : DbContext
     public DbSet<TermsAcceptance> TermsAcceptances => Set<TermsAcceptance>();
     public DbSet<CommissionAttachment> CommissionAttachments => Set<CommissionAttachment>();
     public DbSet<ClientAttachment> ClientAttachments => Set<ClientAttachment>();
-    public DbSet<InvoiceAttachment> InvoiceAttachments => Set<InvoiceAttachment>();
-    public DbSet<QuoteAttachment> QuoteAttachments => Set<QuoteAttachment>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -64,40 +58,7 @@ public class FcmsDbContext : DbContext
             e.HasIndex(x => x.Date);
         });
 
-        modelBuilder.Entity<Receipt>(e =>
-        {
-            e.HasKey(x => x.Id);
-            e.HasIndex(x => x.PaymentId).IsUnique();
-            e.HasIndex(x => x.ReceiptNumber).IsUnique();
-            e.Property(x => x.CommissionPrice).HasColumnType("decimal(18,2)");
-            e.Property(x => x.DownPayment).HasColumnType("decimal(18,2)");
-            e.Property(x => x.PreviousPayments).HasColumnType("decimal(18,2)");
-            e.Property(x => x.AmountPaid).HasColumnType("decimal(18,2)");
-            e.Property(x => x.RemainingBalance).HasColumnType("decimal(18,2)");
-        });
 
-        modelBuilder.Entity<Invoice>(e =>
-        {
-            e.HasKey(x => x.Id);
-            e.HasIndex(x => x.InvoiceNumber).IsUnique();
-            e.HasIndex(x => x.ClientId);
-            e.HasIndex(x => x.Status);
-            e.HasIndex(x => x.DueDate);
-            e.Property(x => x.Subtotal).HasColumnType("decimal(18,2)");
-            e.Property(x => x.Discount).HasColumnType("decimal(18,2)");
-            e.Property(x => x.Tax).HasColumnType("decimal(18,2)");
-            e.Property(x => x.Total).HasColumnType("decimal(18,2)");
-        });
-
-        modelBuilder.Entity<Quote>(e =>
-        {
-            e.HasKey(x => x.Id);
-            e.HasIndex(x => x.QuoteNumber).IsUnique();
-            e.HasIndex(x => x.ClientId);
-            e.HasIndex(x => x.Status);
-            e.Property(x => x.Total).HasColumnType("decimal(18,2)");
-            e.Property(x => x.DownPayment).HasColumnType("decimal(18,2)");
-        });
 
         modelBuilder.Entity<Expense>(e =>
         {
@@ -108,12 +69,7 @@ public class FcmsDbContext : DbContext
             e.Property(x => x.Amount).HasColumnType("decimal(18,2)");
         });
 
-        modelBuilder.Entity<CommissionTemplate>(e =>
-        {
-            e.HasKey(x => x.Id);
-            e.Property(x => x.Price).HasColumnType("decimal(18,2)");
-            e.Property(x => x.DownPayment).HasColumnType("decimal(18,2)");
-        });
+
 
         modelBuilder.Entity<AuditLog>(e =>
         {
@@ -152,16 +108,6 @@ public class FcmsDbContext : DbContext
             e.HasIndex(x => x.ClientId);
         });
 
-        modelBuilder.Entity<InvoiceAttachment>(e =>
-        {
-            e.HasKey(x => x.Id);
-            e.HasIndex(x => x.InvoiceId);
-        });
 
-        modelBuilder.Entity<QuoteAttachment>(e =>
-        {
-            e.HasKey(x => x.Id);
-            e.HasIndex(x => x.QuoteId);
-        });
     }
 }

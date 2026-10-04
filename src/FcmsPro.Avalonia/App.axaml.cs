@@ -240,20 +240,17 @@ public partial class App : Application
         services.AddScoped<CommissionService>();
         services.AddScoped<PaymentService>();
         services.AddScoped<AttachmentService>();
-        services.AddScoped<InvoiceService>();
-        services.AddScoped<QuoteService>();
+
         services.AddScoped<ExpenseService>();
         services.AddScoped<GlobalSearchService>();
-        services.AddScoped<TemplateService>();
+
         services.AddScoped<MetricsService>();
         services.AddScoped<TaxSummaryService>();
         services.AddScoped<TrashService>();
         services.AddScoped<BackupService>();
 
         // PDF
-        services.AddScoped<IReceiptRenderer, ReceiptRenderer>();
-        services.AddScoped<IInvoiceRenderer, InvoiceRenderer>();
-        services.AddScoped<IQuoteRenderer, QuoteRenderer>();
+
         services.AddScoped<ITaxSummaryRenderer, TaxSummaryRenderer>();
 
         // UI-only services
@@ -287,18 +284,7 @@ public partial class App : Application
         // PaymentFormViewModel is constructed directly by PaymentsListViewModel,
         // same pattern as the other module forms above.
 
-        // Receipts module (Phase 4) - read-only, no form ViewModel needed.
-        services.AddTransient<ViewModels.Receipts.ReceiptsListViewModel>();
 
-        // Invoices module (Phase 4)
-        services.AddTransient<ViewModels.Invoices.InvoicesListViewModel>();
-        // InvoiceFormViewModel is constructed directly by InvoicesListViewModel,
-        // same pattern as the other module forms above.
-
-        // Quotes module (Phase 4)
-        services.AddTransient<ViewModels.Quotes.QuotesListViewModel>();
-        // QuoteFormViewModel is constructed directly by QuotesListViewModel,
-        // same pattern as the other module forms above.
 
         // Expenses module (Phase 4)
         services.AddTransient<ViewModels.Expenses.ExpensesListViewModel>();
@@ -314,9 +300,7 @@ public partial class App : Application
         // Settings (Phase 4)
         services.AddTransient<ViewModels.Settings.SettingsViewModel>();
 
-        // Templates (Phase 4)
-        services.AddTransient<ViewModels.Templates.TemplatesViewModel>();
-        // TemplateFormViewModel is constructed directly by TemplatesViewModel.
+
 
         // Logs (Phase 4) - read-only.
         services.AddTransient<ViewModels.Logs.LogsViewModel>();

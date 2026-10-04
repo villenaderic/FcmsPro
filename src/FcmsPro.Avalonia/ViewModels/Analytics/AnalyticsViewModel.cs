@@ -44,8 +44,8 @@ public partial class AnalyticsViewModel : ObservableObject
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private string? _errorMessage;
 
-    public ObservableCollection<NamedTotal> TopClients { get; } = new();
-    public ObservableCollection<NamedTotal> ExpensesByCategory { get; } = new();
+    [ObservableProperty] private ObservableCollection<NamedTotal> _topClients = new();
+    [ObservableProperty] private ObservableCollection<NamedTotal> _expensesByCategory = new();
 
     public ISeries[] RevenueSeries { get; private set; } = Array.Empty<ISeries>();
     public Axis[] RevenueXAxes { get; private set; } = Array.Empty<Axis>();
@@ -134,14 +134,12 @@ public partial class AnalyticsViewModel : ObservableObject
         ErrorMessage = null;
         try
         {
-            var allCommissions = await _uow.Commissions.GetAllAsync();
+            var allCommissions = (await _uow.Commissions.GetAllAsync()).Where(c => !c.IsDeleted).ToList();
             var allClients = await _uow.Clients.GetAllAsync();
-            var allExpenses = await _uow.Expenses.GetAllAsync();
+            var allExpenses = (await _uow.Expenses.GetAllAsync()).Where(e => !e.IsDeleted).ToList();
             var clientsById = allClients.ToDictionary(c => c.Id);
 
-            var allPayments = new List<Core.Entities.Payment>();
-            foreach (var c in allCommissions)
-                allPayments.AddRange(await _uow.Payments.GetByCommissionIdAsync(c.Id));
+            var allPayments = (await _uow.Payments.GetAllAsync()).Where(p => !p.IsDeleted).ToList();
 
             // Revenue by month, last 12 months.
             var months = Enumerable.Range(0, 12)
@@ -173,9 +171,10 @@ public partial class AnalyticsViewModel : ObservableObject
                 .OrderByDescending(x => x.Total)
                 .Take(5);
 
-            TopClients.Clear();
+            var newTopClients = new ObservableCollection<NamedTotal>();
             foreach (var t in revenueByClient)
-                TopClients.Add(t);
+                newTopClients.Add(t);
+            TopClients = newTopClients;
 
             // Expense breakdown by category.
             var byCategory = allExpenses
@@ -183,9 +182,10 @@ public partial class AnalyticsViewModel : ObservableObject
                 .Select(g => new NamedTotal { Name = g.Key.ToString(), Total = g.Sum(e => e.Amount) })
                 .OrderByDescending(x => x.Total);
 
-            ExpensesByCategory.Clear();
+            var newExpensesByCategory = new ObservableCollection<NamedTotal>();
             foreach (var c in byCategory)
-                ExpensesByCategory.Add(c);
+                newExpensesByCategory.Add(c);
+            ExpensesByCategory = newExpensesByCategory;
         }
         catch (Exception ex)
         {

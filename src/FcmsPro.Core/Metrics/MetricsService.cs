@@ -25,94 +25,52 @@ public class MetricsService
         && c.Status != CommissionStatus.Delivered
         && c.Status != CommissionStatus.Cancelled;
 
-    public static bool IsInvoiceOverdue(Invoice invoice, DateOnly today) =>
-        invoice.DueDate < today
-        && invoice.Status != InvoiceStatus.Paid
-        && invoice.Status != InvoiceStatus.Cancelled;
+    public const int DueSoonWindowDays = 7;
 
-    /// <summary>Default lookahead window for "due soon" - matches the item's own wording ("due in 2 days"), not user-configurable yet.</summary>
-    public const int DueSoonWindowDays = 3;
-
-    /// <summary>
-    /// True when the deadline lands within the next DueSoonWindowDays days
-    /// (today counts as due soon, not yet overdue - a deadline of today
-    /// hasn't technically passed until IsCommissionOverdue's strictly-less-than
-    /// check kicks in tomorrow). Deliberately mutually exclusive with
-    /// IsCommissionOverdue: once the deadline has passed, it's overdue, not
-    /// due-soon - a commission is never both at once.
-    /// </summary>
-    public static bool IsCommissionDueSoon(Commission c, DateOnly today, int windowDays = DueSoonWindowDays) =>
+    public static bool IsCommissionDueSoon(Commission c, DateOnly today) =>
         c.Deadline.HasValue
         && c.Deadline.Value >= today
-        && c.Deadline.Value <= today.AddDays(windowDays)
+        && c.Deadline.Value <= today.AddDays(DueSoonWindowDays)
         && c.Status != CommissionStatus.Completed
         && c.Status != CommissionStatus.Delivered
         && c.Status != CommissionStatus.Cancelled;
 
-    public static bool IsInvoiceDueSoon(Invoice invoice, DateOnly today, int windowDays = DueSoonWindowDays) =>
-        invoice.DueDate >= today
-        && invoice.DueDate <= today.AddDays(windowDays)
-        && invoice.Status != InvoiceStatus.Paid
-        && invoice.Status != InvoiceStatus.Cancelled;
-
-    public static bool IsQuoteExpired(Quote quote, DateOnly today) =>
-        quote.ValidUntil < today
-        && quote.Status != QuoteStatus.Accepted
-        && quote.Status != QuoteStatus.Declined;
-
-    /// <summary>
-    /// Display-only effective status: returns the literal stored Status unless
-    /// the invoice is overdue by date, in which case returns Overdue for
-    /// display purposes without mutating the stored value. Preserves the PWA's
-    /// dual system (Phase 1 audit §4.3 / Phase 2 §2 default).
-    /// </summary>
-    public static InvoiceStatus GetEffectiveStatus(Invoice invoice, DateOnly today) =>
-        IsInvoiceOverdue(invoice, today) ? InvoiceStatus.Overdue : invoice.Status;
-
-    public static QuoteStatus GetEffectiveStatus(Quote quote, DateOnly today) =>
-        IsQuoteExpired(quote, today) ? QuoteStatus.Expired : quote.Status;
-
     public async Task<DashboardKpis> GetDashboardKpisAsync(CancellationToken ct = default)
     {
         var today = DateOnly.FromDateTime(DateTime.Today);
-        var commissions = await _uow.Commissions.GetAllAsync(ct);
-        var expenses = await _uow.Expenses.GetAllAsync(ct);
-        var invoices = await _uow.Invoices.GetAllAsync(ct);
+        
+        var clients = await _uow.Clients.GetAllAsync(ct);
+        var activeClientIds = clients.Where(c => !c.IsDeleted).Select(c => c.Id).ToHashSet();
+        
+        var allCommissions = await _uow.Commissions.GetAllAsync(ct);
+        var activeCommissions = allCommissions.Where(c => !c.IsDeleted && activeClientIds.Contains(c.ClientId)).ToList();
+        
 
-        decimal totalIncome = 0m;
-        decimal thisMonthIncome = 0m;
-        decimal pendingBalance = 0m;
-        var overdueCount = 0;
-        var dueSoonCount = 0;
-        var deliveredCount = 0;
+        var activeCommissionIds = activeCommissions.Select(c => c.Id).ToHashSet();
+        
+        var allPayments = await _uow.Payments.GetAllAsync(ct);
+        var activePayments = allPayments.Where(p => !p.IsDeleted && activeCommissionIds.Contains(p.CommissionId)).ToList();
+        
+        var allExpenses = await _uow.Expenses.GetAllAsync(ct);
+        var activeExpenses = allExpenses.Where(e => !e.IsDeleted).ToList();
 
+        decimal totalIncome = activePayments.Sum(p => p.Amount) + activeCommissions.Sum(c => c.DownPayment);
+        
         var now = DateTime.Today;
+        decimal thisMonthIncome = activePayments
+            .Where(p => p.Date.Year == now.Year && p.Date.Month == now.Month)
+            .Sum(p => p.Amount);
 
-        foreach (var c in commissions)
-        {
-            var payments = await _uow.Payments.GetByCommissionIdAsync(c.Id, ct);
-            var paid = payments.Sum(p => p.Amount) + c.DownPayment;
-            totalIncome += paid;
-            thisMonthIncome += payments
-                .Where(p => p.Date.Year == now.Year && p.Date.Month == now.Month)
-                .Sum(p => p.Amount);
+        decimal pendingBalance = activeCommissions.Sum(c => c.Remaining);
+        
+        var overdueCount = activeCommissions.Count(c => IsCommissionOverdue(c, today));
+        var dueSoonCount = activeCommissions.Count(c => IsCommissionDueSoon(c, today));
+        var deliveredCount = activeCommissions.Count(c => c.Status == CommissionStatus.Delivered);
 
-            pendingBalance += c.Remaining;
 
-            if (IsCommissionOverdue(c, today))
-                overdueCount++;
-            else if (IsCommissionDueSoon(c, today))
-                dueSoonCount++;
 
-            if (c.Status == CommissionStatus.Delivered)
-                deliveredCount++;
-        }
-
-        var overdueInvoiceCount = invoices.Count(i => IsInvoiceOverdue(i, today));
-        var dueSoonInvoiceCount = invoices.Count(i => IsInvoiceDueSoon(i, today));
-
-        var totalExpenses = expenses.Sum(e => e.Amount);
-        var completionRate = commissions.Count == 0 ? 0 : (decimal)deliveredCount / commissions.Count * 100;
+        var totalExpenses = activeExpenses.Sum(e => e.Amount);
+        var completionRate = activeCommissions.Count == 0 ? 0 : (decimal)deliveredCount / activeCommissions.Count * 100;
 
         return new DashboardKpis(
             TotalIncome: totalIncome,
@@ -121,9 +79,7 @@ public class MetricsService
             NetProfit: totalIncome - totalExpenses,
             CompletionRatePercent: completionRate,
             OverdueCount: overdueCount,
-            OverdueInvoiceCount: overdueInvoiceCount,
-            DueSoonCount: dueSoonCount,
-            DueSoonInvoiceCount: dueSoonInvoiceCount);
+            DueSoonCount: dueSoonCount);
     }
 }
 
@@ -134,6 +90,4 @@ public record DashboardKpis(
     decimal NetProfit,
     decimal CompletionRatePercent,
     int OverdueCount,
-    int OverdueInvoiceCount,
-    int DueSoonCount,
-    int DueSoonInvoiceCount);
+    int DueSoonCount);

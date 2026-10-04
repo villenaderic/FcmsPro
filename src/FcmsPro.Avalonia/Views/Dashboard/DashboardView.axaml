@@ -18,6 +18,18 @@
       <Setter Property="CornerRadius" Value="14" />
       <Setter Property="Padding" Value="22,20" />
       <Setter Property="BoxShadow" Value="0 2 12 0 #14000000" />
+      <Setter Property="RenderTransform" Value="scale(1)" />
+      <Setter Property="Transitions">
+        <Transitions>
+          <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" Easing="CubicEaseOut" />
+          <BrushTransition Property="BorderBrush" Duration="0:0:0.2" />
+          <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.2" />
+        </Transitions>
+      </Setter>
+    </Style>
+    <Style Selector="Border.heroCard:pointerover">
+      <Setter Property="RenderTransform" Value="scale(1.02)" />
+      <Setter Property="BoxShadow" Value="0 4 16 0 #20000000" />
     </Style>
     <Style Selector="Border.heroCard.profit">
       <!-- The one number on this page that gets a colored accent edge -
@@ -43,6 +55,17 @@
       <Setter Property="CornerRadius" Value="10" />
       <Setter Property="Padding" Value="16" />
       <Setter Property="Margin" Value="0,0,12,0" />
+      <Setter Property="RenderTransform" Value="scale(1)" />
+      <Setter Property="Transitions">
+        <Transitions>
+          <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" Easing="CubicEaseOut" />
+          <BrushTransition Property="BorderBrush" Duration="0:0:0.2" />
+        </Transitions>
+      </Setter>
+    </Style>
+    <Style Selector="Border.tileCard:pointerover">
+      <Setter Property="RenderTransform" Value="scale(1.03)" />
+      <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
     </Style>
     <Style Selector="TextBlock.tileLabel">
       <Setter Property="Opacity" Value="0.6" />

@@ -78,10 +78,7 @@ public class BackupService
             Clients = await _uow.Clients.GetAllAsync(ct),
             Commissions = commissions,
             Payments = payments,
-            Invoices = await _uow.Invoices.GetAllAsync(ct),
-            Quotes = await _uow.Quotes.GetAllAsync(ct),
             Expenses = await _uow.Expenses.GetAllAsync(ct),
-            Templates = await _uow.Templates.GetAllAsync(ct),
             Goals = await _uow.Settings.GetGoalSettingsAsync(ct),
             SettingsJson = JsonSerializer.Serialize(await _uow.Settings.GetAppSettingsAsync(ct))
             // Note: `auth` intentionally omitted, matching PWA export/import behavior.
@@ -107,10 +104,7 @@ public class BackupService
             await ImportEntitiesAsync(import.Clients, _uow.Clients, mode, ct);
             await ImportEntitiesAsync(import.Commissions, _uow.Commissions, mode, ct);
             await ImportEntitiesAsync(import.Payments, _uow.Payments, mode, ct);
-            await ImportEntitiesAsync(import.Invoices, _uow.Invoices, mode, ct);
-            await ImportEntitiesAsync(import.Quotes, _uow.Quotes, mode, ct);
             await ImportEntitiesAsync(import.Expenses, _uow.Expenses, mode, ct);
-            await ImportEntitiesAsync(import.Templates, _uow.Templates, mode, ct);
 
             // Settings only restored in Replace mode, never merged - matches PWA behavior.
             if (mode == ImportMode.Replace)
@@ -168,10 +162,7 @@ public class BackupExport
     public List<Client> Clients { get; set; } = new();
     public List<Commission> Commissions { get; set; } = new();
     public List<Payment> Payments { get; set; } = new();
-    public List<Invoice> Invoices { get; set; } = new();
-    public List<Quote> Quotes { get; set; } = new();
     public List<Expense> Expenses { get; set; } = new();
-    public List<CommissionTemplate> Templates { get; set; } = new();
     public GoalSettings? Goals { get; set; }
     public string? SettingsJson { get; set; }
 }

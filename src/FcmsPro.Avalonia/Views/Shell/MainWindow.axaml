@@ -9,12 +9,7 @@
         xmlns:commissionsViews="using:FcmsPro.Avalonia.Views.Commissions"
         xmlns:paymentsVm="using:FcmsPro.Avalonia.ViewModels.Payments"
         xmlns:paymentsViews="using:FcmsPro.Avalonia.Views.Payments"
-        xmlns:receiptsVm="using:FcmsPro.Avalonia.ViewModels.Receipts"
-        xmlns:receiptsViews="using:FcmsPro.Avalonia.Views.Receipts"
-        xmlns:invoicesVm="using:FcmsPro.Avalonia.ViewModels.Invoices"
-        xmlns:invoicesViews="using:FcmsPro.Avalonia.Views.Invoices"
-        xmlns:quotesVm="using:FcmsPro.Avalonia.ViewModels.Quotes"
-        xmlns:quotesViews="using:FcmsPro.Avalonia.Views.Quotes"
+
         xmlns:expensesVm="using:FcmsPro.Avalonia.ViewModels.Expenses"
         xmlns:expensesViews="using:FcmsPro.Avalonia.Views.Expenses"
         xmlns:goalsVm="using:FcmsPro.Avalonia.ViewModels.Goals"
@@ -25,8 +20,7 @@
         xmlns:analyticsViews="using:FcmsPro.Avalonia.Views.Analytics"
         xmlns:settingsVm="using:FcmsPro.Avalonia.ViewModels.Settings"
         xmlns:settingsViews="using:FcmsPro.Avalonia.Views.Settings"
-        xmlns:templatesVm="using:FcmsPro.Avalonia.ViewModels.Templates"
-        xmlns:templatesViews="using:FcmsPro.Avalonia.Views.Templates"
+
         xmlns:logsVm="using:FcmsPro.Avalonia.ViewModels.Logs"
         xmlns:logsViews="using:FcmsPro.Avalonia.Views.Logs"
         xmlns:trashVm="using:FcmsPro.Avalonia.ViewModels.Trash"
@@ -132,34 +126,15 @@
             <TextBlock Text="Commissions" />
           </StackPanel>
         </Button>
-        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Quotes}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Quotes}}">
-          <StackPanel Orientation="Horizontal" Spacing="8">
-            <icons:QuotesIcon Width="14" Height="14" />
-            <TextBlock Text="Quotes" />
-          </StackPanel>
-        </Button>
+
         <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Payments}"
                 Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Payments}}">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <icons:PaymentsIcon Width="14" Height="14" />
-            <TextBlock Text="Payments" />
+            <TextBlock Text="Income" />
           </StackPanel>
         </Button>
-        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Receipts}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Receipts}}">
-          <StackPanel Orientation="Horizontal" Spacing="8">
-            <icons:ReceiptsIcon Width="14" Height="14" />
-            <TextBlock Text="Receipts" />
-          </StackPanel>
-        </Button>
-        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Invoices}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Invoices}}">
-          <StackPanel Orientation="Horizontal" Spacing="8">
-            <icons:InvoicesIcon Width="14" Height="14" />
-            <TextBlock Text="Invoices" />
-          </StackPanel>
-        </Button>
+
         <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Expenses}"
                 Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Expenses}}">
           <StackPanel Orientation="Horizontal" Spacing="8">
@@ -174,13 +149,7 @@
             <TextBlock Text="Goals" />
           </StackPanel>
         </Button>
-        <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Templates}"
-                Classes.active="{Binding Navigation.CurrentPage, Converter={x:Static conv:PageMatchConverter.Instance}, ConverterParameter={x:Static svc:AppPage.Templates}}">
-          <StackPanel Orientation="Horizontal" Spacing="8">
-            <icons:TemplatesIcon Width="14" Height="14" />
-            <TextBlock Text="Templates" />
-          </StackPanel>
-        </Button>
+
 
         <Border Height="1" Background="{DynamicResource SystemBaseLowColor}" Margin="4,10" />
 
@@ -242,17 +211,7 @@
             <paymentsViews:PaymentsListView />
           </DataTemplate>
 
-          <DataTemplate DataType="{x:Type receiptsVm:ReceiptsListViewModel}">
-            <receiptsViews:ReceiptsListView />
-          </DataTemplate>
 
-          <DataTemplate DataType="{x:Type invoicesVm:InvoicesListViewModel}">
-            <invoicesViews:InvoicesListView />
-          </DataTemplate>
-
-          <DataTemplate DataType="{x:Type quotesVm:QuotesListViewModel}">
-            <quotesViews:QuotesListView />
-          </DataTemplate>
 
           <DataTemplate DataType="{x:Type expensesVm:ExpensesListViewModel}">
             <expensesViews:ExpensesListView />
@@ -274,9 +233,7 @@
             <settingsViews:SettingsView />
           </DataTemplate>
 
-          <DataTemplate DataType="{x:Type templatesVm:TemplatesViewModel}">
-            <templatesViews:TemplatesView />
-          </DataTemplate>
+
 
           <DataTemplate DataType="{x:Type logsVm:LogsViewModel}">
             <logsViews:LogsView />

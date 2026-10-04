@@ -10,6 +10,7 @@
 
   <StackPanel Margin="24" Spacing="10">
     <TextBlock Text="{Binding HeaderText}" FontSize="18" FontWeight="Bold" Margin="0,0,0,8" />
+    <ProgressBar IsIndeterminate="True" Height="2" Margin="0,-12,0,8" IsVisible="{Binding IsBusy}" />
 
     <TextBlock Text="Description *" FontWeight="SemiBold" />
     <TextBox Text="{Binding Description, Mode=TwoWay}" />

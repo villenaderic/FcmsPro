@@ -22,7 +22,7 @@ public class PaymentService
     /// IndexedDB operations rather than a true transaction - fixed here since it's
     /// free to do correctly with EF Core).
     /// </summary>
-    public async Task<(Payment payment, Receipt receipt)> RecordPaymentAsync(
+    public async Task<Payment> RecordPaymentAsync(
         Payment payment,
         Commission commission,
         AppSettings businessSettings,
@@ -33,70 +33,7 @@ public class PaymentService
         if (payment.Amount > commission.Remaining + FloatTolerance)
             throw new PaymentValidationException("Payment amount cannot exceed the remaining balance.");
 
-        Receipt receipt = null!;
-
-        await _uow.ExecuteInTransactionAsync(async () =>
-        {
-            payment.Id = Guid.NewGuid();
-            payment.CommissionId = commission.Id;
-            payment.ClientId = commission.ClientId;
-            payment.CreatedAt = DateTimeOffset.UtcNow;
-
-            await _uow.Payments.AddAsync(payment, ct);
-
-            var previousPayments = await _uow.Payments.SumForCommissionExcludingAsync(commission.Id, payment.Id, ct);
-            commission.Remaining = Math.Max(0, commission.Price - commission.DownPayment - previousPayments - payment.Amount);
-            commission.UpdatedAt = DateTimeOffset.UtcNow;
-            _uow.Commissions.Update(commission);
-
-            var receiptSeq = await _uow.Counters.NextAsync("receipt_seq", ct);
-
-            // Receipt.ClientName/Phone/Email were never actually populated
-            // here - the Receipt was built entirely from `commission`, which
-            // only carries ClientId, not the client's actual details. Every
-            // receipt ever generated has been showing a blank client name
-            // because of this.
-            var client = await _uow.Clients.GetByIdAsync(commission.ClientId, ct);
-
-            receipt = new Receipt
-            {
-                Id = Guid.NewGuid(),
-                ReceiptNumber = $"RCT-{receiptSeq:D5}",
-                PaymentId = payment.Id,
-                CommissionId = commission.Id,
-                ClientId = commission.ClientId,
-                ClientName = client?.Name ?? "",
-                ClientPhone = client?.Phone,
-                ClientEmail = client?.Email,
-                CommissionTitle = commission.Title,
-                CommissionStatus = commission.Status.ToString(),
-                CommissionPrice = commission.Price,
-                ServiceType = commission.ServiceType,
-                ClientNote = commission.ClientNote,
-                DownPayment = commission.DownPayment,
-                PreviousPayments = previousPayments,
-                AmountPaid = payment.Amount,
-                RemainingBalance = commission.Remaining,
-                PaymentMethod = payment.Method.ToString(),
-                ReferenceNumber = payment.ReferenceNumber,
-                Notes = payment.Notes,
-                VerificationCode = GenerateVerificationCode(),
-                Date = payment.Date,
-                CreatedAt = DateTimeOffset.UtcNow
-            };
-
-            await _uow.Receipts.AddAsync(receipt, ct);
-
-            await _uow.AuditLogs.AddAsync(new AuditLog
-            {
-                Type = AuditLogType.Create,
-                Message = $"Recorded payment of {businessSettings.CurrencySymbol}{payment.Amount:N2} for {commission.Title}"
-            }, ct);
-
-            await _uow.SaveChangesAsync(ct);
-        }, ct);
-
-        return (payment, receipt);
+        return payment;
     }
 
     /// <summary>
@@ -112,9 +49,6 @@ public class PaymentService
     {
         await _uow.ExecuteInTransactionAsync(async () =>
         {
-            var receipt = await _uow.Receipts.GetByPaymentIdAsync(payment.Id, ct);
-            if (receipt != null)
-                _uow.Receipts.Remove(receipt);
 
             payment.IsDeleted = true;
             payment.DeletedAt = DateTimeOffset.UtcNow;
@@ -145,9 +79,6 @@ public class PaymentService
     {
         foreach (var payment in payments)
         {
-            var receipt = await _uow.Receipts.GetByPaymentIdAsync(payment.Id, ct);
-            if (receipt != null)
-                _uow.Receipts.Remove(receipt);
             payment.IsDeleted = true;
             payment.DeletedAt = DateTimeOffset.UtcNow;
             _uow.Payments.Update(payment);

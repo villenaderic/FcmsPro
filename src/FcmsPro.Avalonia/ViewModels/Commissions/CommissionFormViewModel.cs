@@ -128,8 +128,9 @@ public partial class CommissionFormViewModel : ObservableObject
         try
         {
             var clients = await _uow.Clients.GetAllAsync();
+            var activeClients = clients.Where(c => !c.IsDeleted || c.Id == _existing?.ClientId || c.Id == _pendingClientId);
             AvailableClients.Clear();
-            foreach (var c in clients.OrderBy(c => c.Name))
+            foreach (var c in activeClients.OrderBy(c => c.Name))
                 AvailableClients.Add(c);
 
             if (_pendingClientId is { } id)

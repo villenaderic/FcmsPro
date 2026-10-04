@@ -34,15 +34,11 @@ public class KeySequenceService
         [Key.C] = AppPage.Clients,
         [Key.W] = AppPage.Commissions,
         [Key.P] = AppPage.Payments,
-        [Key.R] = AppPage.Receipts,
         [Key.E] = AppPage.Expenses,
-        [Key.I] = AppPage.Invoices,
         [Key.S] = AppPage.Settings,
         [Key.L] = AppPage.Logs,
         [Key.B] = AppPage.Backup,
-        [Key.T] = AppPage.Templates,
         [Key.G] = AppPage.Goals,
-        [Key.Q] = AppPage.Quotes,
     };
 
     /// <summary>Maps the second key of an "n" sequence to a create-form request, raised via CreateRequested.</summary>
@@ -52,8 +48,6 @@ public class KeySequenceService
         [Key.C] = AppPage.Clients,     // nc = new client
         [Key.P] = AppPage.Payments,    // np = new payment
         [Key.E] = AppPage.Expenses,    // ne = new expense
-        [Key.I] = AppPage.Invoices,    // ni = new invoice
-        [Key.Q] = AppPage.Quotes,      // nq = new quote
     };
 
     private readonly NavigationService _navigation;

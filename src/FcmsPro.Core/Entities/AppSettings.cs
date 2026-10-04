@@ -23,26 +23,8 @@ public class AppSettings
     /// <summary>JSON-serialized string array of accepted payment methods (labels), user-editable.</summary>
     public string PaymentMethodsJson { get; set; } = "[]";
 
-    public string? ReceiptFooter { get; set; }
-    public string? InvoiceTerms { get; set; }
-    public string? InvoiceNotes { get; set; }
-    public string? QuoteTerms { get; set; }
-
     /// <summary>JSON-serialized string array. Free-text service type list, not a hard enum (matches PWA).</summary>
     public string ServiceTypesJson { get; set; } = "[]";
-
-    /// <summary>
-    /// Opt-in (default off, so this never surprises an existing user on
-    /// upgrade): when a Commission's status is changed to Delivered and it
-    /// still has an outstanding balance, automatically generate a Draft
-    /// invoice for that balance rather than requiring a manual "New Invoice"
-    /// step. Only fires once per commission (skipped if an invoice already
-    /// exists for it).
-    /// </summary>
-    public bool AutoInvoiceOnDelivery { get; set; } = false;
-
-    /// <summary>Due date offset (in days from issue date) used for auto-generated invoices above.</summary>
-    public int InvoiceDueDays { get; set; } = 14;
 }
 
 /// <summary>

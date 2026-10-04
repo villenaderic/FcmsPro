@@ -22,8 +22,8 @@ namespace FcmsPro.Avalonia.Services;
 /// </summary>
 public enum AppPage
 {
-    Dashboard, Analytics, Clients, Commissions, Payments, Receipts,
-    Expenses, Invoices, Quotes, Settings, Logs, Backup, Templates, Goals,
+    Dashboard, Analytics, Clients, Commissions, Payments,
+    Expenses, Settings, Logs, Backup, Goals,
     CommissionDetail, Trash
 }
 
@@ -212,20 +212,33 @@ public class ThemeService
 /// </summary>
 public class WindowStateService
 {
-    // Named SavedWindowState (not WindowState) to avoid shadowing Avalonia's
-    // own Avalonia.Controls.WindowState enum used just below.
     private record SavedWindowState(double X, double Y, double Width, double Height, bool IsMaximized);
 
     private string FilePath => System.IO.Path.Combine(Data.FcmsPaths.GetAppDataDirectory(), "window-state.json");
+
+    private double _normalX = double.NaN;
+    private double _normalY = double.NaN;
+    private double _normalWidth = 1280;
+    private double _normalHeight = 720;
 
     public void Save(Window window)
     {
         try
         {
+            var isMax = window.WindowState == WindowState.Maximized;
+            
+            if (!isMax)
+            {
+                _normalX = window.Position.X;
+                _normalY = window.Position.Y;
+                _normalWidth = window.Width;
+                _normalHeight = window.Height;
+            }
+
             var state = new SavedWindowState(
-                window.Position.X, window.Position.Y,
-                window.Width, window.Height,
-                window.WindowState == WindowState.Maximized);
+                _normalX, _normalY,
+                _normalWidth, _normalHeight,
+                isMax);
             System.IO.File.WriteAllText(FilePath, JsonSerializer.Serialize(state));
         }
         catch
@@ -238,48 +251,55 @@ public class WindowStateService
     {
         try
         {
+            window.PositionChanged += (s, e) =>
+            {
+                if (window.WindowState == WindowState.Normal)
+                {
+                    _normalX = window.Position.X;
+                    _normalY = window.Position.Y;
+                }
+            };
+
+            window.PropertyChanged += (s, e) =>
+            {
+                if (window.WindowState == WindowState.Normal)
+                {
+                    if (e.Property == Window.WidthProperty || e.Property == Window.BoundsProperty)
+                        _normalWidth = window.Width;
+                    if (e.Property == Window.HeightProperty || e.Property == Window.BoundsProperty)
+                        _normalHeight = window.Height;
+                }
+            };
+
             if (!System.IO.File.Exists(FilePath)) return;
             var state = JsonSerializer.Deserialize<SavedWindowState>(System.IO.File.ReadAllText(FilePath));
             if (state is null) return;
 
-            if (state.IsMaximized)
-            {
-                // Let Avalonia/the OS compute the correct maximized bounds
-                // itself rather than also restoring a specific saved
-                // Width/Height/Position - setting both was observed (or at
-                // least strongly suspected) to produce a window whose title
-                // bar, including the minimize/maximize/close buttons, could
-                // land outside the visible screen area on relaunch,
-                // especially after a monitor/resolution change.
-                window.WindowState = WindowState.Maximized;
-                return;
-            }
+            _normalX = state.X;
+            _normalY = state.Y;
+            _normalWidth = state.Width;
+            _normalHeight = state.Height;
 
-            // Defensive sanity bounds: reject saved values that look
-            // implausible (e.g. from a monitor no longer connected, or a
-            // save that happened mid-drag) rather than trusting them
-            // blindly. Avalonia's Screens API isn't reliably queryable
-            // before the window is shown, so this uses simple heuristic
-            // bounds instead of actual screen geometry - an off-screen
-            // window with unreachable title bar buttons is effectively as
-            // broken as a crash from the user's perspective, so it's worth
-            // erring on the side of falling back to the default centered
-            // placement whenever in doubt.
             const int minCoordinate = -2000;
             const int maxCoordinate = 10000;
-            var positionLooksSane =
-                state.X > minCoordinate && state.X < maxCoordinate &&
-                state.Y > minCoordinate && state.Y < maxCoordinate;
+            var positionLooksSane = !double.IsNaN(_normalX) && !double.IsNaN(_normalY) &&
+                _normalX > minCoordinate && _normalX < maxCoordinate &&
+                _normalY > minCoordinate && _normalY < maxCoordinate;
             var sizeLooksSane =
-                state.Width is >= 400 and < 10000 &&
-                state.Height is >= 300 and < 10000;
+                _normalWidth is >= 400 and < 10000 &&
+                _normalHeight is >= 300 and < 10000;
 
-            if (!positionLooksSane || !sizeLooksSane)
-                return; // fall back to Avalonia's default WindowStartupLocation
+            if (positionLooksSane && sizeLooksSane)
+            {
+                window.Position = new PixelPoint((int)_normalX, (int)_normalY);
+                window.Width = _normalWidth;
+                window.Height = _normalHeight;
+            }
 
-            window.Position = new PixelPoint((int)state.X, (int)state.Y);
-            window.Width = state.Width;
-            window.Height = state.Height;
+            if (state.IsMaximized)
+            {
+                window.WindowState = WindowState.Maximized;
+            }
         }
         catch
         {

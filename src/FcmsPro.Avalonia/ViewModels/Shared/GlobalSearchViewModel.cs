@@ -14,7 +14,7 @@ namespace FcmsPro.Avalonia.ViewModels.Shared;
 /// Powers the "/" global search window (KeySequenceService.FocusSearchRequested).
 /// Every existing list page's search box only filters that page's own
 /// already-loaded rows; this is the one place that searches Clients,
-/// Commissions, Invoices, Quotes, and Expenses at once, from anywhere in the app.
+/// Commissions, and Expenses at once, from anywhere in the app.
 ///
 /// Debounces on a short delay rather than searching on every keystroke -
 /// GlobalSearchService.SearchAsync does five full-table loads per call, and
@@ -113,16 +113,9 @@ public partial class GlobalSearchViewModel : ObservableObject
                 _navigation.NavigateTo(AppPage.CommissionDetail, result.Id);
                 break;
 
-            // Invoices/Quotes/Expenses have no dedicated detail page yet -
+            // Expenses have no dedicated detail page yet -
             // land on the matching list, filtered to the client where one
             // exists (Expenses have no client relationship, so unfiltered).
-            case GlobalSearchResultType.Invoice:
-                _navigation.NavigateTo(AppPage.Invoices, result.ClientId);
-                break;
-
-            case GlobalSearchResultType.Quote:
-                _navigation.NavigateTo(AppPage.Quotes, result.ClientId);
-                break;
 
             case GlobalSearchResultType.Expense:
                 _navigation.NavigateTo(AppPage.Expenses);

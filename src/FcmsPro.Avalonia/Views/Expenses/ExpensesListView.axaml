@@ -20,65 +20,72 @@
                IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                Margin="0,0,0,12" TextWrapping="Wrap" />
 
-    <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto" HorizontalAlignment="Left" Margin="0,0,0,8">
-      <TextBox Grid.Column="0" Text="{Binding SearchQuery, Mode=TwoWay}"
-               Watermark="Search description..." Width="280" Margin="0,0,12,0" />
-      <ComboBox Grid.Column="1" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SortOption, Mode=TwoWay}" Width="170">
+    <WrapPanel Grid.Row="2" Margin="0,0,0,8">
+      <TextBox Text="{Binding SearchQuery, Mode=TwoWay}"
+               Watermark="Search description..." Width="280" Margin="0,0,12,8" />
+      <ComboBox ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SortOption, Mode=TwoWay}" Width="170" Margin="0,0,0,8">
         <ComboBox.ItemTemplate>
           <DataTemplate>
             <TextBlock Text="{Binding Converter={x:Static conv:ListSortOptionLabelConverter.Instance}}" />
           </DataTemplate>
         </ComboBox.ItemTemplate>
       </ComboBox>
-    </Grid>
+    </WrapPanel>
 
     <ProgressBar Grid.Row="3" IsIndeterminate="True" Height="2" Margin="0,0,0,8" IsVisible="{Binding IsLoading}" />
 
-    <Grid Grid.Row="4" ColumnDefinitions="*,70,90,100,Auto,Auto" Margin="12,0,12,4">
-      <TextBlock Grid.Column="0" Text="Description" Classes="tableHeader" />
-      <TextBlock Grid.Column="2" Text="Amount" Classes="tableHeader" />
-      <TextBlock Grid.Column="3" Text="Date" Classes="tableHeader" />
-      <TextBlock Grid.Column="4" Grid.ColumnSpan="2" Text="Actions" Classes="tableHeader" Margin="12,0,0,0" />
-    </Grid>
+    <StackPanel Grid.Row="4" Grid.RowSpan="2" IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
+      <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
+      <TextBlock Text="No expenses yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+      <TextBlock Text="Log business expenses by category to track your net profit."
+                 TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
+      <Button Content="+ Add Expense" Command="{Binding AddCommand}" Classes="accent" HorizontalAlignment="Center" Margin="0,4,0,0" />
+    </StackPanel>
 
-    <Grid Grid.Row="5">
-      <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
-        <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
-        <TextBlock Text="No expenses yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
-        <TextBlock Text="Log business expenses by category to track your net profit."
-                   TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
-        <Button Content="+ Add Expense" Command="{Binding AddCommand}" Classes="accent" HorizontalAlignment="Center" Margin="0,4,0,0" />
-      </StackPanel>
+    <ScrollViewer Grid.Row="4" Grid.RowSpan="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" IsVisible="{Binding !HasNoResults}">
+      <Grid MinWidth="750">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-      <ScrollViewer IsVisible="{Binding !HasNoResults}">
-        <ItemsControl ItemsSource="{Binding Expenses}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate x:DataType="entities:Expense">
-              <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
-                <Grid ColumnDefinitions="*,70,90,100,Auto,Auto">
-                  <StackPanel Grid.Column="0">
-                    <TextBlock Text="{Binding Description}" FontWeight="SemiBold" />
-                    <TextBlock Text="{Binding Category}" Opacity="0.6" FontSize="12" />
-                  </StackPanel>
-                  <TextBlock Grid.Column="1"
-                             Text="{Binding RecurFrequency, Converter={x:Static conv:RecurFrequencyLabelConverter.Instance}}"
-                             IsVisible="{Binding RecurFrequency, Converter={x:Static conv:IsRecurringConverter.Instance}}"
-                             Margin="8,0" FontSize="11" Opacity="0.6" VerticalAlignment="Center" />
-                  <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat='{}{0:C2}'}" Margin="8,0" FontWeight="SemiBold" />
-                  <TextBlock Grid.Column="3" Text="{Binding Date}" Margin="8,0" Opacity="0.7" />
-                  <Button Grid.Column="4" Content="Edit"
-                          Command="{Binding $parent[ItemsControl].((vm:ExpensesListViewModel)DataContext).EditCommand}"
-                          CommandParameter="{Binding}" />
-                  <Button Grid.Column="5" Content="Delete"
-                          Command="{Binding $parent[ItemsControl].((vm:ExpensesListViewModel)DataContext).DeleteCommand}"
-                          CommandParameter="{Binding}" Classes="destructive" />
-                </Grid>
-              </Border>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </ScrollViewer>
-    </Grid>
+        <Grid Grid.Row="0" ColumnDefinitions="*,70,90,100,70,90" Margin="12,0,12,4">
+          <TextBlock Grid.Column="0" Text="Description" Classes="tableHeader" />
+          <TextBlock Grid.Column="2" Text="Amount" Classes="tableHeader" Margin="8,0" />
+          <TextBlock Grid.Column="3" Text="Date" Classes="tableHeader" Margin="8,0" />
+          <TextBlock Grid.Column="4" Grid.ColumnSpan="2" Text="Actions" Classes="tableHeader" />
+        </Grid>
+
+        <ScrollViewer Grid.Row="1">
+          <ItemsControl ItemsSource="{Binding Expenses}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="entities:Expense">
+                  <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                    <Grid ColumnDefinitions="*,70,90,100,70,90">
+                      <StackPanel Grid.Column="0">
+                        <TextBlock Text="{Binding Description}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding Category}" Opacity="0.6" FontSize="12" />
+                      </StackPanel>
+                      <TextBlock Grid.Column="1"
+                                 Text="{Binding RecurFrequency, Converter={x:Static conv:RecurFrequencyLabelConverter.Instance}}"
+                                 IsVisible="{Binding RecurFrequency, Converter={x:Static conv:IsRecurringConverter.Instance}}"
+                                 Margin="8,0" FontSize="11" Opacity="0.6" VerticalAlignment="Center" />
+                      <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat='{}{0:C2}'}" Margin="8,0" FontWeight="SemiBold" />
+                      <TextBlock Grid.Column="3" Text="{Binding Date}" Margin="8,0" Opacity="0.7" />
+                      <Button Grid.Column="4" Content="Edit"
+                              Command="{Binding $parent[ItemsControl].((vm:ExpensesListViewModel)DataContext).EditCommand}"
+                              CommandParameter="{Binding}" />
+                      <Button Grid.Column="5" Content="Delete"
+                              Command="{Binding $parent[ItemsControl].((vm:ExpensesListViewModel)DataContext).DeleteCommand}"
+                              CommandParameter="{Binding}" Classes="destructive" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+      </Grid>
+    </ScrollViewer>
 
   </Grid>
 </UserControl>

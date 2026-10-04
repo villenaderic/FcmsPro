@@ -34,7 +34,7 @@ public partial class PaymentsListViewModel : ObservableObject, ICreatablePage
 
     partial void OnSortOptionChanged(ListSortOption value) => _ = LoadAsync();
 
-    public ObservableCollection<PaymentRowViewModel> Rows { get; } = new();
+    [ObservableProperty] private ObservableCollection<PaymentRowViewModel> _rows = new();
 
     /// <summary>True once a load has completed and found nothing - drives the empty-state illustration in PaymentsListView.</summary>
     public bool HasNoResults => !IsLoading && Rows.Count == 0;
@@ -110,7 +110,7 @@ public partial class PaymentsListViewModel : ObservableObject, ICreatablePage
                 _ => filtered.OrderByDescending(p => p.CreatedAt), // Newest (default)
             };
 
-            Rows.Clear();
+            var newRows = new ObservableCollection<PaymentRowViewModel>();
             foreach (var p in ordered)
             {
                 var commissionTitle = commissionsById.TryGetValue(p.CommissionId, out var commission)
@@ -119,8 +119,9 @@ public partial class PaymentsListViewModel : ObservableObject, ICreatablePage
                 var clientName = clientsById.TryGetValue(p.ClientId, out var client)
                     ? client.Name
                     : "(client deleted)";
-                Rows.Add(new PaymentRowViewModel(p, commissionTitle, clientName));
+                newRows.Add(new PaymentRowViewModel(p, commissionTitle, clientName));
             }
+            Rows = newRows;
         }
         catch (Exception ex)
         {
@@ -139,8 +140,8 @@ public partial class PaymentsListViewModel : ObservableObject, ICreatablePage
         var formVm = new PaymentFormViewModel(_paymentService, _uow);
         var window = new Views.Payments.PaymentFormWindow { DataContext = formVm };
 
-        (Payment, Receipt)? result = null;
-        formVm.Saved += (p, r) => { result = (p, r); window.Close(); };
+        Payment? result = null;
+        formVm.Saved += (p) => { result = p; window.Close(); };
         formVm.Cancelled += window.Close;
 
         await _dialogService.ShowAsync<object>(window);

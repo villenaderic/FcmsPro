@@ -24,13 +24,13 @@
         <Image Source="avares://FcmsPro/Assets/logo-wordmark.png" Width="280"
                HorizontalAlignment="Left" Margin="0,0,0,8" />
         <TextBlock TextWrapping="Wrap"
-                   Text="Your freelance commission, invoicing, and client management app - now running natively, with all your data stored locally on this machine." />
+                   Text="Your freelance commission, payments, and client management app - now running natively, with all your data stored locally on this machine." />
       </StackPanel>
 
       <StackPanel Spacing="12" IsVisible="{Binding IsTermsStep}">
         <TextBlock Text="Terms &amp; Data Handling" FontSize="20" FontWeight="Bold" />
         <ScrollViewer Height="280" Background="{DynamicResource SystemAltHighColor}" Padding="12">
-          <TextBlock TextWrapping="Wrap" Text="FCMS Pro stores all of your business data - clients, commissions, payments, invoices, and everything else - locally on this computer, in a SQLite database file in your app data folder. Nothing is sent to any external server; there is no cloud sync, and the app developer has no access to your data.&#10;&#10;You are responsible for backing up your own data (see the Backup page once you're in the app) - if this computer is lost, reformatted, or the app data folder is deleted without a backup, your data cannot be recovered.&#10;&#10;By continuing, you acknowledge you've read and understood the above." />
+          <TextBlock TextWrapping="Wrap" Text="FCMS Pro stores all of your business data - clients, commissions, payments, and everything else - locally on this computer, in a SQLite database file in your app data folder. Nothing is sent to any external server; there is no cloud sync, and the app developer has no access to your data.&#10;&#10;You are responsible for backing up your own data (see the Backup page once you're in the app) - if this computer is lost, reformatted, or the app data folder is deleted without a backup, your data cannot be recovered.&#10;&#10;By continuing, you acknowledge you've read and understood the above." />
         </ScrollViewer>
         <CheckBox Content="I've read and accept the above" IsChecked="{Binding TermsAccepted, Mode=TwoWay}" />
       </StackPanel>

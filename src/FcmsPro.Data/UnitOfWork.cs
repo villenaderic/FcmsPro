@@ -16,13 +16,7 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         Payments = new PaymentRepository(db);
         CommissionAttachments = new CommissionAttachmentRepository(db);
         ClientAttachments = new ClientAttachmentRepository(db);
-        InvoiceAttachments = new InvoiceAttachmentRepository(db);
-        QuoteAttachments = new QuoteAttachmentRepository(db);
-        Receipts = new ReceiptRepository(db);
-        Invoices = new InvoiceRepository(db);
-        Quotes = new QuoteRepository(db);
         Expenses = new ExpenseRepository(db);
-        Templates = new TemplateRepository(db);
         AuditLogs = new AuditLogRepository(db);
         Counters = new CounterRepository(db);
         Settings = new SettingsRepository(db);
@@ -35,13 +29,7 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
     public IPaymentRepository Payments { get; }
     public ICommissionAttachmentRepository CommissionAttachments { get; }
     public IClientAttachmentRepository ClientAttachments { get; }
-    public IInvoiceAttachmentRepository InvoiceAttachments { get; }
-    public IQuoteAttachmentRepository QuoteAttachments { get; }
-    public IReceiptRepository Receipts { get; }
-    public IInvoiceRepository Invoices { get; }
-    public IQuoteRepository Quotes { get; }
     public IExpenseRepository Expenses { get; }
-    public ITemplateRepository Templates { get; }
     public IAuditLogRepository AuditLogs { get; }
     public ICounterRepository Counters { get; }
     public ISettingsRepository Settings { get; }

@@ -7,15 +7,11 @@ using FcmsPro.Core.Services;
 using FcmsPro.Avalonia.ViewModels.Clients;
 using FcmsPro.Avalonia.ViewModels.Commissions;
 using FcmsPro.Avalonia.ViewModels.Payments;
-using FcmsPro.Avalonia.ViewModels.Receipts;
-using FcmsPro.Avalonia.ViewModels.Invoices;
-using FcmsPro.Avalonia.ViewModels.Quotes;
 using FcmsPro.Avalonia.ViewModels.Expenses;
 using FcmsPro.Avalonia.ViewModels.Goals;
 using FcmsPro.Avalonia.ViewModels.Dashboard;
 using FcmsPro.Avalonia.ViewModels.Analytics;
 using FcmsPro.Avalonia.ViewModels.Settings;
-using FcmsPro.Avalonia.ViewModels.Templates;
 using FcmsPro.Avalonia.ViewModels.Logs;
 using FcmsPro.Avalonia.ViewModels.Trash;
 using FcmsPro.Avalonia.ViewModels.Backup;
@@ -139,9 +135,7 @@ public partial class MainWindowViewModel : ObservableObject
                 CurrentPageViewModel = sp.GetRequiredService<SettingsViewModel>();
                 break;
 
-            case AppPage.Templates:
-                CurrentPageViewModel = sp.GetRequiredService<TemplatesViewModel>();
-                break;
+
 
             case AppPage.Logs:
                 CurrentPageViewModel = sp.GetRequiredService<LogsViewModel>();
@@ -179,17 +173,7 @@ public partial class MainWindowViewModel : ObservableObject
                 CurrentPageViewModel = sp.GetRequiredService<PaymentsListViewModel>();
                 break;
 
-            case AppPage.Receipts:
-                CurrentPageViewModel = sp.GetRequiredService<ReceiptsListViewModel>();
-                break;
 
-            case AppPage.Invoices:
-                CurrentPageViewModel = sp.GetRequiredService<InvoicesListViewModel>();
-                break;
-
-            case AppPage.Quotes:
-                CurrentPageViewModel = sp.GetRequiredService<QuotesListViewModel>();
-                break;
 
             case AppPage.Expenses:
                 CurrentPageViewModel = sp.GetRequiredService<ExpensesListViewModel>();

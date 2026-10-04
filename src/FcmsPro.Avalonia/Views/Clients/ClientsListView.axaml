@@ -17,73 +17,71 @@
                IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                Margin="0,0,0,12" TextWrapping="Wrap" />
 
-    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
-      <TextBox Grid.Column="0" Text="{Binding SearchQuery, Mode=TwoWay}"
-               Watermark="Search by name, email, or phone..." MaxWidth="320"
-               HorizontalAlignment="Stretch" Margin="0,0,12,0" />
-      <ComboBox Grid.Column="1" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SortOption, Mode=TwoWay}" Width="170">
+    <WrapPanel Grid.Row="2" Margin="0,0,0,8">
+      <TextBox Text="{Binding SearchQuery, Mode=TwoWay}"
+               Watermark="Search by name, email, or phone..." Width="300"
+               Margin="0,0,12,8" />
+      <ComboBox ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SortOption, Mode=TwoWay}" Width="170" Margin="0,0,0,8">
         <ComboBox.ItemTemplate>
           <DataTemplate>
             <TextBlock Text="{Binding Converter={x:Static conv:ListSortOptionLabelConverter.Instance}}" />
           </DataTemplate>
         </ComboBox.ItemTemplate>
       </ComboBox>
-    </Grid>
+    </WrapPanel>
 
     <ProgressBar Grid.Row="3" IsIndeterminate="True" Height="2" Margin="0,0,0,8" IsVisible="{Binding IsLoading}" />
 
-    <Grid Grid.Row="4" ColumnDefinitions="*,140,200,Auto" Margin="12,0,12,4">
-      <TextBlock Grid.Column="0" Text="Name" Classes="tableHeader" />
-      <TextBlock Grid.Column="1" Text="Phone" Classes="tableHeader" />
-      <TextBlock Grid.Column="2" Text="Email" Classes="tableHeader" />
-      <TextBlock Grid.Column="3" Text="Actions" Classes="tableHeader" Margin="12,0,0,0" />
-    </Grid>
+    <StackPanel Grid.Row="4" Grid.RowSpan="2" IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
+      <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
+      <TextBlock Text="No clients yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+      <TextBlock Text="Add your first client to start tracking commissions, payments, and invoices for them."
+                 TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
+      <Button Content="+ Add Client" Command="{Binding AddCommand}" Classes="accent" HorizontalAlignment="Center" Margin="0,4,0,0" />
+    </StackPanel>
 
-    <!--
-      Simple stacked-row list for this scaffolding pass rather than a full
-      DataGrid - pagination and per-row live stats (commission count /
-      balance) are a reasonable next iteration once this vertical slice is
-      confirmed working end-to-end.
-    -->
-    <Grid Grid.Row="5">
-      <StackPanel IsVisible="{Binding HasNoResults}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" MaxWidth="320">
-        <Image Source="avares://FcmsPro/Assets/illustration-empty-state.png" Width="160" Opacity="0.85" />
-        <TextBlock Text="No clients yet" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
-        <TextBlock Text="Add your first client to start tracking commissions, payments, and invoices for them."
-                   TextWrapping="Wrap" TextAlignment="Center" Opacity="0.6" />
-        <Button Content="+ Add Client" Command="{Binding AddCommand}" Classes="accent" HorizontalAlignment="Center" Margin="0,4,0,0" />
-      </StackPanel>
+    <ScrollViewer Grid.Row="4" Grid.RowSpan="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" IsVisible="{Binding !HasNoResults}">
+      <Grid MinWidth="600">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-      <ScrollViewer IsVisible="{Binding !HasNoResults}">
-        <ItemsControl ItemsSource="{Binding Clients}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate x:DataType="entities:Client">
-              <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
-                <Grid ColumnDefinitions="*,140,200,Auto">
-                  <StackPanel Grid.Column="0">
-                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
-                    <TextBlock Text="{Binding ClientType}" Opacity="0.6" FontSize="12" />
-                  </StackPanel>
-                  <TextBlock Grid.Column="1" Text="{Binding Phone}" VerticalAlignment="Center" Margin="8,0" Opacity="0.8" />
-                  <TextBlock Grid.Column="2" Text="{Binding Email}" VerticalAlignment="Center" Margin="8,0" Opacity="0.8" />
-                  <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="4">
-                    <Button Content="View"
-                            Command="{Binding $parent[ItemsControl].((vm:ClientsListViewModel)DataContext).ViewProfileCommand}"
-                            CommandParameter="{Binding}" />
-                    <Button Content="Edit"
-                            Command="{Binding $parent[ItemsControl].((vm:ClientsListViewModel)DataContext).EditCommand}"
-                            CommandParameter="{Binding}" />
-                    <Button Content="Delete"
-                            Command="{Binding $parent[ItemsControl].((vm:ClientsListViewModel)DataContext).DeleteCommand}"
-                            CommandParameter="{Binding}" Classes="destructive" />
-                  </StackPanel>
-                </Grid>
-              </Border>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </ScrollViewer>
-    </Grid>
+        <Grid Grid.Row="0" ColumnDefinitions="*,200,180" Margin="12,0,12,4">
+          <TextBlock Grid.Column="0" Text="Name" Classes="tableHeader" />
+          <TextBlock Grid.Column="1" Text="Email" Classes="tableHeader" Margin="8,0" />
+          <TextBlock Grid.Column="2" Text="Actions" Classes="tableHeader" />
+        </Grid>
+
+        <ScrollViewer Grid.Row="1">
+          <ItemsControl ItemsSource="{Binding Clients}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="entities:Client">
+                  <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
+                    <Grid ColumnDefinitions="*,200,180">
+                      <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                      </StackPanel>
+                      <TextBlock Grid.Column="1" Text="{Binding Email}" VerticalAlignment="Center" Margin="8,0" Opacity="0.8" />
+                      <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4">
+                        <Button Content="View"
+                                Command="{Binding $parent[ItemsControl].((vm:ClientsListViewModel)DataContext).ViewProfileCommand}"
+                                CommandParameter="{Binding}" />
+                        <Button Content="Edit"
+                                Command="{Binding $parent[ItemsControl].((vm:ClientsListViewModel)DataContext).EditCommand}"
+                                CommandParameter="{Binding}" />
+                        <Button Content="Delete"
+                                Command="{Binding $parent[ItemsControl].((vm:ClientsListViewModel)DataContext).DeleteCommand}"
+                                CommandParameter="{Binding}" Classes="destructive" />
+                      </StackPanel>
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+      </Grid>
+    </ScrollViewer>
 
   </Grid>
 </UserControl>

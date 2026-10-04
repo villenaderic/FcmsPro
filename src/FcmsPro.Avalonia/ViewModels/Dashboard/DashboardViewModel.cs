@@ -26,14 +26,12 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private decimal _netProfit;
     [ObservableProperty] private decimal _completionRatePercent;
     [ObservableProperty] private int _overdueCount;
-    [ObservableProperty] private int _overdueInvoiceCount;
     [ObservableProperty] private int _dueSoonCount;
-    [ObservableProperty] private int _dueSoonInvoiceCount;
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private string? _errorMessage;
 
-    public bool HasOverdue => OverdueCount > 0 || OverdueInvoiceCount > 0;
-    public bool HasDueSoon => DueSoonCount > 0 || DueSoonInvoiceCount > 0;
+    public bool HasOverdue => OverdueCount > 0;
+    public bool HasDueSoon => DueSoonCount > 0;
 
     /// <summary>
     /// Composes a natural-language summary of both overdue counts for the
@@ -48,18 +46,8 @@ public partial class DashboardViewModel : ObservableObject
     {
         get
         {
-            var parts = new List<string>();
-            if (OverdueCount > 0)
-                parts.Add(OverdueCount == 1 ? "1 commission" : $"{OverdueCount} commissions");
-            if (OverdueInvoiceCount > 0)
-                parts.Add(OverdueInvoiceCount == 1 ? "1 invoice" : $"{OverdueInvoiceCount} invoices");
-
-            return parts.Count switch
-            {
-                0 => string.Empty,
-                1 => $"{parts[0]} {(parts[0].StartsWith("1 ") ? "is" : "are")} overdue",
-                _ => $"{parts[0]} and {parts[1]} are overdue"
-            };
+            if (OverdueCount == 0) return string.Empty;
+            return OverdueCount == 1 ? "1 commission is overdue" : $"{OverdueCount} commissions are overdue";
         }
     }
 
@@ -81,28 +69,16 @@ public partial class DashboardViewModel : ObservableObject
     {
         get
         {
-            var parts = new List<string>();
-            if (DueSoonCount > 0)
-                parts.Add(DueSoonCount == 1 ? "1 commission" : $"{DueSoonCount} commissions");
-            if (DueSoonInvoiceCount > 0)
-                parts.Add(DueSoonInvoiceCount == 1 ? "1 invoice" : $"{DueSoonInvoiceCount} invoices");
-
-            return parts.Count switch
-            {
-                0 => string.Empty,
-                1 => $"{parts[0]} {(parts[0].StartsWith("1 ") ? "is" : "are")} due within {MetricsService.DueSoonWindowDays} days",
-                _ => $"{parts[0]} and {parts[1]} are due within {MetricsService.DueSoonWindowDays} days"
-            };
+            if (DueSoonCount == 0) return string.Empty;
+            return DueSoonCount == 1 ? $"1 commission is due within {MetricsService.DueSoonWindowDays} days" : $"{DueSoonCount} commissions are due within {MetricsService.DueSoonWindowDays} days";
         }
     }
 
     [RelayCommand]
-    private void GoToDueSoonItems() => _navigation.NavigateTo(
-        DueSoonCount > 0 ? AppPage.Commissions : AppPage.Invoices);
+    private void GoToDueSoonItems() => _navigation.NavigateTo(AppPage.Commissions);
 
     [RelayCommand]
-    private void GoToOverdueItems() => _navigation.NavigateTo(
-        OverdueCount > 0 ? AppPage.Commissions : AppPage.Invoices);
+    private void GoToOverdueItems() => _navigation.NavigateTo(AppPage.Commissions);
 
     [RelayCommand]
     private async Task LoadAsync()
@@ -118,9 +94,7 @@ public partial class DashboardViewModel : ObservableObject
             NetProfit = kpis.NetProfit;
             CompletionRatePercent = kpis.CompletionRatePercent;
             OverdueCount = kpis.OverdueCount;
-            OverdueInvoiceCount = kpis.OverdueInvoiceCount;
             DueSoonCount = kpis.DueSoonCount;
-            DueSoonInvoiceCount = kpis.DueSoonInvoiceCount;
             OnPropertyChanged(nameof(HasOverdue));
             OnPropertyChanged(nameof(OverdueSummaryText));
             OnPropertyChanged(nameof(HasDueSoon));

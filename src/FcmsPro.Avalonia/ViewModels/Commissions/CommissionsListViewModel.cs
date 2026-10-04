@@ -43,7 +43,7 @@ public partial class CommissionsListViewModel : ObservableObject, ICreatablePage
 
     partial void OnSortOptionChanged(ListSortOption value) => ApplyFilterToRows();
 
-    public ObservableCollection<CommissionRowViewModel> Rows { get; } = new();
+    [ObservableProperty] private ObservableCollection<CommissionRowViewModel> _rows = new();
 
     /// <summary>True once a load has completed and found nothing - drives the empty-state illustration in CommissionsListView.</summary>
     public bool HasNoResults => !IsLoading && Rows.Count == 0;
@@ -121,14 +121,15 @@ public partial class CommissionsListViewModel : ObservableObject, ICreatablePage
                 (c.ServiceType?.ToLower().Contains(q) ?? false));
         }
 
-        Rows.Clear();
+        var newRows = new ObservableCollection<CommissionRowViewModel>();
 
         foreach (var c in OrderCommissions(filtered))
         {
             var row = new CommissionRowViewModel(c);
             row.StatusChangeRequested += OnRowStatusChangeRequested;
-            Rows.Add(row);
+            newRows.Add(row);
         }
+        Rows = newRows;
     }
 
     /// <summary>
@@ -216,8 +217,15 @@ public partial class CommissionsListViewModel : ObservableObject, ICreatablePage
     private async Task DuplicateAsync(CommissionRowViewModel? row)
     {
         if (row is null) return;
-        await _commissionService.DuplicateAsync(row.Commission);
-        await LoadAsync();
+        IsLoading = true;
+        try
+        {
+            await _commissionService.DuplicateAsync(row.Commission);
+        }
+        finally
+        {
+            await LoadAsync();
+        }
     }
 
     [RelayCommand]
@@ -235,8 +243,15 @@ public partial class CommissionsListViewModel : ObservableObject, ICreatablePage
 
         if (!confirmed) return;
 
-        await _commissionService.DeleteAsync(row.Commission);
-        await LoadAsync();
+        IsLoading = true;
+        try
+        {
+            await _commissionService.DeleteAsync(row.Commission);
+        }
+        finally
+        {
+            await LoadAsync();
+        }
     }
 
     [RelayCommand]
