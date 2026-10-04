@@ -9,6 +9,15 @@
     <AssemblyName>FcmsPro</AssemblyName>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    
+    <!-- Application Metadata for SmartScreen & File Properties -->
+    <Version>1.2.2</Version>
+    <Authors>Roderic Villena</Authors>
+    <Company>Roderic Villena</Company>
+    <Product>FCMS Pro</Product>
+    <Description>Freelance Commission Management System</Description>
+    <Copyright>Copyright © 2024 Roderic Villena</Copyright>
+    <Title>FCMS Pro</Title>
   </PropertyGroup>
 
   <ItemGroup>

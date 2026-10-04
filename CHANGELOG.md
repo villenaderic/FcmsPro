@@ -3,6 +3,9 @@
 All notable changes to FCMS Pro are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.2]
+- Added Author, Company, and Product metadata to the executable to help build SmartScreen reputation.
+
 ## [1.2.1]
 
 ### Fixed
