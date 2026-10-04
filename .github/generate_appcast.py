@@ -10,6 +10,9 @@ def generate():
     # Fetch latest release from GitHub API
     req = urllib.request.Request("https://api.github.com/repos/villenaderic/FcmsPro/releases/latest")
     req.add_header('User-Agent', 'FcmsPro-Appcast-Generator')
+    token = os.environ.get("GITHUB_TOKEN")
+    if token:
+        req.add_header('Authorization', f'Bearer {token}')
     try:
         with urllib.request.urlopen(req) as response:
             data = json.loads(response.read())

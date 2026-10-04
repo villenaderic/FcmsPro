@@ -110,6 +110,7 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
       - name: Create release with all platform installers attached
         uses: softprops/action-gh-release@v2
@@ -126,6 +127,8 @@ jobs:
           python-version: '3.10'
 
       - name: Generate Appcast
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/generate_appcast.py
 
       - name: Commit Appcast to main
