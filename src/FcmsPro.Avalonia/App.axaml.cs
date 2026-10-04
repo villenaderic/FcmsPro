@@ -140,6 +140,9 @@ public partial class App : Application
                 _lifetimeCts.Cancel();
                 Log.CloseAndFlush();
             };
+
+            // Start auto-updater loop
+            Services.GetRequiredService<UpdateService>().Initialize();
         }
     }
 
@@ -262,6 +265,7 @@ public partial class App : Application
         services.AddSingleton<ThemeService>();
         services.AddSingleton<WindowStateService>();
         services.AddSingleton<KeySequenceService>();
+        services.AddSingleton<UpdateService>();
 
         // ViewModels (Transient - fresh state each navigation)
         services.AddTransient<OnboardingFlowViewModel>();

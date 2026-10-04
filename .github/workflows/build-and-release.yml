@@ -119,3 +119,21 @@ jobs:
             windows-installer/*.exe
             macos-dmg/*.dmg
             linux-packages/*
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Generate Appcast
+        run: python .github/generate_appcast.py
+
+      - name: Commit Appcast to main
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git checkout main
+          git add docs/appcast.xml
+          git commit -m "chore: Update appcast.xml for auto-updater [skip ci]" || echo "No changes"
+          git push origin main
