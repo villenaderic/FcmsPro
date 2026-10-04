@@ -22,13 +22,11 @@ public class CommissionServiceRecurrenceTests
         logs = new Mock<IAuditLogRepository>();
         payments = new Mock<IPaymentRepository>();
         var settings = new Mock<ISettingsRepository>();
-        var invoices = new Mock<IInvoiceRepository>();
 
         uow.SetupGet(u => u.Commissions).Returns(commissions.Object);
         uow.SetupGet(u => u.AuditLogs).Returns(logs.Object);
         uow.SetupGet(u => u.Payments).Returns(payments.Object);
         uow.SetupGet(u => u.Settings).Returns(settings.Object);
-        uow.SetupGet(u => u.Invoices).Returns(invoices.Object);
         uow.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
         payments.Setup(p => p.SumForCommissionExcludingAsync(It.IsAny<Guid>(), null, It.IsAny<CancellationToken>()))
@@ -40,14 +38,12 @@ public class CommissionServiceRecurrenceTests
         // a no-op for them (it returns immediately after reading this).
         settings.Setup(s => s.GetAppSettingsAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(new AppSettings());
-        invoices.Setup(i => i.GetAllAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<Invoice>());
 
         return uow;
     }
 
     private static CommissionService BuildService(Mock<IUnitOfWork> uow) =>
-        new(uow.Object, new InvoiceService(uow.Object));
+        new(uow.Object);
 
     [Theory]
     [InlineData(RecurFrequency.Weekly, 7)]

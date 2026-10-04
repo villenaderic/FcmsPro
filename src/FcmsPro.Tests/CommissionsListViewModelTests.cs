@@ -48,7 +48,7 @@ public class CommissionsListViewModelTests
         var dialogService = new DialogService();
         var navigation = new NavigationService();
 
-        var vm = new CommissionsListViewModel(new CommissionService(uow.Object, new InvoiceService(uow.Object)), uow.Object, dialogService, navigation);
+        var vm = new CommissionsListViewModel(new CommissionService(uow.Object), uow.Object, dialogService, navigation);
         return (vm, commissions);
     }
 

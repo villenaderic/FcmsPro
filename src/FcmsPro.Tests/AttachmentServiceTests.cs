@@ -37,19 +37,13 @@ public class AttachmentServiceTests : IDisposable
 
     private static Mock<IUnitOfWork> BuildMockUow(
         out Mock<IClientAttachmentRepository> clientAttachments,
-        out Mock<IInvoiceAttachmentRepository> invoiceAttachments,
-        out Mock<IQuoteAttachmentRepository> quoteAttachments,
         out Mock<ICommissionAttachmentRepository> commissionAttachments)
     {
         var uow = new Mock<IUnitOfWork>();
         clientAttachments = new Mock<IClientAttachmentRepository>();
-        invoiceAttachments = new Mock<IInvoiceAttachmentRepository>();
-        quoteAttachments = new Mock<IQuoteAttachmentRepository>();
         commissionAttachments = new Mock<ICommissionAttachmentRepository>();
 
         uow.SetupGet(u => u.ClientAttachments).Returns(clientAttachments.Object);
-        uow.SetupGet(u => u.InvoiceAttachments).Returns(invoiceAttachments.Object);
-        uow.SetupGet(u => u.QuoteAttachments).Returns(quoteAttachments.Object);
         uow.SetupGet(u => u.CommissionAttachments).Returns(commissionAttachments.Object);
         uow.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
@@ -59,7 +53,7 @@ public class AttachmentServiceTests : IDisposable
     [Fact]
     public async Task AddForClientAsync_CopiesFileAndPersistsMetadata()
     {
-        var uow = BuildMockUow(out var clientAttachments, out _, out _, out _);
+        var uow = BuildMockUow(out var clientAttachments, out _);
         var service = new AttachmentService(uow.Object);
         var clientId = Guid.NewGuid();
         var source = CreateSourceFile("contract.pdf", 500);
@@ -77,39 +71,11 @@ public class AttachmentServiceTests : IDisposable
         clientAttachments.Verify(r => r.AddAsync(It.IsAny<ClientAttachment>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    [Fact]
-    public async Task AddForInvoiceAsync_AcceptsImageFiles()
-    {
-        var uow = BuildMockUow(out _, out var invoiceAttachments, out _, out _);
-        var service = new AttachmentService(uow.Object);
-        var invoiceId = Guid.NewGuid();
-        var source = CreateSourceFile("mockup.png");
-        var targetDir = Path.Combine(_tempRoot, "target");
-
-        var result = await service.AddForInvoiceAsync(invoiceId, source, targetDir);
-
-        Assert.Equal(invoiceId, result.InvoiceId);
-        Assert.Equal("image/png", result.ContentType);
-    }
-
-    [Fact]
-    public async Task AddForQuoteAsync_SetsCaptionWhenProvided()
-    {
-        var uow = BuildMockUow(out _, out _, out var quoteAttachments, out _);
-        var service = new AttachmentService(uow.Object);
-        var quoteId = Guid.NewGuid();
-        var source = CreateSourceFile("reference.jpg");
-        var targetDir = Path.Combine(_tempRoot, "target");
-
-        var result = await service.AddForQuoteAsync(quoteId, source, targetDir, caption: "Client's reference sketch");
-
-        Assert.Equal("Client's reference sketch", result.Caption);
-    }
 
     [Fact]
     public async Task AddAsync_RejectsUnsupportedExtension()
     {
-        var uow = BuildMockUow(out var clientAttachments, out _, out _, out _);
+        var uow = BuildMockUow(out var clientAttachments, out _);
         var service = new AttachmentService(uow.Object);
         var source = CreateSourceFile("malware.exe");
 
@@ -122,7 +88,7 @@ public class AttachmentServiceTests : IDisposable
     [Fact]
     public async Task AddAsync_RejectsFileOverSizeLimit()
     {
-        var uow = BuildMockUow(out var clientAttachments, out _, out _, out _);
+        var uow = BuildMockUow(out var clientAttachments, out _);
         var service = new AttachmentService(uow.Object);
         var source = CreateSourceFile("huge.png", sizeBytes: 11 * 1024 * 1024); // 11 MB, over the 10 MB limit
 
@@ -136,7 +102,7 @@ public class AttachmentServiceTests : IDisposable
     [Fact]
     public async Task AddAsync_RejectsMissingSourceFile()
     {
-        var uow = BuildMockUow(out var clientAttachments, out _, out _, out _);
+        var uow = BuildMockUow(out var clientAttachments, out _);
         var service = new AttachmentService(uow.Object);
         var missingPath = Path.Combine(_tempRoot, "does-not-exist.png");
 
@@ -150,7 +116,7 @@ public class AttachmentServiceTests : IDisposable
         // .pdf was added when this service was generalized beyond Commission
         // (a signed contract or reference document) - confirm it's accepted
         // on every AddFor*Async entry point, not just the new ones.
-        var uow = BuildMockUow(out _, out _, out _, out var commissionAttachments);
+        var uow = BuildMockUow(out _, out var commissionAttachments);
         var service = new AttachmentService(uow.Object);
         var source = CreateSourceFile("reference-sheet.pdf");
 
@@ -163,7 +129,7 @@ public class AttachmentServiceTests : IDisposable
     [Fact]
     public async Task RemoveAsync_DeletesMetadataAndOnDiskFile()
     {
-        var uow = BuildMockUow(out var clientAttachments, out _, out _, out _);
+        var uow = BuildMockUow(out var clientAttachments, out _);
         var service = new AttachmentService(uow.Object);
         var targetDir = Path.Combine(_tempRoot, "target");
         var added = await service.AddForClientAsync(Guid.NewGuid(), CreateSourceFile("doc.pdf"), targetDir);
@@ -179,7 +145,7 @@ public class AttachmentServiceTests : IDisposable
     [Fact]
     public async Task RemoveAsync_MissingOnDiskFile_DoesNotThrow()
     {
-        var uow = BuildMockUow(out var clientAttachments, out _, out _, out _);
+        var uow = BuildMockUow(out var clientAttachments, out _);
         var service = new AttachmentService(uow.Object);
         var attachment = new ClientAttachment { ClientId = Guid.NewGuid(), StoredFileName = "already-gone.pdf" };
 

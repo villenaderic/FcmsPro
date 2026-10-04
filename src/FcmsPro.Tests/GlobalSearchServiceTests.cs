@@ -15,30 +15,24 @@ namespace FcmsPro.Tests;
 public class GlobalSearchServiceTests
 {
     private static (Mock<IUnitOfWork> uow, Mock<IClientRepository> clients, Mock<ICommissionRepository> commissions,
-        Mock<IInvoiceRepository> invoices, Mock<IQuoteRepository> quotes, Mock<IExpenseRepository> expenses)
+        Mock<IExpenseRepository> expenses)
         BuildMockUow()
     {
         var uow = new Mock<IUnitOfWork>();
         var clients = new Mock<IClientRepository>();
         var commissions = new Mock<ICommissionRepository>();
-        var invoices = new Mock<IInvoiceRepository>();
-        var quotes = new Mock<IQuoteRepository>();
         var expenses = new Mock<IExpenseRepository>();
 
         uow.SetupGet(u => u.Clients).Returns(clients.Object);
         uow.SetupGet(u => u.Commissions).Returns(commissions.Object);
-        uow.SetupGet(u => u.Invoices).Returns(invoices.Object);
-        uow.SetupGet(u => u.Quotes).Returns(quotes.Object);
         uow.SetupGet(u => u.Expenses).Returns(expenses.Object);
 
         clients.Setup(c => c.SearchAsync(It.IsAny<string?>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<Client>());
         commissions.Setup(c => c.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Commission>());
-        invoices.Setup(i => i.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Invoice>());
-        quotes.Setup(q => q.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Quote>());
         expenses.Setup(e => e.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Expense>());
 
-        return (uow, clients, commissions, invoices, quotes, expenses);
+        return (uow, clients, commissions, expenses);
     }
 
     [Theory]
@@ -47,7 +41,7 @@ public class GlobalSearchServiceTests
     [InlineData("a")] // single character - below the 2-char minimum
     public async Task Search_BelowMinimumLength_ReturnsEmptyWithoutQueryingAnything(string query)
     {
-        var (uow, clients, commissions, invoices, quotes, expenses) = BuildMockUow();
+        var (uow, clients, commissions, expenses) = BuildMockUow();
         var service = new GlobalSearchService(uow.Object);
 
         var results = await service.SearchAsync(query);
@@ -60,7 +54,7 @@ public class GlobalSearchServiceTests
     [Fact]
     public async Task Search_MatchesClientByName()
     {
-        var (uow, clients, _, _, _, _) = BuildMockUow();
+        var (uow, clients, _, _) = BuildMockUow();
         var client = new Client { Id = Guid.NewGuid(), Name = "Jordan Alvarez", Email = "jordan@example.com" };
         clients.Setup(c => c.SearchAsync(It.IsAny<string?>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<Client> { client });
@@ -78,7 +72,7 @@ public class GlobalSearchServiceTests
     [Fact]
     public async Task Search_ExcludesSoftDeletedClients()
     {
-        var (uow, clients, _, _, _, _) = BuildMockUow();
+        var (uow, clients, _, _) = BuildMockUow();
         clients.Setup(c => c.SearchAsync(It.IsAny<string?>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<Client>
             {
@@ -94,7 +88,7 @@ public class GlobalSearchServiceTests
     [Fact]
     public async Task Search_MatchesCommissionByServiceTypeNotJustTitle()
     {
-        var (uow, _, commissions, _, _, _) = BuildMockUow();
+        var (uow, _, commissions, _) = BuildMockUow();
         var commission = new Commission
         {
             Id = Guid.NewGuid(),
@@ -113,50 +107,11 @@ public class GlobalSearchServiceTests
         Assert.Equal(commission.ClientId, match.ClientId); // used to deep-link via CommissionDetail
     }
 
-    [Fact]
-    public async Task Search_MatchesInvoiceByInvoiceNumber()
-    {
-        var (uow, _, _, invoices, _, _) = BuildMockUow();
-        var invoice = new Invoice
-        {
-            Id = Guid.NewGuid(),
-            ClientId = Guid.NewGuid(),
-            InvoiceNumber = "INV-2026-0042",
-            Description = "Logo package"
-        };
-        invoices.Setup(i => i.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Invoice> { invoice });
-
-        var service = new GlobalSearchService(uow.Object);
-        var results = await service.SearchAsync("2026-0042");
-
-        var match = Assert.Single(results);
-        Assert.Equal(GlobalSearchResultType.Invoice, match.Type);
-        Assert.Equal("INV-2026-0042", match.Title);
-    }
-
-    [Fact]
-    public async Task Search_MatchesQuoteByScope()
-    {
-        var (uow, _, _, _, quotes, _) = BuildMockUow();
-        var quote = new Quote
-        {
-            Id = Guid.NewGuid(),
-            ClientId = Guid.NewGuid(),
-            QuoteNumber = "Q-0007",
-            Scope = "Full character sheet with three outfit variants"
-        };
-        quotes.Setup(q => q.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Quote> { quote });
-
-        var service = new GlobalSearchService(uow.Object);
-        var results = await service.SearchAsync("outfit variants");
-
-        Assert.Single(results.Where(r => r.Type == GlobalSearchResultType.Quote));
-    }
 
     [Fact]
     public async Task Search_MatchesExpenseByDescription_AndHasNoClientId()
     {
-        var (uow, _, _, _, _, expenses) = BuildMockUow();
+        var (uow, _, _, expenses) = BuildMockUow();
         var expense = new Expense
         {
             Id = Guid.NewGuid(),
@@ -177,7 +132,7 @@ public class GlobalSearchServiceTests
     [Fact]
     public async Task Search_IsCaseInsensitive()
     {
-        var (uow, clients, _, _, _, _) = BuildMockUow();
+        var (uow, clients, _, _) = BuildMockUow();
         clients.Setup(c => c.SearchAsync(It.IsAny<string?>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<Client> { new() { Id = Guid.NewGuid(), Name = "ALLCAPS CLIENT" } });
 
@@ -190,7 +145,7 @@ public class GlobalSearchServiceTests
     [Fact]
     public async Task Search_CombinesMatchesAcrossMultipleEntityTypes()
     {
-        var (uow, clients, commissions, invoices, quotes, expenses) = BuildMockUow();
+        var (uow, clients, commissions, expenses) = BuildMockUow();
         var sharedTerm = "retainer";
 
         clients.Setup(c => c.SearchAsync(It.IsAny<string?>(), It.IsAny<CancellationToken>()))

@@ -80,33 +80,4 @@ public class MetricsServiceDueSoonTests
         var commission = new Commission { Deadline = Today.AddDays(1), Status = status };
         Assert.False(MetricsService.IsCommissionDueSoon(commission, Today));
     }
-
-    [Fact]
-    public void InvoiceDueSoon_WithinWindow_IsDueSoon()
-    {
-        var invoice = new Invoice { DueDate = Today.AddDays(1), Status = InvoiceStatus.Sent };
-        Assert.True(MetricsService.IsInvoiceDueSoon(invoice, Today));
-    }
-
-    [Fact]
-    public void InvoiceDueSoon_AlreadyPaid_IsNotDueSoon()
-    {
-        var invoice = new Invoice { DueDate = Today.AddDays(1), Status = InvoiceStatus.Paid };
-        Assert.False(MetricsService.IsInvoiceDueSoon(invoice, Today));
-    }
-
-    [Fact]
-    public void InvoiceDueSoon_PastWindow_IsNotDueSoon()
-    {
-        var invoice = new Invoice { DueDate = Today.AddDays(30), Status = InvoiceStatus.Sent };
-        Assert.False(MetricsService.IsInvoiceDueSoon(invoice, Today));
-    }
-
-    [Fact]
-    public void InvoiceDueSoon_AlreadyOverdue_IsNotDueSoon()
-    {
-        var invoice = new Invoice { DueDate = Today.AddDays(-3), Status = InvoiceStatus.Sent };
-        Assert.True(MetricsService.IsInvoiceOverdue(invoice, Today));
-        Assert.False(MetricsService.IsInvoiceDueSoon(invoice, Today));
-    }
 }

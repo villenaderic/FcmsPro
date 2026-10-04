@@ -35,30 +35,21 @@ public class BackupServiceTests : IDisposable
         var clients = new Mock<IClientRepository>();
         var commissions = new Mock<ICommissionRepository>();
         var payments = new Mock<IPaymentRepository>();
-        var invoices = new Mock<IInvoiceRepository>();
-        var quotes = new Mock<IQuoteRepository>();
         var expenses = new Mock<IExpenseRepository>();
-        var templates = new Mock<ITemplateRepository>();
         var auditLogs = new Mock<IAuditLogRepository>();
         var settings = new Mock<ISettingsRepository>();
 
         uow.SetupGet(u => u.Clients).Returns(clients.Object);
         uow.SetupGet(u => u.Commissions).Returns(commissions.Object);
         uow.SetupGet(u => u.Payments).Returns(payments.Object);
-        uow.SetupGet(u => u.Invoices).Returns(invoices.Object);
-        uow.SetupGet(u => u.Quotes).Returns(quotes.Object);
         uow.SetupGet(u => u.Expenses).Returns(expenses.Object);
-        uow.SetupGet(u => u.Templates).Returns(templates.Object);
         uow.SetupGet(u => u.AuditLogs).Returns(auditLogs.Object);
         uow.SetupGet(u => u.Settings).Returns(settings.Object);
 
         commissions.Setup(c => c.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Commission>());
         clients.Setup(c => c.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Client>());
         payments.Setup(p => p.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Payment>());
-        invoices.Setup(i => i.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Invoice>());
-        quotes.Setup(q => q.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Quote>());
         expenses.Setup(e => e.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Expense>());
-        templates.Setup(t => t.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<CommissionTemplate>());
         settings.Setup(s => s.GetGoalSettingsAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new GoalSettings());
         settings.Setup(s => s.GetAppSettingsAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new AppSettings());
         uow.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
@@ -253,7 +244,7 @@ public class BackupServiceTests : IDisposable
     public async Task ImportAllAsync_NullEntityList_IsSkippedNotCleared()
     {
         // A field genuinely absent from an older/partial backup file (e.g.
-        // Templates never written) should leave existing data alone even in
+        // Expenses never written) should leave existing data alone even in
         // Replace mode - only fields actually present in the import get
         // replaced. This is what ImportEntitiesAsync's `if (incoming is
         // null) return;` guard is for.
@@ -266,21 +257,21 @@ public class BackupServiceTests : IDisposable
         // actually deserializes every list to *empty*, not null. To
         // exercise the null-guard for real, the null has to be explicit in
         // the JSON, which is what serializing a BackupExport with
-        // Templates = null! (forced past the non-nullable annotation)
+        // Expenses = null! (forced past the non-nullable annotation)
         // produces below.
         var uow = BuildMockUow();
-        var templates = Mock.Get(uow.Object.Templates);
-        var existingTemplate = new CommissionTemplate { Id = Guid.NewGuid() };
-        templates.Setup(t => t.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<CommissionTemplate> { existingTemplate });
+        var expenses = Mock.Get(uow.Object.Expenses);
+        var existingExpense = new Expense { Id = Guid.NewGuid() };
+        expenses.Setup(e => e.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Expense> { existingExpense });
 
         var service = new BackupService(uow.Object);
-        var export = new BackupExport { Templates = null! };
+        var export = new BackupExport { Expenses = null! };
         var json = JsonSerializer.Serialize(export);
-        Assert.Contains("\"Templates\":null", json); // sanity-check the premise before trusting the assertions below
+        Assert.Contains("\"Expenses\":null", json); // sanity-check the premise before trusting the assertions below
 
         await service.ImportAllAsync(json, ImportMode.Replace);
 
-        templates.Verify(t => t.Remove(It.IsAny<CommissionTemplate>()), Times.Never);
-        templates.Verify(t => t.AddAsync(It.IsAny<CommissionTemplate>(), It.IsAny<CancellationToken>()), Times.Never);
+        expenses.Verify(e => e.Remove(It.IsAny<Expense>()), Times.Never);
+        expenses.Verify(e => e.AddAsync(It.IsAny<Expense>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }
