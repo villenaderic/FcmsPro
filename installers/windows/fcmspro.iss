@@ -8,7 +8,7 @@
 ; Output: .\Output\FcmsPro-Setup-{version}.exe
 
 #define MyAppName "FCMS Pro"
-#define MyAppVersion "1.2.4"
+#define MyAppVersion "1.3.0"
 #define MyAppPublisher "Roderic Villena"
 #define MyAppExeName "FcmsPro.exe"
 

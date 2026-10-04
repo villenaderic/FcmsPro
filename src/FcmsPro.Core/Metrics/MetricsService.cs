@@ -72,6 +72,21 @@ public class MetricsService
         var totalExpenses = activeExpenses.Sum(e => e.Amount);
         var completionRate = activeCommissions.Count == 0 ? 0 : (decimal)deliveredCount / activeCommissions.Count * 100;
 
+        var chartLabels = new List<string>();
+        var chartValues = new List<decimal>();
+        for (int i = 5; i >= 0; i--)
+        {
+            var targetMonth = now.AddMonths(-i);
+            chartLabels.Add(targetMonth.ToString("MMM yyyy"));
+            var monthIncome = activePayments
+                .Where(p => p.Date.Year == targetMonth.Year && p.Date.Month == targetMonth.Month)
+                .Sum(p => p.Amount) 
+                + activeCommissions
+                .Where(c => c.DateAdded.Year == targetMonth.Year && c.DateAdded.Month == targetMonth.Month)
+                .Sum(c => c.DownPayment);
+            chartValues.Add(monthIncome);
+        }
+
         return new DashboardKpis(
             TotalIncome: totalIncome,
             ThisMonthIncome: thisMonthIncome,
@@ -79,7 +94,9 @@ public class MetricsService
             NetProfit: totalIncome - totalExpenses,
             CompletionRatePercent: completionRate,
             OverdueCount: overdueCount,
-            DueSoonCount: dueSoonCount);
+            DueSoonCount: dueSoonCount,
+            IncomeChartLabels: chartLabels,
+            IncomeChartValues: chartValues);
     }
 }
 
@@ -90,4 +107,6 @@ public record DashboardKpis(
     decimal NetProfit,
     decimal CompletionRatePercent,
     int OverdueCount,
-    int DueSoonCount);
+    int DueSoonCount,
+    List<string>? IncomeChartLabels = null,
+    List<decimal>? IncomeChartValues = null);

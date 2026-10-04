@@ -151,6 +151,13 @@
         </Button>
 
 
+        <Button Classes="navitem" Command="{Binding ToggleThemeCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="&#9728;" FontFamily="Segoe UI Emoji" VerticalAlignment="Center" FontSize="14" />
+            <TextBlock Text="Toggle Theme" />
+          </StackPanel>
+        </Button>
+
         <Border Height="1" Background="{DynamicResource SystemBaseLowColor}" Margin="4,10" />
 
         <Button Classes="navitem" Command="{Binding NavigateToCommand}" CommandParameter="{x:Static svc:AppPage.Backup}"

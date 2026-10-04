@@ -84,6 +84,15 @@ public partial class MainWindowViewModel : ObservableObject
     private void ToggleSidebar() => IsSidebarCollapsed = !IsSidebarCollapsed;
 
     [RelayCommand]
+    private void ToggleTheme()
+    {
+        if (global::Avalonia.Application.Current is not { } app) return;
+        app.RequestedThemeVariant = app.ActualThemeVariant == global::Avalonia.Styling.ThemeVariant.Dark 
+            ? global::Avalonia.Styling.ThemeVariant.Light 
+            : global::Avalonia.Styling.ThemeVariant.Dark;
+    }
+
+    [RelayCommand]
     private void NavigateTo(AppPage page) => Navigation.NavigateTo(page);
 
     [RelayCommand]

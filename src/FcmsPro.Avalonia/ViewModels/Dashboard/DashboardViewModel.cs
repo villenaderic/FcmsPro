@@ -4,6 +4,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FcmsPro.Core.Metrics;
 using FcmsPro.Avalonia.Services;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace FcmsPro.Avalonia.ViewModels.Dashboard;
 
@@ -29,6 +33,18 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private int _dueSoonCount;
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private string? _errorMessage;
+
+    [ObservableProperty] private ISeries[] _incomeSeries = [];
+    [ObservableProperty] private Axis[] _xAxes = [];
+
+    public Axis[] YAxes { get; set; } =
+    [
+        new Axis
+        {
+            Labeler = value => value.ToString("C0"),
+            LabelsPaint = new SolidColorPaint(SKColors.Gray)
+        }
+    ];
 
     public bool HasOverdue => OverdueCount > 0;
     public bool HasDueSoon => DueSoonCount > 0;
@@ -95,6 +111,30 @@ public partial class DashboardViewModel : ObservableObject
             CompletionRatePercent = kpis.CompletionRatePercent;
             OverdueCount = kpis.OverdueCount;
             DueSoonCount = kpis.DueSoonCount;
+
+            if (kpis.IncomeChartLabels != null && kpis.IncomeChartValues != null)
+            {
+                IncomeSeries = [
+                    new LineSeries<decimal>
+                    {
+                        Values = kpis.IncomeChartValues,
+                        Name = "Income",
+                        Fill = new SolidColorPaint(SKColors.CornflowerBlue.WithAlpha(50)),
+                        Stroke = new SolidColorPaint(SKColors.CornflowerBlue) { StrokeThickness = 3 },
+                        GeometryFill = new SolidColorPaint(SKColors.CornflowerBlue),
+                        GeometryStroke = new SolidColorPaint(SKColors.White) { StrokeThickness = 2 }
+                    }
+                ];
+
+                XAxes = [
+                    new Axis
+                    {
+                        Labels = kpis.IncomeChartLabels,
+                        LabelsPaint = new SolidColorPaint(SKColors.Gray)
+                    }
+                ];
+            }
+
             OnPropertyChanged(nameof(HasOverdue));
             OnPropertyChanged(nameof(OverdueSummaryText));
             OnPropertyChanged(nameof(HasDueSoon));
