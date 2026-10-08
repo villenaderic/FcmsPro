@@ -44,6 +44,7 @@ public class CommissionsListViewModelTests
 
         commissions.Setup(c => c.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(seedData);
         settings.Setup(s => s.GetUiPreferencesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new UiPreferences());
+        clients.Setup(c => c.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Client>());
 
         var dialogService = new DialogService();
         var navigation = new NavigationService();
