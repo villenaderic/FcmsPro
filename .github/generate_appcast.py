@@ -53,7 +53,10 @@ def generate():
         item_pub.text = rfc_date
         
         description = ET.SubElement(item, "description")
-        description.text = data.get('body', '')
+        body = data.get('body', '')
+        # Remove the auto-generated GitHub "Full Changelog" line that contains the raw URL
+        clean_body = '\n'.join([line for line in body.split('\n') if not line.startswith('**Full Changelog**:')])
+        description.text = clean_body.strip()
 
         enclosure = ET.SubElement(item, "enclosure")
         enclosure.set("url", url)
