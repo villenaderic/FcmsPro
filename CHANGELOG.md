@@ -3,6 +3,12 @@
 All notable changes to FCMS Pro are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.6.3]
+
+### Fixed
+- Fixed missing Client Name column in the Commissions table.
+- Fixed horizontal column alignment and wrapping issues on the Income table.
+
 ## [1.2.4]
 - Added complete app-data wipe on uninstall to ensure fresh restarts without manual cleanup.
 - Added a new Quick Start guide into the initial onboarding flow.

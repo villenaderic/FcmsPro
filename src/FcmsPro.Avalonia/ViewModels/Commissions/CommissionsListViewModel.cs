@@ -81,6 +81,7 @@ public partial class CommissionsListViewModel : ObservableObject, ICreatablePage
     partial void OnStatusFilterChanged(CommissionStatus? value) => ApplyFilterToRows();
 
     private System.Collections.Generic.List<Commission> _allLoaded = new();
+    private Dictionary<Guid, Client> _clientsById = new();
 
     [RelayCommand]
     private async Task LoadAsync()
@@ -89,6 +90,9 @@ public partial class CommissionsListViewModel : ObservableObject, ICreatablePage
         ErrorMessage = null;
         try
         {
+            var allClients = await _uow.Clients.GetAllAsync();
+            _clientsById = allClients.ToDictionary(c => c.Id);
+
             _allLoaded = FilteredByClient is not null
                 ? await _uow.Commissions.GetByClientIdAsync(FilteredByClient.Id)
                 : await _uow.Commissions.GetAllAsync();
@@ -125,7 +129,8 @@ public partial class CommissionsListViewModel : ObservableObject, ICreatablePage
 
         foreach (var c in OrderCommissions(filtered))
         {
-            var row = new CommissionRowViewModel(c);
+            var clientName = _clientsById.TryGetValue(c.ClientId, out var client) ? client.Name : "Unknown Client";
+            var row = new CommissionRowViewModel(c, clientName);
             row.StatusChangeRequested += OnRowStatusChangeRequested;
             newRows.Add(row);
         }

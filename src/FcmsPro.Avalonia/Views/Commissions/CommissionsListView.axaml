@@ -54,7 +54,7 @@
     </StackPanel>
 
     <ScrollViewer Grid.Row="4" Grid.RowSpan="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" IsVisible="{Binding !HasNoResults}">
-      <Grid MinWidth="950">
+      <Grid MinWidth="1100">
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto" />
           <RowDefinition Height="*" />
@@ -67,13 +67,14 @@
           row and never lined up with a header row anyway) so the two now stay
           in lockstep.
         -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,90,110,90,140,270" Margin="12,0,12,4">
+        <Grid Grid.Row="0" ColumnDefinitions="*,160,90,110,90,140,270" Margin="12,0,12,4">
           <TextBlock Grid.Column="0" Text="Title" Classes="tableHeader" />
-          <TextBlock Grid.Column="1" Text="Price" Classes="tableHeader" Margin="8,0" />
-          <TextBlock Grid.Column="2" Text="Remaining" Classes="tableHeader" Margin="8,0" />
-          <TextBlock Grid.Column="3" Text="Deadline" Classes="tableHeader" Margin="8,0" />
-          <TextBlock Grid.Column="4" Text="Status" Classes="tableHeader" Margin="8,0" />
-          <TextBlock Grid.Column="5" Text="Actions" Classes="tableHeader" />
+          <TextBlock Grid.Column="1" Text="Client" Classes="tableHeader" Margin="8,0" />
+          <TextBlock Grid.Column="2" Text="Price" Classes="tableHeader" Margin="8,0" />
+          <TextBlock Grid.Column="3" Text="Remaining" Classes="tableHeader" Margin="8,0" />
+          <TextBlock Grid.Column="4" Text="Deadline" Classes="tableHeader" Margin="8,0" />
+          <TextBlock Grid.Column="5" Text="Status" Classes="tableHeader" Margin="8,0" />
+          <TextBlock Grid.Column="6" Text="Actions" Classes="tableHeader" />
         </Grid>
 
         <ScrollViewer Grid.Row="1">
@@ -81,17 +82,18 @@
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:CommissionRowViewModel">
                   <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
-                    <Grid ColumnDefinitions="*,90,110,90,140,270">
-                      <StackPanel Grid.Column="0">
-                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                    <Grid ColumnDefinitions="*,160,90,110,90,140,270">
+                      <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                         <TextBlock Text="{Binding Priority}" Opacity="0.5" FontSize="11" />
                       </StackPanel>
-                      <TextBlock Grid.Column="1" Text="{Binding Price, StringFormat='{}{0:C2}'}" VerticalAlignment="Center" Margin="8,0" />
-                      <TextBlock Grid.Column="2" Text="{Binding Remaining, StringFormat='{}{0:C2} due'}" VerticalAlignment="Center" Margin="8,0" Opacity="0.8" />
-                      <TextBlock Grid.Column="3" Text="{Binding Deadline}" VerticalAlignment="Center" Margin="8,0" Opacity="0.7" />
-                      <ComboBox Grid.Column="4" ItemsSource="{Binding StatusOptions}"
+                      <TextBlock Grid.Column="1" Text="{Binding ClientName}" VerticalAlignment="Center" Margin="8,0" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Grid.Column="2" Text="{Binding Price, StringFormat='{}{0:C2}'}" VerticalAlignment="Center" Margin="8,0" />
+                      <TextBlock Grid.Column="3" Text="{Binding Remaining, StringFormat='{}{0:C2} due'}" VerticalAlignment="Center" Margin="8,0" Opacity="0.8" />
+                      <TextBlock Grid.Column="4" Text="{Binding Deadline}" VerticalAlignment="Center" Margin="8,0" Opacity="0.7" />
+                      <ComboBox Grid.Column="5" ItemsSource="{Binding StatusOptions}"
                                 SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" Width="130" Margin="8,0" />
-                      <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4">
+                      <StackPanel Grid.Column="6" Orientation="Horizontal" Spacing="4">
                         <Button Content="View"
                                 Command="{Binding $parent[ItemsControl].((vm:CommissionsListViewModel)DataContext).ViewCommand}"
                                 CommandParameter="{Binding}" />

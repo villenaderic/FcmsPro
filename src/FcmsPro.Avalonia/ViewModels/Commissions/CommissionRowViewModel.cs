@@ -43,10 +43,11 @@ public partial class CommissionRowViewModel : ObservableObject
 
     public event Action<CommissionRowViewModel, CommissionStatus /* previous */>? StatusChangeRequested;
 
-    public CommissionRowViewModel(Commission commission)
+    public CommissionRowViewModel(Commission commission, string clientName)
     {
         Commission = commission;
         _selectedStatus = commission.Status;
+        ClientName = clientName;
     }
 
     partial void OnSelectedStatusChanged(CommissionStatus value)
@@ -56,6 +57,7 @@ public partial class CommissionRowViewModel : ObservableObject
         StatusChangeRequested?.Invoke(this, previous);
     }
 
+    public string ClientName { get; }
     public string Title => Commission.Title;
     public decimal Price => Commission.Price;
     public decimal Remaining => Commission.Remaining;

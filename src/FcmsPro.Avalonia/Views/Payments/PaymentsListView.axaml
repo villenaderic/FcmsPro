@@ -51,7 +51,7 @@
           <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" ColumnDefinitions="*,*,100,110,100,90" Margin="12,0,12,4">
+        <Grid Grid.Row="0" ColumnDefinitions="*,160,100,110,100,90" Margin="12,0,12,4">
           <TextBlock Grid.Column="0" Text="Commission" Classes="tableHeader" />
           <TextBlock Grid.Column="1" Text="Client" Classes="tableHeader" />
           <TextBlock Grid.Column="2" Text="Amount" Classes="tableHeader" Margin="8,0" />
@@ -65,11 +65,11 @@
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:PaymentRowViewModel">
                   <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
-                    <Grid ColumnDefinitions="*,*,100,110,100,90">
+                    <Grid ColumnDefinitions="*,160,100,110,100,90">
                       <TextBlock Grid.Column="0" Text="{Binding CommissionTitle}" FontWeight="SemiBold"
-                                 Margin="0,0,8,0" TextWrapping="Wrap" />
+                                 Margin="0,0,12,0" TextTrimming="CharacterEllipsis" />
                       <TextBlock Grid.Column="1" Text="{Binding ClientName}" Opacity="0.8"
-                                 Margin="0,0,8,0" TextWrapping="Wrap" />
+                                 Margin="0,0,8,0" TextTrimming="CharacterEllipsis" />
                       <TextBlock Grid.Column="2" Text="{Binding Payment.Amount, StringFormat='{}{0:C2}'}" Margin="8,0" FontWeight="SemiBold" />
                       <TextBlock Grid.Column="3" Text="{Binding Payment.Method}" Margin="8,0" Opacity="0.7" />
                       <TextBlock Grid.Column="4" Text="{Binding Payment.Date}" Margin="8,0" Opacity="0.7" />
