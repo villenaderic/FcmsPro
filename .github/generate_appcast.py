@@ -31,16 +31,6 @@ def generate():
     title = ET.SubElement(channel, "title")
     title.text = "FCMS Pro Updates"
     
-    item = ET.SubElement(channel, "item")
-    item_title = ET.SubElement(item, "title")
-    item_title.text = data['name']
-    
-    item_pub = ET.SubElement(item, "pubDate")
-    item_pub.text = rfc_date
-    
-    sparkle_release = ET.SubElement(item, "sparkle:releaseNotesLink")
-    sparkle_release.text = data['html_url']
-    
     for asset in data['assets']:
         name = asset['name'].lower()
         url = asset['browser_download_url']
@@ -55,6 +45,16 @@ def generate():
         elif not name.endswith(".exe"):
             continue
             
+        item = ET.SubElement(channel, "item")
+        item_title = ET.SubElement(item, "title")
+        item_title.text = f"{data['name']} ({os_name})"
+        
+        item_pub = ET.SubElement(item, "pubDate")
+        item_pub.text = rfc_date
+        
+        sparkle_release = ET.SubElement(item, "sparkle:releaseNotesLink")
+        sparkle_release.text = data['html_url']
+
         enclosure = ET.SubElement(item, "enclosure")
         enclosure.set("url", url)
         enclosure.set("sparkle:version", version)
