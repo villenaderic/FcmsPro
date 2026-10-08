@@ -58,6 +58,7 @@ public partial class CommissionRowViewModel : ObservableObject
     }
 
     public string ClientName { get; }
+    public bool IsClientDeleted => ClientName == "Unknown Client";
     public string Title => Commission.Title;
     public decimal Price => Commission.Price;
     public decimal Remaining => Commission.Remaining;

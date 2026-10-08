@@ -26,7 +26,7 @@ def generate():
     dt = datetime.fromisoformat(pub_date.replace('Z', '+00:00'))
     rfc_date = formatdate(dt.timestamp())
 
-    rss = ET.Element("rss", version="2.0", xmlns_sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle")
+    rss = ET.Element("rss", {"version": "2.0", "xmlns:sparkle": "http://www.andymatuschak.org/xml-namespaces/sparkle"})
     channel = ET.SubElement(rss, "channel")
     title = ET.SubElement(channel, "title")
     title.text = "FCMS Pro Updates"

@@ -14,6 +14,9 @@ public class PaymentRowViewModel
     public string CommissionTitle { get; }
     public string ClientName { get; }
 
+    public bool IsCommissionDeleted => CommissionTitle == "(commission deleted)";
+    public bool IsClientDeleted => ClientName == "(client deleted)";
+
     public PaymentRowViewModel(Payment payment, string commissionTitle, string clientName)
     {
         Payment = payment;

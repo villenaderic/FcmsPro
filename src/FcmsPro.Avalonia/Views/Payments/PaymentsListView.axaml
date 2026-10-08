@@ -66,10 +66,33 @@
                 <DataTemplate x:DataType="vm:PaymentRowViewModel">
                   <Border Classes="listRow" Background="Transparent" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,0,1" Padding="12,10">
                     <Grid ColumnDefinitions="*,160,100,110,100,90">
-                      <TextBlock Grid.Column="0" Text="{Binding CommissionTitle}" FontWeight="SemiBold"
-                                 Margin="0,0,12,0" TextTrimming="CharacterEllipsis" />
-                      <TextBlock Grid.Column="1" Text="{Binding ClientName}" Opacity="0.8"
-                                 Margin="0,0,8,0" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Grid.Column="0" Text="{Binding CommissionTitle}"
+                                 Margin="0,0,12,0" TextTrimming="CharacterEllipsis"
+                                 Classes.deleted="{Binding IsCommissionDeleted}">
+                        <TextBlock.Styles>
+                          <Style Selector="TextBlock">
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                          </Style>
+                          <Style Selector="TextBlock.deleted">
+                            <Setter Property="FontWeight" Value="Normal" />
+                            <Setter Property="FontStyle" Value="Italic" />
+                            <Setter Property="Opacity" Value="0.6" />
+                          </Style>
+                        </TextBlock.Styles>
+                      </TextBlock>
+                      <TextBlock Grid.Column="1" Text="{Binding ClientName}"
+                                 Margin="0,0,8,0" TextTrimming="CharacterEllipsis"
+                                 Classes.deleted="{Binding IsClientDeleted}">
+                        <TextBlock.Styles>
+                          <Style Selector="TextBlock">
+                            <Setter Property="Opacity" Value="0.8" />
+                          </Style>
+                          <Style Selector="TextBlock.deleted">
+                            <Setter Property="FontStyle" Value="Italic" />
+                            <Setter Property="Opacity" Value="0.5" />
+                          </Style>
+                        </TextBlock.Styles>
+                      </TextBlock>
                       <TextBlock Grid.Column="2" Text="{Binding Payment.Amount, StringFormat='{}{0:C2}'}" Margin="8,0" FontWeight="SemiBold" />
                       <TextBlock Grid.Column="3" Text="{Binding Payment.Method}" Margin="8,0" Opacity="0.7" />
                       <TextBlock Grid.Column="4" Text="{Binding Payment.Date}" Margin="8,0" Opacity="0.7" />

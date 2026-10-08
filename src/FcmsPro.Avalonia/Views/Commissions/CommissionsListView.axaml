@@ -87,7 +87,14 @@
                         <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                         <TextBlock Text="{Binding Priority}" Opacity="0.5" FontSize="11" />
                       </StackPanel>
-                      <TextBlock Grid.Column="1" Text="{Binding ClientName}" VerticalAlignment="Center" Margin="8,0" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Grid.Column="1" Text="{Binding ClientName}" VerticalAlignment="Center" Margin="8,0" TextTrimming="CharacterEllipsis" Classes.deleted="{Binding IsClientDeleted}">
+                        <TextBlock.Styles>
+                          <Style Selector="TextBlock.deleted">
+                            <Setter Property="FontStyle" Value="Italic" />
+                            <Setter Property="Opacity" Value="0.5" />
+                          </Style>
+                        </TextBlock.Styles>
+                      </TextBlock>
                       <TextBlock Grid.Column="2" Text="{Binding Price, StringFormat='{}{0:C2}'}" VerticalAlignment="Center" Margin="8,0" />
                       <TextBlock Grid.Column="3" Text="{Binding Remaining, StringFormat='{}{0:C2} due'}" VerticalAlignment="Center" Margin="8,0" Opacity="0.8" />
                       <TextBlock Grid.Column="4" Text="{Binding Deadline}" VerticalAlignment="Center" Margin="8,0" Opacity="0.7" />

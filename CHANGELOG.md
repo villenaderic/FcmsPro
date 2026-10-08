@@ -3,6 +3,12 @@
 All notable changes to FCMS Pro are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.6.4]
+
+### Fixed
+- Fixed auto-updater XML generation bug (xmlns_sparkle vs xmlns:sparkle).
+- Fixed styling of deleted commission and client labels in lists so they look distinct from regular active items.
+
 ## [1.6.3]
 
 ### Fixed
