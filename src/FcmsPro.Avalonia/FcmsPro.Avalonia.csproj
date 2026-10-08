@@ -11,7 +11,7 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     
     <!-- Application Metadata for SmartScreen & File Properties -->
-    <Version>1.6.2</Version>
+    <Version>1.6.5</Version>
     <Authors>Roderic Villena</Authors>
     <Company>Roderic Villena</Company>
     <Product>FCMS Pro</Product>
