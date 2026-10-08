@@ -52,8 +52,8 @@ def generate():
         item_pub = ET.SubElement(item, "pubDate")
         item_pub.text = rfc_date
         
-        sparkle_release = ET.SubElement(item, "sparkle:releaseNotesLink")
-        sparkle_release.text = data['html_url']
+        description = ET.SubElement(item, "description")
+        description.text = data.get('body', '')
 
         enclosure = ET.SubElement(item, "enclosure")
         enclosure.set("url", url)
