@@ -31,6 +31,9 @@ public class UpdateService
                 // A real icon instead of null, so the update window can be built safely.
                 UIFactory = new UIFactory(LoadWindowIcon()!),
                 RelaunchAfterUpdate = true,
+                CustomInstallerArguments = OperatingSystem.IsWindows()
+                    ? "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-"
+                    : "",
             };
 
             // Exit immediately so the installer can overwrite the running executable.
@@ -73,7 +76,7 @@ public class UpdateService
         try
         {
             using var stream = global::Avalonia.Platform.AssetLoader.Open(
-                new Uri("avares://FcmsPro.Avalonia/Assets/app-256.png"));
+                new Uri("avares://FcmsPro/Assets/app-256.png"));
             return new global::Avalonia.Controls.WindowIcon(stream);
         }
         catch (Exception ex)
