@@ -29,7 +29,13 @@ installers/linux/appimagetool-*.AppImage
 ## is the symptom to watch for if a pattern like that gets reintroduced.
 **/window-state.json
 
-## OS
+## OS & temp
 .DS_Store
 Thumbs.db
 publish/
+*.pdf
+*.db
+*.db-shm
+*.db-wal
+*.log
+jobs.json

@@ -32,6 +32,7 @@
         x:Class="FcmsPro.Avalonia.Views.Shell.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="FCMS Pro"
+        Icon="/Assets/app-256.png"
         Width="1280" Height="720"
         MinWidth="640" MinHeight="480"
         WindowStartupLocation="CenterScreen">
@@ -70,8 +71,8 @@
                 IsVisible="{Binding !IsSidebarCollapsed}" Spacing="2" Margin="0">
 
       <Grid ColumnDefinitions="*,Auto" Margin="16,20,12,20">
-        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
-          <Image Source="avares://FcmsPro/Assets/app-icon-64.png" Width="26" Height="26" />
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+          <Image Source="avares://FcmsPro/Assets/app-icon-64.png" Width="24" Height="24" VerticalAlignment="Center" />
           <TextBlock Text="FCMS Pro" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" />
         </StackPanel>
         <Button Grid.Column="1" Content="&#9776;" FontSize="14" Padding="6,2"

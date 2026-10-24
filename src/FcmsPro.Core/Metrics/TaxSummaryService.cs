@@ -32,8 +32,9 @@ public class TaxSummaryService
 
     public async Task<TaxSummary> GetSummaryAsync(int year, CancellationToken ct = default)
     {
-        var allCommissions = await _uow.Commissions.GetAllAsync(ct);
-        var allExpenses = await _uow.Expenses.GetAllAsync(ct);
+        var allCommissions = (await _uow.Commissions.GetAllAsync(ct)).Where(c => !c.IsDeleted).ToList();
+        var allExpenses = (await _uow.Expenses.GetAllAsync(ct)).Where(e => !e.IsDeleted).ToList();
+        var allPayments = (await _uow.Payments.GetAllAsync(ct)).Where(p => !p.IsDeleted).ToList();
 
         // Income for a given year = down payments made that year (from
         // commissions created that year) + payments recorded that year -
@@ -50,15 +51,12 @@ public class TaxSummaryService
             totalIncome += c.DownPayment;
         }
 
-        foreach (var c in allCommissions)
+        var activeCommissionIds = allCommissions.Select(c => c.Id).ToHashSet();
+        foreach (var p in allPayments.Where(p => activeCommissionIds.Contains(p.CommissionId) && p.Date.Year == year))
         {
-            var payments = await _uow.Payments.GetByCommissionIdAsync(c.Id, ct);
-            foreach (var p in payments.Where(p => p.Date.Year == year))
-            {
-                var q = QuarterOf(p.Date.Month);
-                incomeByQuarter[q - 1] += p.Amount;
-                totalIncome += p.Amount;
-            }
+            var q = QuarterOf(p.Date.Month);
+            incomeByQuarter[q - 1] += p.Amount;
+            totalIncome += p.Amount;
         }
 
         var expensesThisYear = allExpenses.Where(e => e.Date.Year == year).ToList();
@@ -84,8 +82,8 @@ public class TaxSummaryService
     /// <summary>Every year that has at least one commission or expense, newest first - populates the year picker without the user having to guess which years have data.</summary>
     public async Task<List<int>> GetAvailableYearsAsync(CancellationToken ct = default)
     {
-        var commissions = await _uow.Commissions.GetAllAsync(ct);
-        var expenses = await _uow.Expenses.GetAllAsync(ct);
+        var commissions = (await _uow.Commissions.GetAllAsync(ct)).Where(c => !c.IsDeleted);
+        var expenses = (await _uow.Expenses.GetAllAsync(ct)).Where(e => !e.IsDeleted);
 
         var years = commissions.Select(c => c.DateAdded.Year)
             .Concat(expenses.Select(e => e.Date.Year))

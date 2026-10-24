@@ -73,11 +73,13 @@ public partial class AnalyticsViewModel : ObservableObject
         try
         {
             var years = await _taxSummaryService.GetAvailableYearsAsync();
+            var targetYear = years.Count > 0 ? years[0] : DateTime.Today.Year;
+
             AvailableYears.Clear();
             foreach (var y in years)
                 AvailableYears.Add(y);
 
-            SelectedYear = years.Count > 0 ? years[0] : DateTime.Today.Year;
+            SelectedYear = targetYear;
             await LoadTaxSummaryAsync();
         }
         catch (Exception ex)
@@ -86,10 +88,18 @@ public partial class AnalyticsViewModel : ObservableObject
         }
     }
 
-    partial void OnSelectedYearChanged(int value) => _ = LoadTaxSummaryAsync();
+    partial void OnSelectedYearChanged(int value)
+    {
+        if (value > 0)
+        {
+            _ = LoadTaxSummaryAsync();
+        }
+    }
 
     private async Task LoadTaxSummaryAsync()
     {
+        if (SelectedYear <= 0) return;
+
         try
         {
             TaxSummary = await _taxSummaryService.GetSummaryAsync(SelectedYear);
@@ -103,7 +113,7 @@ public partial class AnalyticsViewModel : ObservableObject
     [RelayCommand]
     private async Task ExportTaxSummaryAsync()
     {
-        if (TaxSummary is null) return;
+        if (SelectedYear <= 0) return;
 
         TaxSummaryStatusMessage = null;
         var path = await _dialogService.SaveFileAsync($"tax-summary-{SelectedYear}.pdf", "Save Tax Summary PDF");
@@ -112,10 +122,24 @@ public partial class AnalyticsViewModel : ObservableObject
         IsExportingTaxSummary = true;
         try
         {
+            TaxSummary = await _taxSummaryService.GetSummaryAsync(SelectedYear);
             var businessSettings = await _uow.Settings.GetAppSettingsAsync();
             var bytes = await _taxSummaryRenderer.RenderPdfAsync(TaxSummary, businessSettings);
             await System.IO.File.WriteAllBytesAsync(path, bytes);
-            TaxSummaryStatusMessage = $"Saved {System.IO.Path.GetFileName(path)}";
+            TaxSummaryStatusMessage = $"Saved to {path}";
+
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = path,
+                    UseShellExecute = true
+                });
+            }
+            catch
+            {
+                // Fallback if no default viewer available
+            }
         }
         catch (Exception ex)
         {

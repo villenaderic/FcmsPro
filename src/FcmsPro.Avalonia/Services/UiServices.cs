@@ -110,10 +110,14 @@ public class DialogService
     {
         if (OwnerWindow is null) return null;
 
+        var defaultFolder = await OwnerWindow.StorageProvider.TryGetWellKnownFolderAsync(WellKnownFolder.Documents);
+
         var file = await OwnerWindow.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = title,
             SuggestedFileName = suggestedFileName,
+            DefaultExtension = "pdf",
+            SuggestedStartLocation = defaultFolder,
             FileTypeChoices = new[] { FilePickerFileTypes.Pdf }
         });
 

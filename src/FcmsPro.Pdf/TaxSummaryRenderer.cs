@@ -42,7 +42,11 @@ public class TaxSummaryRenderer : ITaxSummaryRenderer
         double contentWidth = PageWidthPt - margin * 2;
         double y = margin;
 
-        var name = businessSettings.BusinessName ?? businessSettings.FreelancerName ?? "";
+        var name = !string.IsNullOrWhiteSpace(businessSettings.BusinessName)
+            ? businessSettings.BusinessName
+            : (!string.IsNullOrWhiteSpace(businessSettings.FreelancerName) ? businessSettings.FreelancerName : "");
+        var currency = string.IsNullOrWhiteSpace(businessSettings.CurrencySymbol) ? "₱" : businessSettings.CurrencySymbol;
+
         gfx.DrawString(name, headerFont, XBrushes.Black, new XPoint(margin, y));
         y += 16;
         gfx.DrawString($"Income & Expense Summary - {summary.Year}", titleFont, XBrushes.Black, new XPoint(margin, y));
@@ -52,7 +56,7 @@ public class TaxSummaryRenderer : ITaxSummaryRenderer
         void Row(string label, decimal amount, XFont font, bool rule = false)
         {
             gfx.DrawString(label, font, XBrushes.Black, new XPoint(margin, y));
-            gfx.DrawString($"{businessSettings.CurrencySymbol}{amount:N2}", font, XBrushes.Black,
+            gfx.DrawString($"{currency}{amount:N2}", font, XBrushes.Black,
                 new XRect(margin, y - 12, contentWidth, 16), XStringFormats.TopRight);
             y += 20;
             if (rule)
@@ -83,9 +87,9 @@ public class TaxSummaryRenderer : ITaxSummaryRenderer
         foreach (var q in summary.Quarters)
         {
             gfx.DrawString($"Q{q.Quarter}", valueFont, XBrushes.Black, new XPoint(colQuarter, y));
-            gfx.DrawString($"{businessSettings.CurrencySymbol}{q.Income:N2}", valueFont, XBrushes.Black, new XPoint(colIncome, y));
-            gfx.DrawString($"{businessSettings.CurrencySymbol}{q.Expenses:N2}", valueFont, XBrushes.Black, new XPoint(colExpenses, y));
-            gfx.DrawString($"{businessSettings.CurrencySymbol}{q.Net:N2}", valueFont, XBrushes.Black, new XPoint(colNet, y));
+            gfx.DrawString($"{currency}{q.Income:N2}", valueFont, XBrushes.Black, new XPoint(colIncome, y));
+            gfx.DrawString($"{currency}{q.Expenses:N2}", valueFont, XBrushes.Black, new XPoint(colExpenses, y));
+            gfx.DrawString($"{currency}{q.Net:N2}", valueFont, XBrushes.Black, new XPoint(colNet, y));
             y += 20;
         }
 
@@ -105,7 +109,7 @@ public class TaxSummaryRenderer : ITaxSummaryRenderer
             foreach (var c in summary.ExpensesByCategory)
             {
                 gfx.DrawString(SplitPascalCase(c.Category.ToString()), valueFont, XBrushes.Black, new XPoint(margin, y));
-                gfx.DrawString($"{businessSettings.CurrencySymbol}{c.Total:N2}", valueFont, XBrushes.Black,
+                gfx.DrawString($"{currency}{c.Total:N2}", valueFont, XBrushes.Black,
                     new XRect(margin, y - 12, contentWidth, 16), XStringFormats.TopRight);
                 y += 20;
             }
