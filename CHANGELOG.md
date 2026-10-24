@@ -3,6 +3,27 @@
 All notable changes to FCMS Pro are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.6.7]
+
+### Added
+- Added Ko-fi support link on the official website and in app SettingsView.
+
+### Fixed
+- Fixed Analytics PDF export and Tax Summary calculations to resolve data discrepancies.
+
+### Changed
+- Refreshed brand identity assets (new high-resolution application icons for Windows, macOS, and Linux, updated website logos and favicons).
+
+## [1.6.6]
+
+### Fixed
+- Streamlined auto-updater pipeline, release notes markdown formatting, and appcast multi-OS enclosure generation.
+
+## [1.6.5]
+
+### Fixed
+- Bumped application version to resolve update loop issues.
+
 ## [1.6.4]
 
 ### Fixed
