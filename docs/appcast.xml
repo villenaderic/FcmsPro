@@ -3,22 +3,22 @@
   <channel>
     <title>FCMS Pro Updates</title>
     <item>
-      <title>v1.6.7 (macos)</title>
-      <pubDate>Sat, 24 Oct 2026 20:14:28 -0000</pubDate>
+      <title>v1.6.8 (macos)</title>
+      <pubDate>Sat, 24 Oct 2026 21:44:03 -0000</pubDate>
       <description />
-      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.7/FcmsPro-1.6.7-arm64.dmg" sparkle:version="1.6.7" sparkle:os="macos" length="49990453" type="application/octet-stream" />
+      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.8/FcmsPro-1.6.8-arm64.dmg" sparkle:version="1.6.8" sparkle:os="macos" length="49990588" type="application/octet-stream" />
     </item>
     <item>
-      <title>v1.6.7 (windows)</title>
-      <pubDate>Sat, 24 Oct 2026 20:14:28 -0000</pubDate>
+      <title>v1.6.8 (windows)</title>
+      <pubDate>Sat, 24 Oct 2026 21:44:03 -0000</pubDate>
       <description />
-      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.7/FcmsPro-Setup-1.6.7.exe" sparkle:version="1.6.7" sparkle:os="windows" length="38426035" type="application/octet-stream" />
+      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.8/FcmsPro-Setup-1.6.8.exe" sparkle:version="1.6.8" sparkle:os="windows" length="38427402" type="application/octet-stream" />
     </item>
     <item>
-      <title>v1.6.7 (linux)</title>
-      <pubDate>Sat, 24 Oct 2026 20:14:28 -0000</pubDate>
+      <title>v1.6.8 (linux)</title>
+      <pubDate>Sat, 24 Oct 2026 21:44:03 -0000</pubDate>
       <description />
-      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.7/fcmspro_1.6.7_amd64.deb" sparkle:version="1.6.7" sparkle:os="linux" length="38234802" type="application/octet-stream" />
+      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.8/fcmspro_1.6.8_amd64.deb" sparkle:version="1.6.8" sparkle:os="linux" length="38237482" type="application/octet-stream" />
     </item>
   </channel>
 </rss>
