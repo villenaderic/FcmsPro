@@ -3,6 +3,13 @@
 All notable changes to FCMS Pro are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.6.8]
+
+### Fixed
+- Fixed Windows taskbar icon showing default Avalonia framework icon instead of FCMS Pro brand logo.
+- Fixed Inno Setup silent background update flags and added force-close application directive for seamless 1-click in-app updates.
+- Fixed window icon asset URI resolution in UpdateService.
+
 ## [1.6.7]
 
 ### Added
