@@ -4,6 +4,7 @@
         x:Class="FcmsPro.Avalonia.Views.Onboarding.OnboardingWindow"
         x:DataType="vm:OnboardingFlowViewModel"
         Title="Welcome to FCMS Pro"
+        Icon="/Assets/app.ico"
         Width="640" Height="560"
         CanResize="False"
         WindowStartupLocation="CenterScreen">

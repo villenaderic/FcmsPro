@@ -32,7 +32,7 @@
         x:Class="FcmsPro.Avalonia.Views.Shell.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="FCMS Pro"
-        Icon="/Assets/app-256.png"
+        Icon="/Assets/app.ico"
         Width="1280" Height="720"
         MinWidth="640" MinHeight="480"
         WindowStartupLocation="CenterScreen">
