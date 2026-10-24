@@ -1,6 +1,7 @@
 using Avalonia;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,6 +9,12 @@ namespace FcmsPro.Avalonia;
 
 internal static class Program
 {
+    // Sets the explicit AppUserModelID on Windows so the running application
+    // binds to its own taskbar identity and uses the branded icon rather than
+    // a generic or fallback host process icon.
+    [DllImport("shell32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+    private static extern int SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string appID);
+
     // Named mutex for single-instance enforcement across all three OSes.
     // Named mutexes are supported cross-platform in .NET Core/5+ on Windows,
     // macOS, and Linux (backed by different OS primitives under the hood, but
@@ -19,6 +26,17 @@ internal static class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        if (OperatingSystem.IsWindows())
+        {
+            try
+            {
+                SetCurrentProcessExplicitAppUserModelID("RodericVillena.FCMSPro");
+            }
+            catch
+            {
+                // Non-critical if Shell32 call fails on certain Windows environments
+            }
+        }
         // Belt-and-suspenders crash visibility: async void exceptions (like
         // ones thrown inside App.OnFrameworkInitializationCompleted) do NOT
         // propagate back through a normal try/catch around

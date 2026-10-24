@@ -17,6 +17,14 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        try
+        {
+            Icon = new WindowIcon(global::Avalonia.Platform.AssetLoader.Open(new System.Uri("avares://FcmsPro/Assets/app.ico")));
+        }
+        catch
+        {
+            // Fallback to XAML Icon attribute
+        }
 
         DataContextChanged += (_, _) =>
         {

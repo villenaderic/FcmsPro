@@ -3,6 +3,12 @@
 All notable changes to FCMS Pro are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.6.9]
+
+### Fixed
+- Fixed opaque dark bounding box on the FCMS Pro wordmark logo in the Welcome / Onboarding window by converting `logo-wordmark.png` to a transparent RGBA asset.
+- Fixed Windows taskbar icon binding by explicitly declaring `AppUserModelID` in `Program.cs` and installer shortcuts, and binding `WindowIcon` across window constructors.
+
 ## [1.6.8]
 
 ### Fixed

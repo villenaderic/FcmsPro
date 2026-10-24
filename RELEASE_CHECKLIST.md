@@ -8,8 +8,8 @@ release, then regenerates `docs/appcast.xml` for the in-app updater.
 2. Add a section to `CHANGELOG.md`.
 3. Tag and push (tag must be exactly `vX.Y.Z`):
    ```bash
-   git tag v1.6.8
-   git push origin v1.6.8
+   git tag v1.6.9
+   git push origin v1.6.9
    ```
 4. Watch the Actions run. All five jobs must be green, including **Update appcast.xml**.
 5. Confirm the release has `.exe`, `.dmg`, `.deb` and `.AppImage`, and that

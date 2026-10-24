@@ -12,6 +12,14 @@ public partial class OnboardingWindow : Window
     public OnboardingWindow()
     {
         InitializeComponent();
+        try
+        {
+            Icon = new WindowIcon(global::Avalonia.Platform.AssetLoader.Open(new System.Uri("avares://FcmsPro/Assets/app.ico")));
+        }
+        catch
+        {
+            // Fallback to XAML Icon attribute
+        }
         DataContextChanged += (_, _) =>
         {
             if (DataContext is OnboardingFlowViewModel vm)
