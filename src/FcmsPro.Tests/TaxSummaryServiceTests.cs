@@ -60,7 +60,7 @@ public class TaxSummaryServiceTests
             new()
             {
                 Id = Guid.NewGuid(),
-                Title = "Hosting",
+                Description = "Hosting",
                 Amount = 500,
                 Category = ExpenseCategory.SoftwareTools,
                 Date = new DateOnly(2026, 10, 10), // Q4
@@ -150,9 +150,9 @@ public class TaxSummaryServiceTests
             new()
             {
                 Id = Guid.NewGuid(),
-                Title = "Deleted Expense",
+                Description = "Deleted Expense",
                 Amount = 2500,
-                Category = ExpenseCategory.Supplies,
+                Category = ExpenseCategory.OfficeSupplies,
                 Date = new DateOnly(2026, 10, 1),
                 IsDeleted = true
             }

@@ -55,6 +55,24 @@ public partial class SettingsViewModel : ObservableObject
     private void ViewTrash() => _navigation.NavigateTo(AppPage.Trash);
 
     [RelayCommand]
+    private void OpenSupport()
+    {
+        try
+        {
+            const string url = "https://ko-fi.com/villenaderic";
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
+        }
+        catch
+        {
+            StatusMessage = "Could not open browser. Please visit: https://ko-fi.com/villenaderic";
+        }
+    }
+
+    [RelayCommand]
     private async Task LoadAsync()
     {
         StatusMessage = null;

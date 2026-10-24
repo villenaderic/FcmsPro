@@ -55,6 +55,15 @@
         <Button Content="View Trash" Command="{Binding ViewTrashCommand}" HorizontalAlignment="Left" />
       </StackPanel>
 
+      <!-- Support & Community -->
+      <StackPanel Spacing="8">
+        <TextBlock Text="Support &amp; Community" FontWeight="Bold" FontSize="16" />
+        <TextBlock Text="FCMS Pro is free and open source. If it helps your freelance business, consider supporting ongoing development!" 
+                   TextWrapping="Wrap" Opacity="0.8" FontSize="13" />
+        <Button Content="☕ Support on Ko-fi" Command="{Binding OpenSupportCommand}"
+                Classes="accent" HorizontalAlignment="Left" />
+      </StackPanel>
+
     </StackPanel>
   </ScrollViewer>
 </UserControl>
