@@ -122,21 +122,68 @@ jobs:
     permissions:
       contents: write
     steps:
+      # Checkout first: it needs CHANGELOG.md and scripts/, and it cleans the
+      # workspace, so it must run before the artifacts are downloaded into dist/.
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           path: dist
           merge-multiple: true
       - run: ls -lR dist
+
+      # CHANGELOG.md is the single source of truth for release notes. The same
+      # text ends up in the GitHub Release, appcast.xml (in-app update dialog)
+      # and the website. Missing section = warning + GitHub's generated notes.
+      - name: Extract release notes from CHANGELOG.md
+        id: notes
+        shell: bash
+        run: |
+          set -u
+          rc=0
+          python3 scripts/extract-changelog.py "${GITHUB_REF_NAME#v}" --out release-notes.md || rc=$?
+          if [ "$rc" -eq 0 ]; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            echo "path=release-notes.md" >> "$GITHUB_OUTPUT"
+          else
+            # Exit 3 = section missing/empty. Anything else = the script itself could not
+            # run (e.g. the tag was created before scripts/ was merged to main).
+            if [ "$rc" -eq 3 ]; then
+              echo "::warning::No '## [${GITHUB_REF_NAME#v}]' section in CHANGELOG.md - falling back to GitHub-generated release notes."
+            else
+              echo "::warning::scripts/extract-changelog.py failed (exit $rc) for ${GITHUB_REF_NAME} - falling back to GitHub-generated release notes."
+            fi
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "path=" >> "$GITHUB_OUTPUT"
+          fi
+
+      # sha256sum format ("<hash>  <file>"), bare file names, so the site and
+      # users can run `sha256sum -c`. Compensates for the lack of code signing.
+      - name: Generate SHA256SUMS.txt
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd dist
+          shopt -s nullglob
+          for ext in exe dmg deb AppImage; do
+            files=(*."$ext")
+            [ "${#files[@]}" -ge 1 ] || { echo "::error::No .$ext installer in dist/"; exit 1; }
+          done
+          sha256sum *.exe *.dmg *.deb *.AppImage > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+          sha256sum -c SHA256SUMS.txt
+
       - name: Create release with all platform installers attached
         uses: softprops/action-gh-release@v2
         with:
-          generate_release_notes: true
+          body_path: ${{ steps.notes.outputs.path }}
+          generate_release_notes: ${{ steps.notes.outputs.found != 'true' }}
           fail_on_unmatched_files: true
           files: |
             dist/*.exe
             dist/*.dmg
             dist/*.deb
             dist/*.AppImage
+            dist/SHA256SUMS.txt
 
   # Separate job that checks out `main` directly. The old step ran inside a
   # tag checkout (detached, shallow, tag-only refspec), where `git checkout main`

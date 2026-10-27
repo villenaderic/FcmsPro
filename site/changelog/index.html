@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>What&rsquo;s new in FCMS Pro: release notes and changelog</title>
+<meta name="description" content="Every FCMS Pro release, newest first: what was added, changed and fixed. Latest version {{version}}.">
+<link rel="canonical" href="{{canonical}}">
+<meta property="og:title" content="What&rsquo;s new in FCMS Pro">
+<meta property="og:description" content="Release notes for every FCMS Pro version: added, changed and fixed.">
+<meta property="og:url" content="{{canonical}}">
+<meta name="twitter:title" content="What&rsquo;s new in FCMS Pro">
+<meta name="twitter:description" content="Release notes for every FCMS Pro version: added, changed and fixed.">
+{{include:_partials/head.html}}
+</head>
+<body>
+{{include:_partials/header.html}}
+<main id="main">
+
+<section class="page-head">
+  <div class="container">
+    <p class="eyebrow">Latest: <span class="mono" data-release="version">{{version}}</span> <span class="badge badge--new" data-release="new-badge" hidden>New</span></p>
+    <h1>What&rsquo;s new</h1>
+    <p>Every release, newest first. These notes come straight from the project&rsquo;s
+      <a href="https://github.com/villenaderic/FcmsPro/blob/main/CHANGELOG.md" rel="noopener noreferrer">CHANGELOG.md</a>,
+      so they match what shipped.</p>
+    <div class="link-row">
+      <a class="btn btn--primary" href="{{root}}download/">Download {{version}}</a>
+      <a class="btn btn--ghost" href="https://github.com/villenaderic/FcmsPro/releases.atom" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-rss"/></svg>Subscribe to releases</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="cl-h">
+  <div class="container">
+    <h2 class="visually-hidden" id="cl-h">Release history</h2>
+
+    <div class="cl-controls" data-cl-controls role="group" aria-label="Filter by type of change" hidden></div>
+
+    <div class="cl-list" data-changelog>
+{{changelog_html}}
+    </div>
+    <p class="cl-empty" data-cl-empty hidden>No changes of that type.</p>
+
+    <p class="platform-note">Older installers and full release assets are on the
+      <a href="https://github.com/villenaderic/FcmsPro/releases" rel="noopener noreferrer">GitHub releases page</a>.
+      The desktop app also shows these notes in its built-in update dialog.</p>
+  </div>
+</section>
+
+</main>
+{{include:_partials/footer.html}}
+</body>
+</html>

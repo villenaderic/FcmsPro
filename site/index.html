@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FCMS Pro: freelance commission management that stays on your computer</title>
+<meta name="description" content="Track clients, commissions, quotes, invoices, payments and expenses in one desktop app for Windows, macOS and Linux. No account, no subscription, no telemetry.">
+<link rel="canonical" href="{{canonical}}">
+<meta property="og:title" content="FCMS Pro: run your freelance business, keep your data">
+<meta property="og:description" content="A free, open-source desktop app for freelancers. Commissions, quotes, invoices, payments and expenses, stored on your own computer.">
+<meta property="og:url" content="{{canonical}}">
+<meta name="twitter:title" content="FCMS Pro: run your freelance business, keep your data">
+<meta name="twitter:description" content="A free, open-source desktop app for freelancers. Everything stays on your own computer.">
+{{include:_partials/head.html}}
+<!-- Version, date and download data below are written at deploy time from the latest GitHub Release. -->
+<script type="application/ld+json">{{jsonld_json}}</script>
+</head>
+<body>
+{{include:_partials/header.html}}
+<main id="main">
+
+<!-- 2. HERO -->
+<section class="hero">
+  <div class="container">
+    <p class="eyebrow">Version <span data-release="version">{{version}}</span> <span class="badge badge--new" data-release="new-badge" hidden>New</span></p>
+    <h1>Run your freelance business. Keep your data.</h1>
+    <p class="hero__sub">Track clients, commissions, quotes, invoices, payments and expenses in one desktop app. Everything is stored on your own computer, not on someone else&rsquo;s server.</p>
+
+    <div class="hero__cta">
+      <div>
+        <a class="btn btn--primary btn--lg" id="hero-download" href="{{root}}download/" data-os-download>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>
+          <span data-os-label>Download</span>
+        </a>
+        <span class="btn-sub" data-os-meta>v<span data-release="version">{{version}}</span> &middot; Windows, macOS, Linux</span>
+      </div>
+      <div>
+        <a class="btn btn--lg" href="{{root}}download/">All platforms</a>
+      </div>
+    </div>
+    <p class="platform-note" data-platform-note aria-live="polite"></p>
+    <div class="platform-note" data-mobile-note hidden>
+      <p>FCMS Pro is a desktop app. Send yourself the link and download it on your computer.</p>
+      <div class="link-row">
+        <a class="btn" href="mailto:?subject=FCMS%20Pro%20download&amp;body={{canonical}}download/">Email me the link</a>
+        <button class="btn" type="button" data-copy-text="{{canonical}}download/">Copy link</button>
+      </div>
+    </div>
+
+    <ul class="trust-strip" role="list">
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>No account</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>No subscription</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>No telemetry</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Open source, MIT</li>
+    </ul>
+
+    <div class="hero__visual">
+      <div class="window">
+        <div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">FCMS Pro</span></div>
+        <div class="window__body">{{shot:dashboard|hero}}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. PRODUCT SHOWCASE -->
+<section class="section" id="showcase" aria-labelledby="showcase-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">The app</span>
+      <h2 id="showcase-h">Everything for the job, from quote to payment</h2>
+      <p>One window for the whole commission lifecycle.</p>
+    </div>
+    <div class="tabs showcase reveal" data-tabs>
+      <div role="tablist" aria-label="Product screens">
+        <button type="button" role="tab" id="tab-dashboard" aria-selected="true" aria-controls="panel-dashboard">Dashboard</button>
+        <button type="button" role="tab" id="tab-kanban" aria-selected="false" aria-controls="panel-kanban" tabindex="-1">Kanban</button>
+        <button type="button" role="tab" id="tab-invoice" aria-selected="false" aria-controls="panel-invoice" tabindex="-1">Invoice PDF</button>
+        <button type="button" role="tab" id="tab-analytics" aria-selected="false" aria-controls="panel-analytics" tabindex="-1">Analytics</button>
+        <button type="button" role="tab" id="tab-search" aria-selected="false" aria-controls="panel-search" tabindex="-1">Search</button>
+        <button type="button" role="tab" id="tab-theme" aria-selected="false" aria-controls="panel-theme" tabindex="-1">Light &amp; dark</button>
+      </div>
+
+      <div role="tabpanel" id="panel-dashboard" aria-labelledby="tab-dashboard" tabindex="0">
+        <h3 class="visually-hidden">Dashboard</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Dashboard</span></div><div class="window__body">{{shot:dashboard}}</div></div>
+        <p class="showcase__caption">Income, balances, overdue items and due-soon warnings at a glance.</p>
+      </div>
+      <div role="tabpanel" id="panel-kanban" aria-labelledby="tab-kanban" tabindex="0">
+        <h3 class="visually-hidden">Kanban</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Commissions</span></div><div class="window__body">{{shot:commissions-kanban}}</div></div>
+        <p class="showcase__caption">Switch Commissions between a table and a kanban board. Change status right from the list.</p>
+      </div>
+      <div role="tabpanel" id="panel-invoice" aria-labelledby="tab-invoice" tabindex="0">
+        <h3 class="visually-hidden">Invoice PDF</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Invoice</span></div><div class="window__body">{{shot:invoice-pdf}}</div></div>
+        <p class="showcase__caption">Quotes, invoices and receipts export to PDF, using the business details and terms you set once in Settings.</p>
+      </div>
+      <div role="tabpanel" id="panel-analytics" aria-labelledby="tab-analytics" tabindex="0">
+        <h3 class="visually-hidden">Analytics</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Analytics</span></div><div class="window__body">{{shot:analytics}}</div></div>
+        <p class="showcase__caption">Income breakdowns, plus a tax and quarterly summary you can export.</p>
+      </div>
+      <div role="tabpanel" id="panel-search" aria-labelledby="tab-search" tabindex="0">
+        <h3 class="visually-hidden">Search</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Search</span></div><div class="window__body">{{shot:search}}</div></div>
+        <p class="showcase__caption">Press <kbd>/</kbd> anywhere to search clients, commissions, invoices, quotes and expenses.</p>
+      </div>
+      <div role="tabpanel" id="panel-theme" aria-labelledby="tab-theme" tabindex="0">
+        <h3 class="visually-hidden">Light and dark theme</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Light theme</span></div><div class="window__body">{{shot:dashboard-light}}</div></div>
+        <p class="showcase__caption">Light or dark, with your choice of accent colour. Switch with <strong>Toggle Theme</strong> in the sidebar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. WHY LOCAL-FIRST -->
+<section class="section section--alt" id="local-first" aria-labelledby="local-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Why local-first</span>
+      <h2 id="local-h">Your records, on your machine</h2>
+      <p>Many invoicing tools keep your financial data on the provider&rsquo;s servers. FCMS Pro does the opposite.</p>
+    </div>
+    <div class="compare reveal">
+      <article class="card card--us">
+        <h3>FCMS Pro <span class="badge">Local-first</span></h3>
+        <ul role="list">
+          <li class="yes"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>All data lives in one SQLite file on your computer</li>
+          <li class="yes"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>No account to create and no monthly fee</li>
+          <li class="yes"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>No telemetry</li>
+          <li class="yes"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Export everything to a single .json file whenever you like</li>
+          <li class="yes"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Open source under the MIT license, so you can read the code</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Typical subscription tools</h3>
+        <ul role="list">
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-x"/></svg>Your data sits on the company&rsquo;s servers</li>
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-x"/></svg>An account and a recurring fee</li>
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-x"/></svg>Access depends on the company staying in business</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>The trade-offs</h3>
+        <ul role="list">
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-info"/></svg>Backups are your responsibility: there is no cloud copy</li>
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-info"/></svg>No cloud sync between computers</li>
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-info"/></svg>Uninstalling on Windows also deletes your data folder</li>
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-info"/></svg>The app is not code signed, so your OS will show a warning</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 5. FEATURES -->
+<section class="section" id="features" aria-labelledby="features-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Features</span>
+      <h2 id="features-h">Every module you need, nothing you don&rsquo;t</h2>
+    </div>
+    <div class="grid grid--features reveal">
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-dashboard"/></svg></span><h3>Dashboard</h3><p>Income, balances, overdue items and due-soon warnings at a glance.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clients"/></svg></span><h3>Clients</h3><p>Profiles with what each client owes and has paid, their commission history, and file attachments such as signed contracts.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-kanban"/></svg></span><h3>Commissions</h3><p>Table or kanban board. Move jobs from Pending through Delivered, or Cancelled at any point.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-repeat"/></svg></span><h3>Recurring work</h3><p>Repeat commissions weekly, biweekly or monthly, and recurring expenses like subscriptions.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-quote"/></svg></span><h3>Quotes</h3><p>Send scope and price first. Convert an accepted quote into a pre-filled commission.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-payment"/></svg></span><h3>Payments</h3><p>Recording a payment reduces the balance automatically. Refund to undo it and restore the balance.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-receipt"/></svg></span><h3>Receipts</h3><p>Every payment generates a receipt you can download as a PDF.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-invoice"/></svg></span><h3>Invoices</h3><p>Standalone billing documents, linked to a commission or not, with PDF export and attachments.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-expense"/></svg></span><h3>Expenses</h3><p>Log expenses by category and track net profit: income minus expenses.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-goal"/></svg></span><h3>Goals</h3><p>Set monthly or yearly income and expense targets and see how you&rsquo;re tracking.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-analytics"/></svg></span><h3>Analytics &amp; tax summary</h3><p>Income breakdowns with a tax and quarterly summary export.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-template"/></svg></span><h3>Templates</h3><p>Eight ready-made starting points, like Icon Commission or Logo Package, plus your own.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg></span><h3>Global search</h3><p>Press <kbd>/</kbd> to search across clients, commissions, invoices, quotes and expenses.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-trash"/></svg></span><h3>Trash</h3><p>Soft delete means a client or commission you remove by accident isn&rsquo;t gone for good.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-backup"/></svg></span><h3>Backup</h3><p>Manual export and import, plus automatic local backups with a configurable retention count.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-logs"/></svg></span><h3>Logs</h3><p>A read-only history of records created, updated and deleted, logins, and backups.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 6. HOW IT WORKS -->
+<section class="section section--alt" id="how" aria-labelledby="how-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Getting started</span>
+      <h2 id="how-h">Three steps to your first commission</h2>
+    </div>
+    <ol class="steps reveal" role="list">
+      <li class="card step">
+        <h3>Download</h3>
+        <p class="muted">Pick the installer for your system from the <a href="{{root}}download/">download page</a>. Your OS will warn that the app is unsigned; <a href="#security">here is why and what to do</a>.</p>
+      </li>
+      <li class="card step">
+        <h3>Install</h3>
+        <p class="muted">Run the Windows installer, open the macOS .dmg, or install the Linux .deb or run the AppImage. No account is needed at any point.</p>
+      </li>
+      <li class="card step">
+        <h3>Set up</h3>
+        <p class="muted">A short first-run flow:</p>
+        <ol>
+          <li>Welcome</li>
+          <li>Terms &amp; data handling</li>
+          <li>Where your data lives</li>
+          <li>Create your admin account</li>
+          <li>Finish</li>
+        </ol>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- 7. KEYBOARD-FIRST -->
+<section class="section" id="keyboard" aria-labelledby="kbd-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Keyboard-first</span>
+      <h2 id="kbd-h">Get around without the mouse</h2>
+      <p>Shortcuts are switched off while you&rsquo;re typing in a text field. Two-key shortcuts need the second key within about a second.</p>
+    </div>
+    <div class="shortcuts reveal">
+      <div>
+        <div class="shortcut"><span>Search everything</span><span class="shortcut__keys"><kbd>/</kbd></span></div>
+        <div class="shortcut"><span>Collapse or expand the sidebar</span><span class="shortcut__keys"><kbd>[</kbd></span></div>
+        <div class="shortcut"><span>Go to Dashboard</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>d</kbd></span></div>
+        <div class="shortcut"><span>Go to Analytics</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>a</kbd></span></div>
+        <div class="shortcut"><span>Go to Clients</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>c</kbd></span></div>
+        <div class="shortcut"><span>Go to Commissions</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>w</kbd></span></div>
+        <div class="shortcut"><span>Go to Payments</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>p</kbd></span></div>
+      </div>
+      <div>
+        <div class="shortcut"><span>Go to Expenses</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>e</kbd></span></div>
+        <div class="shortcut"><span>Go to Goals</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>g</kbd></span></div>
+        <div class="shortcut"><span>Go to Backup</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>b</kbd></span></div>
+        <div class="shortcut"><span>Go to Logs</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>l</kbd></span></div>
+        <div class="shortcut"><span>Go to Settings</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>s</kbd></span></div>
+        <div class="shortcut"><span>New client</span><span class="shortcut__keys"><kbd>n</kbd> then <kbd>c</kbd></span></div>
+        <div class="shortcut"><span>New commission</span><span class="shortcut__keys"><kbd>n</kbd> then <kbd>w</kbd></span></div>
+        <div class="shortcut"><span>New payment</span><span class="shortcut__keys"><kbd>n</kbd> then <kbd>p</kbd></span></div>
+        <div class="shortcut"><span>New expense</span><span class="shortcut__keys"><kbd>n</kbd> then <kbd>e</kbd></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. AUTO-UPDATES & RELEASES + 9. SECURITY -->
+<section class="section section--alt" id="updates" aria-labelledby="updates-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Always current</span>
+      <h2 id="updates-h">Updates arrive on their own</h2>
+      <p>FCMS Pro checks for a newer version when it starts and offers to install it. This page always shows the latest release.</p>
+    </div>
+    <div class="split reveal">
+      <article class="card release-card" aria-labelledby="rel-h">
+        <h3 class="visually-hidden" id="rel-h">Latest release</h3>
+        <div class="release-card__head">
+          <span class="release-card__version">v<span data-release="version">{{version}}</span></span>
+          <span class="badge badge--new" data-release="new-badge" hidden>New</span>
+          <time class="muted" data-release="date" datetime="{{published}}">{{published|date}}</time>
+        </div>
+        <div>
+          <strong>What&rsquo;s new</strong>
+          <ul data-release="highlights">{{highlights_html}}</ul>
+        </div>
+        <p class="muted" data-release="status" aria-live="polite"></p>
+        <div class="link-row">
+          <a class="btn" data-asset-link="windows" href="{{asset.windows.url}}" rel="noopener noreferrer">Windows <span class="meta">.exe &middot; {{asset.windows.size}}</span></a>
+          <a class="btn" data-asset-link="macos" href="{{asset.macos.url}}" rel="noopener noreferrer">macOS <span class="meta">.dmg &middot; {{asset.macos.size}}</span></a>
+          <a class="btn" data-asset-link="linux_deb" href="{{asset.linux_deb.url}}" rel="noopener noreferrer">Linux <span class="meta">.deb &middot; {{asset.linux_deb.size}}</span></a>
+          <a class="btn" data-asset-link="linux_appimage" href="{{asset.linux_appimage.url}}" rel="noopener noreferrer">AppImage <span class="meta">{{asset.linux_appimage.size}}</span></a>
+        </div>
+        <div class="link-row">
+          <a class="btn btn--ghost" href="{{root}}changelog/">Full changelog</a>
+          <a class="btn btn--ghost" href="{{release_url}}" rel="noopener noreferrer">Release on GitHub</a>
+          <a class="btn btn--ghost" href="https://github.com/villenaderic/FcmsPro/releases.atom" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-rss"/></svg>Subscribe to releases</a>
+        </div>
+      </article>
+
+      <article class="card" id="security" aria-labelledby="sec-h">
+        <span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield"/></svg></span>
+        <h3 id="sec-h">Security &amp; trust</h3>
+        <div class="stack">
+          <p class="muted">FCMS Pro is <strong>not code signed</strong>, because that needs a paid certificate. Windows SmartScreen and macOS Gatekeeper warn about unsigned apps. That is expected, as long as you downloaded it from this site or the project&rsquo;s GitHub Releases page.</p>
+          <p><strong>Windows:</strong> click <em>More info</em>, then <em>Run anyway</em>.<br><strong>macOS 14 or earlier:</strong> right-click the app, choose <em>Open</em>, then confirm.<br><strong>macOS 15 or newer:</strong> try to open it once, then use <em>System Settings &rarr; Privacy &amp; Security &rarr; Open Anyway</em>.</p>
+          <div class="callout callout--info">
+            <strong>Verify your download</strong>
+            Compare the file&rsquo;s SHA-256 with the value on the <a href="{{root}}download/">download page</a> (also published as <code>SHA256SUMS.txt</code> with each release). It confirms the file matches what was published.
+          </div>
+          <div class="codeblock">
+            <pre><code>Get-FileHash -Algorithm SHA256 .\<span data-asset-name="windows">{{asset.windows.name}}</span></code></pre>
+            <button class="copy-btn" type="button" data-copy-code>Copy</button>
+          </div>
+          <div class="codeblock">
+            <pre><code>shasum -a 256 <span data-asset-name="macos">{{asset.macos.name}}</span></code></pre>
+            <button class="copy-btn" type="button" data-copy-code>Copy</button>
+          </div>
+          <p class="muted">On Linux use <code>sha256sum</code> the same way. FCMS Pro has no telemetry, and the full source code is on GitHub.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 10. FAQ -->
+<section class="section" id="faq" aria-labelledby="faq-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2 id="faq-h">Questions, answered</h2>
+    </div>
+    <div class="faq reveal">
+      <details>
+        <summary>Where is my data stored?</summary>
+        <div class="faq__body">
+          <p>In a single SQLite file on your own computer: <code>%APPDATA%\FcmsPro</code> on Windows, <code>~/Library/Application Support/FcmsPro</code> on macOS, and <code>~/.local/share/FcmsPro</code> on Linux. There is no server, no account and no telemetry. The first-run setup also shows you this folder.</p>
+        </div>
+      </details>
+      <details>
+        <summary>How do I back up?</summary>
+        <div class="faq__body">
+          <p>Open <strong>Backup</strong> and choose <strong>Export</strong>. It saves your clients, commissions, payments, invoices and more to a single <code>.json</code> file. Import restores it, either merging with or replacing what is there. FCMS Pro also keeps automatic local backups with a retention count you can configure.</p>
+          <p>Those automatic backups live on the same computer, so keep an export somewhere else too. There is no cloud copy to fall back on. Your password is never included in a backup.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Will my data survive updates?</summary>
+        <div class="faq__body">
+          <p>Your database is kept in your user data folder, separate from the program files, so installing a new version doesn&rsquo;t replace it. When a new version changes how data is stored, the app applies those database migrations automatically on launch. It is still good practice to export a backup before you update.</p>
+          <p><strong>Uninstalling is different:</strong> on Windows the uninstaller also deletes the <code>%APPDATA%\FcmsPro</code> data folder, so export a backup first if you want to keep your records.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Why does my system show a security warning?</summary>
+        <div class="faq__body">
+          <p>The app is not code signed, because that needs a paid certificate. See <a href="#security">Security &amp; trust</a> for the steps on Windows and macOS.</p>
+        </div>
+      </details>
+      <details>
+        <summary>How do I verify my download?</summary>
+        <div class="faq__body">
+          <p>Run <code>Get-FileHash -Algorithm SHA256</code> in PowerShell on Windows, or <code>shasum -a 256</code> on macOS or <code>sha256sum</code> on Linux, and compare the result with the SHA-256 on the <a href="{{root}}download/">download page</a>.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Which systems are supported?</summary>
+        <div class="faq__body">
+          <p>Windows (64-bit installer), macOS on Apple Silicon (macOS 11 or newer), and Linux x64 as a <code>.deb</code> or <code>.AppImage</code>. There is no Intel Mac build and no native ARM build for Windows or Linux yet. If you need one, <a href="https://github.com/villenaderic/FcmsPro/issues/new?template=feature_request.yml&amp;title=Build%20request%3A%20" rel="noopener noreferrer">open a request</a>.</p>
+        </div>
+      </details>
+      <details>
+        <summary>How do updates work?</summary>
+        <div class="faq__body">
+          <p>FCMS Pro checks GitHub for a newer version when it starts and offers to install it. You can always download the newest installer from the <a href="{{root}}download/">download page</a>, and the full history is in the <a href="{{root}}changelog/">changelog</a>.</p>
+        </div>
+      </details>
+      <details>
+        <summary>I found a bug or want a feature.</summary>
+        <div class="faq__body">
+          <p>Please use <a href="https://github.com/villenaderic/FcmsPro/issues/new/choose" rel="noopener noreferrer">GitHub Issues</a>. You can also reach the author on <a href="https://m.me/roderic.villena" rel="noopener noreferrer">Messenger</a>.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- 11. SUPPORT + FINAL CTA -->
+<section class="section section--tight" id="support" aria-labelledby="support-h">
+  <div class="container">
+    <div class="cta-band reveal">
+      <h2 id="support-h">Ready to take your records back?</h2>
+      <p>FCMS Pro is free, privacy-first and open source. If it saves you time, you can help fund future development.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary btn--lg" href="{{root}}download/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>Download FCMS Pro</a>
+        <a class="btn btn--lg" href="https://ko-fi.com/villenaderic" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart"/></svg>Support on Ko-fi</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+{{include:_partials/footer.html}}
+</body>
+</html>

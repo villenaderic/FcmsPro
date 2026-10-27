@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Download FCMS Pro for Windows, macOS and Linux</title>
+<meta name="description" content="Download FCMS Pro {{version}}: free, open-source freelance commission management for Windows, macOS (Apple Silicon) and Linux. Checksums included.">
+<link rel="canonical" href="{{canonical}}">
+<meta property="og:title" content="Download FCMS Pro">
+<meta property="og:description" content="Free, open source, no account. Installers for Windows, macOS (Apple Silicon) and Linux, with SHA-256 checksums.">
+<meta property="og:url" content="{{canonical}}">
+<meta name="twitter:title" content="Download FCMS Pro">
+<meta name="twitter:description" content="Installers for Windows, macOS (Apple Silicon) and Linux, with SHA-256 checksums.">
+{{include:_partials/head.html}}
+<script type="application/ld+json">{{jsonld_json}}</script>
+</head>
+<body>
+{{include:_partials/header.html}}
+<main id="main">
+
+<section class="page-head">
+  <div class="container">
+    <p class="eyebrow">Version <span data-release="version">{{version}}</span> <span class="badge badge--new" data-release="new-badge" hidden>New</span></p>
+    <h1>Download FCMS Pro</h1>
+    <p>Free and open source. No account, no subscription, no telemetry.
+      Released <time data-release="date" datetime="{{published}}">{{published|date}}</time>.</p>
+    <p class="muted" data-release="status" aria-live="polite"></p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="dl-h">
+  <div class="container">
+    <h2 class="visually-hidden" id="dl-h">Choose your system</h2>
+
+    <div class="tabs os-tabs" data-tabs data-os-tabs>
+      <div role="tablist" aria-label="Operating system">
+        <button type="button" role="tab" id="tab-windows" aria-selected="true" aria-controls="panel-windows">Windows</button>
+        <button type="button" role="tab" id="tab-macos" aria-selected="false" aria-controls="panel-macos" tabindex="-1">macOS</button>
+        <button type="button" role="tab" id="tab-linux" aria-selected="false" aria-controls="panel-linux" tabindex="-1">Linux</button>
+      </div>
+
+      <div role="tabpanel" id="panel-windows" aria-labelledby="tab-windows" tabindex="0" data-os="windows">
+        <article class="card dl-card">
+          <div class="dl-card__top">
+          <div>
+            <h3>Windows</h3>
+            <div class="dl-card__meta"><span>64-bit (x64) installer</span></div>
+          </div>
+          <a class="btn btn--primary btn--lg" data-asset-link="windows" href="{{asset.windows.url}}" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>Download for Windows <span class="meta">.exe &middot; {{asset.windows.size}}</span></a>
+        </div>
+          <dl>
+          <dt>File</dt><dd><code data-asset-name="windows">{{asset.windows.name}}</code></dd>
+          <dt>Size</dt><dd data-asset-size="windows">{{asset.windows.size}}</dd>
+          <dt>SHA-256</dt><dd><div class="hash"><code data-asset-sha="windows" data-copy-text="{{asset.windows.sha256}}">{{asset.windows.sha256}}</code><button class="copy-btn" type="button" data-copy-sibling>Copy</button></div></dd>
+        </dl>
+          <div>
+            <strong>Install</strong>
+            <ol>
+              <li>Run the installer you downloaded.</li>
+              <li>Windows SmartScreen may say <em>Windows protected your PC</em>. FCMS Pro is not code signed, so this is expected. Click <em>More info</em>, then <em>Run anyway</em>.</li>
+              <li>Follow the setup, then open FCMS Pro. The first-run setup shows you where your data folder is.</li>
+            </ol>
+          </div>
+        </article>
+      </div>
+
+      <div role="tabpanel" id="panel-macos" aria-labelledby="tab-macos" tabindex="0" data-os="macos" hidden>
+        <article class="card dl-card">
+          <div class="dl-card__top">
+          <div>
+            <h3>macOS</h3>
+            <div class="dl-card__meta"><span>Apple Silicon (M1 or newer), macOS 11 or newer</span></div>
+          </div>
+          <a class="btn btn--primary btn--lg" data-asset-link="macos" href="{{asset.macos.url}}" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>Download for macOS <span class="meta">.dmg &middot; {{asset.macos.size}}</span></a>
+        </div>
+          <div class="callout callout--warning">
+            <strong>Apple Silicon only.</strong> There is no Intel Mac build yet. If you need one, <a href="https://github.com/villenaderic/FcmsPro/issues/new?template=feature_request.yml&amp;title=Build%20request%3A%20Intel%20Mac" rel="noopener noreferrer">open a request</a>.
+          </div>
+          <dl>
+          <dt>File</dt><dd><code data-asset-name="macos">{{asset.macos.name}}</code></dd>
+          <dt>Size</dt><dd data-asset-size="macos">{{asset.macos.size}}</dd>
+          <dt>SHA-256</dt><dd><div class="hash"><code data-asset-sha="macos" data-copy-text="{{asset.macos.sha256}}">{{asset.macos.sha256}}</code><button class="copy-btn" type="button" data-copy-sibling>Copy</button></div></dd>
+        </dl>
+          <div>
+            <strong>Install</strong>
+            <ol>
+              <li>Open the <code>.dmg</code> and drag FCMS Pro into Applications.</li>
+              <li>The app is not signed with an Apple Developer ID, so Gatekeeper may refuse a normal double-click.</li>
+              <li>On macOS 14 or earlier: right-click the app, choose <em>Open</em>, then confirm.</li>
+              <li>On macOS 15 or newer that right-click shortcut no longer works. Try to open the app once, then go to <em>System Settings &rarr; Privacy &amp; Security</em>, scroll to the message about FCMS Pro and click <em>Open Anyway</em>.</li>
+            </ol>
+          </div>
+        </article>
+      </div>
+
+      <div role="tabpanel" id="panel-linux" aria-labelledby="tab-linux" tabindex="0" data-os="linux" hidden>
+        <article class="card dl-card">
+          <div class="dl-card__top">
+          <div>
+            <h3>Linux</h3>
+            <div class="dl-card__meta"><span>64-bit (x64) only; no ARM build yet</span></div>
+          </div>
+          <a class="btn btn--primary btn--lg" data-asset-link="linux_deb" href="{{asset.linux_deb.url}}" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>Download .deb <span class="meta">.deb &middot; {{asset.linux_deb.size}}</span></a>
+        </div>
+          <dl>
+          <dt>File</dt><dd><code data-asset-name="linux_deb">{{asset.linux_deb.name}}</code></dd>
+          <dt>Size</dt><dd data-asset-size="linux_deb">{{asset.linux_deb.size}}</dd>
+          <dt>SHA-256</dt><dd><div class="hash"><code data-asset-sha="linux_deb" data-copy-text="{{asset.linux_deb.sha256}}">{{asset.linux_deb.sha256}}</code><button class="copy-btn" type="button" data-copy-sibling>Copy</button></div></dd>
+        </dl>
+          <div>
+            <strong>Install the .deb (Debian, Ubuntu and derivatives)</strong>
+            <div class="codeblock">
+              <pre><code>sudo apt install ./<span data-asset-name="linux_deb">{{asset.linux_deb.name}}</span></code></pre>
+              <button class="copy-btn" type="button" data-copy-code>Copy</button>
+            </div>
+          </div>
+          <hr>
+          <div class="dl-card__top">
+            <div><h3>AppImage</h3><div class="dl-card__meta"><span>Runs without installing on x64 distributions that have FUSE 2</span></div></div>
+            <a class="btn btn--primary btn--lg" data-asset-link="linux_appimage" href="{{asset.linux_appimage.url}}" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>Download AppImage <span class="meta">.AppImage &middot; {{asset.linux_appimage.size}}</span></a>
+          </div>
+          <dl>
+          <dt>File</dt><dd><code data-asset-name="linux_appimage">{{asset.linux_appimage.name}}</code></dd>
+          <dt>Size</dt><dd data-asset-size="linux_appimage">{{asset.linux_appimage.size}}</dd>
+          <dt>SHA-256</dt><dd><div class="hash"><code data-asset-sha="linux_appimage" data-copy-text="{{asset.linux_appimage.sha256}}">{{asset.linux_appimage.sha256}}</code><button class="copy-btn" type="button" data-copy-sibling>Copy</button></div></dd>
+        </dl>
+          <div class="codeblock">
+            <pre><code>chmod +x ./<span data-asset-name="linux_appimage">{{asset.linux_appimage.name}}</span>
+./<span data-asset-name="linux_appimage">{{asset.linux_appimage.name}}</span></code></pre>
+            <button class="copy-btn" type="button" data-copy-code>Copy</button>
+          </div>
+          <p class="muted">If the AppImage will not start, your distribution may be missing <code>libfuse2</code> (newer Ubuntu releases no longer include it) or the ICU libraries (<code>libicu</code>). Install them with your package manager, or use the .deb instead.</p>
+        </article>
+      </div>
+    </div>
+    <p class="muted dl-note" data-platform-note aria-live="polite"></p>
+  </div>
+</section>
+
+<section class="section" id="verify" aria-labelledby="verify-h">
+  <div class="container prose">
+    <h2 id="verify-h">Verify your download</h2>
+    <p>FCMS Pro is not code signed, so the SHA-256 checksum is how you confirm the file is the one that was published. The values above come from the GitHub Release, which also carries them as <code>SHA256SUMS.txt</code>. The two must match.</p>
+    <div class="codeblock"><pre><code># Windows (PowerShell)
+Get-FileHash -Algorithm SHA256 .\<span data-asset-name="windows">{{asset.windows.name}}</span>
+
+# macOS
+shasum -a 256 <span data-asset-name="macos">{{asset.macos.name}}</span>
+
+# Linux
+sha256sum <span data-asset-name="linux_deb">{{asset.linux_deb.name}}</span></code></pre><button class="copy-btn" type="button" data-copy-code>Copy</button></div>
+    <div class="callout callout--info">
+      <strong>Back up before you update.</strong> Your database lives in your user data folder, not next to the program, so updating does not replace it. On Windows, uninstalling does delete that folder. FCMS Pro stores everything locally with no cloud copy, so export a backup from the Backup page first.
+    </div>
+  </div>
+</section>
+
+<section class="section" id="history" aria-labelledby="hist-h">
+  <div class="container history">
+    <h2 id="hist-h">All releases</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">Version</th><th scope="col">Released</th><th scope="col">Downloads</th></tr></thead>
+        <tbody>
+{{history_rows_html}}
+        </tbody>
+      </table>
+    </div>
+    <div class="link-row link-row--spaced">
+      <a class="btn" href="{{root}}changelog/">Full changelog</a>
+      <a class="btn btn--ghost" href="https://github.com/villenaderic/FcmsPro/releases" rel="noopener noreferrer">All releases on GitHub</a>
+      <a class="btn btn--ghost" href="https://github.com/villenaderic/FcmsPro/releases.atom" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-rss"/></svg>Subscribe to releases</a>
+    </div>
+    <p class="muted">Installed FCMS Pro already? It checks for updates when it starts and offers to install them.</p>
+  </div>
+</section>
+
+</main>
+{{include:_partials/footer.html}}
+</body>
+</html>

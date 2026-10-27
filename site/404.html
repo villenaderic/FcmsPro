@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Page not found | FCMS Pro</title>
+<meta name="description" content="This page does not exist. Head back to the FCMS Pro home page, downloads or documentation.">
+<meta name="robots" content="noindex">
+{{include:_partials/head.html}}
+</head>
+<body>
+{{include:_partials/header.html}}
+<main id="main">
+
+<section class="page-head">
+  <div class="container">
+    <p class="eyebrow">Error 404</p>
+    <h1>Page not found</h1>
+    <p>That address does not exist on this site. It may have moved, or the link may be mistyped.</p>
+    <div class="link-row">
+      <a class="btn btn--primary" href="{{root}}">Go to the home page</a>
+      <a class="btn btn--ghost" href="{{root}}download/">Download FCMS Pro</a>
+      <a class="btn btn--ghost" href="{{root}}docs/">Read the docs</a>
+    </div>
+    <p class="muted">Still stuck?
+      <a href="https://github.com/villenaderic/FcmsPro/issues/new/choose" rel="noopener noreferrer">Report a broken link</a>.</p>
+  </div>
+</section>
+
+</main>
+{{include:_partials/footer.html}}
+</body>
+</html>

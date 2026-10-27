@@ -1,0 +1,23 @@
+[
+  {
+    "tag_name": "v2.0.0",
+    "name": "v2.0.0",
+    "draft": false,
+    "prerelease": false,
+    "published_at": "2026-10-26T10:00:00Z",
+    "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v2.0.0",
+    "body": "- new stuff",
+    "assets": [
+      {
+        "name": "FcmsPro-2.0.0-arm64.dmg",
+        "size": 1,
+        "browser_download_url": "https://github.com/villenaderic/FcmsPro/releases/download/v2.0.0/FcmsPro-2.0.0-arm64.dmg"
+      },
+      {
+        "name": "fcmspro_2.0.0_amd64.deb",
+        "size": 2,
+        "browser_download_url": "https://github.com/villenaderic/FcmsPro/releases/download/v2.0.0/fcmspro_2.0.0_amd64.deb"
+      }
+    ]
+  }
+]

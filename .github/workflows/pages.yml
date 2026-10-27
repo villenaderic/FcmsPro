@@ -1,0 +1,157 @@
+name: Deploy website
+
+# The website is derived from the repo + GitHub Releases at deploy time and is
+# never committed back. Nothing here edits `main`, so there are no commit loops.
+#
+# Why these triggers (see docs/SITE_ARCHITECTURE.md):
+#   * Events created with GITHUB_TOKEN (e.g. the release being published inside
+#     "Build, Test, and Release") do NOT start other workflows. So we cannot listen
+#     for `release: published`. `workflow_run` is the sanctioned way to chain.
+#   * `workflow_run` fires after the WHOLE release workflow ends, i.e. after the
+#     `appcast` job too, so the release, its assets and SHA256SUMS.txt all exist.
+#   * The 6-hourly cron makes the site self-healing if any trigger is missed.
+#   * NOTE: `workflow_run` only fires for workflows on the default branch, so this
+#     file must be merged to `main` before the chain works.
+
+on:
+  workflow_run:
+    workflows: ["Build, Test, and Release"]
+    types: [completed]
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "scripts/**"
+      - "docs/USER_GUIDE.md"
+      - "CHANGELOG.md"
+      - ".github/workflows/pages.yml"
+  schedule:
+    - cron: "17 */6 * * *"   # off the hour: scheduled runs on :00 are the most delayed
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; a queued deploy waits instead of cancelling a running one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    # - Forks must not run the cron / deploy.
+    # - For workflow_run: only a successful run of a *tag push* (head_branch is the
+    #   tag name, e.g. v1.6.9). Skips the main-branch test runs and pull requests.
+    if: >-
+      github.repository == 'villenaderic/FcmsPro' &&
+      (github.event_name != 'workflow_run' ||
+        (github.event.workflow_run.conclusion == 'success' &&
+         github.event.workflow_run.event == 'push' &&
+         startsWith(github.event.workflow_run.head_branch, 'v')))
+    outputs:
+      version: ${{ steps.verify.outputs.version }}
+    steps:
+      # Default ref = latest commit on `main` for every trigger here, so the build
+      # also sees the appcast commit made at the end of the release workflow.
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run script tests (offline)
+        run: |
+          python3 scripts/test-site-data.py
+          python3 scripts/test-extract-changelog.py
+          node scripts/test-release-js.mjs
+
+      - name: Guard - no hard-coded versioned download URLs in site source
+        run: |
+          if [ -d site ] && grep -rEn \
+              -e 'releases/download/v?[0-9]' \
+              -e '[0-9]+\.[0-9]+\.[0-9]+[-_.A-Za-z0-9]*\.(exe|dmg|deb|AppImage)' \
+              site/; then
+            echo "::error::Versioned download link found in site/ (see lines above). Links must come from release.json."
+            exit 1
+          fi
+          echo "ok: none found"
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v6
+
+      # Fails (non-zero) if the latest stable release has no .exe, so the previously
+      # deployed site stays live. GITHUB_TOKEN lifts the API rate limit.
+      - name: Fetch release data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/build-site-data.py --out _build/data --changelog CHANGELOG.md
+
+      - name: Build static site
+        run: >
+          python3 scripts/build-site.py
+          --src site
+          --data _build/data
+          --guide docs/USER_GUIDE.md
+          --changelog CHANGELOG.md
+          --site-url "${{ steps.pages.outputs.base_url }}"
+          --out _site
+
+      - name: Verify build output
+        id: verify
+        env:
+          EVENT: ${{ github.event_name }}
+          TRIGGER_TAG: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          set -euo pipefail
+          for f in _site/index.html _site/404.html _site/data/release.json _site/data/releases.json _site/data/changelog.json; do
+            [ -s "$f" ] || { echo "::error::Missing or empty $f"; exit 1; }
+          done
+          version=$(python3 -c "import json; print(json.load(open('_site/data/release.json'))['version'])")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          # A release-triggered run must show the release that triggered it.
+          if [ "$EVENT" = "workflow_run" ] && [[ "$TRIGGER_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            if [ "${TRIGGER_TAG#v}" != "$version" ]; then
+              echo "::error::Triggered by $TRIGGER_TAG but release data says v$version. Refusing to deploy; the 6-hourly run will retry."
+              exit 1
+            fi
+          fi
+          echo "### Website build" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Latest release shown: **v$version**" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Trigger: \`$EVENT\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5
+
+      # Non-fatal: the CDN may take a moment, and the live site already has its
+      # own browser-side fallback. This only makes problems visible in the log.
+      - name: Smoke test the live site
+        continue-on-error: true
+        env:
+          URL: ${{ steps.deployment.outputs.page_url }}
+          EXPECTED: ${{ needs.build.outputs.version }}
+        run: |
+          for i in 1 2 3 4 5 6; do
+            live=$(curl -fsS "${URL}data/release.json?cb=$RANDOM$i" | python3 -c "import json,sys; print(json.load(sys.stdin)['version'])" || true)
+            if [ "$live" = "$EXPECTED" ]; then echo "live site serves v$live"; exit 0; fi
+            echo "attempt $i: live='$live' expected='$EXPECTED'"; sleep 10
+          done
+          echo "::warning::Live site did not report v$EXPECTED within 60s (CDN delay?)."
+          exit 1

@@ -39,3 +39,9 @@ publish/
 *.db-wal
 *.log
 jobs.json
+
+## Python & Site build outputs
+__pycache__/
+*.pyc
+_build/
+_site/

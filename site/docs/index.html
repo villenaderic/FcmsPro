@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FCMS Pro documentation: user guide</title>
+<meta name="description" content="The FCMS Pro user guide: first-run setup, navigation, keyboard shortcuts, clients, commissions, quotes, payments, invoices, expenses, backup and settings.">
+<link rel="canonical" href="{{canonical}}">
+<meta property="og:title" content="FCMS Pro documentation">
+<meta property="og:description" content="Step-by-step user guide for FCMS Pro, the local-first freelance commission manager.">
+<meta property="og:url" content="{{canonical}}">
+<meta name="twitter:title" content="FCMS Pro documentation">
+<meta name="twitter:description" content="Step-by-step user guide for FCMS Pro, the local-first freelance commission manager.">
+{{include:_partials/head.html}}
+</head>
+<body>
+{{include:_partials/header.html}}
+<main id="main">
+<div class="container docs-layout">
+
+  <aside class="docs-side" aria-label="Documentation navigation">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <input class="docs-search" id="docs-search" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" hidden>
+    <ul class="docs-results" data-docs-results aria-live="polite" hidden></ul>
+    <nav aria-label="On this page" data-docs-toc>
+{{guide_toc_html}}
+    </nav>
+    <p class="muted platform-note">Guide for FCMS Pro <span class="mono" data-release="version">{{version}}</span>.
+      Found a mistake?
+      <a href="https://github.com/villenaderic/FcmsPro/issues/new/choose" rel="noopener noreferrer">Tell us</a>.</p>
+  </aside>
+
+  <article class="prose" data-docs-body>
+{{guide_html}}
+  </article>
+
+</div>
+</main>
+{{include:_partials/footer.html}}
+</body>
+</html>

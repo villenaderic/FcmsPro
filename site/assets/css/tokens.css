@@ -1,0 +1,149 @@
+/* FCMS Pro website - design tokens.
+   Brand: deep navy surfaces + electric blue (from the existing site and the
+   app logo's cyan glow). Everything else in the CSS reads these variables, so
+   a re-brand is a change to this one file.
+
+   Theme selection:
+     1. <html data-theme="light|dark"> (set by theme.js / the boot snippet) wins.
+     2. Otherwise prefers-color-scheme decides.
+   The dark values are therefore declared twice (media query + [data-theme]).
+   Keep the two blocks identical. */
+
+:root {
+  color-scheme: light;
+
+  /* Type */
+  --font-ui: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --fs-xs: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem);
+  --fs-sm: clamp(0.875rem, 0.85rem + 0.12vw, 0.9375rem);
+  --fs-md: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --fs-lg: clamp(1.125rem, 1.07rem + 0.3vw, 1.3125rem);
+  --fs-xl: clamp(1.375rem, 1.2rem + 0.9vw, 1.875rem);
+  --fs-2xl: clamp(1.75rem, 1.4rem + 1.7vw, 2.75rem);
+  --fs-3xl: clamp(2.25rem, 1.6rem + 3.2vw, 4rem);
+
+  /* 8-pt spacing grid */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+
+  /* Shape */
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --content-max: 1160px;
+  --header-h: 64px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur: 220ms;
+
+  /* ---------- Light theme (designed, not inverted) ---------- */
+  --surface-0: #f6f8fc;   /* page */
+  --surface-1: #ffffff;   /* cards */
+  --surface-2: #eef2f9;   /* wells, code */
+  --surface-3: #e1e8f3;   /* hover on wells */
+  --text: #0b1220;
+  --text-muted: #475569;  /* 7.2:1 on surface-0 */
+  --border: #d5deec;
+  --border-strong: #b6c3d8;
+  --accent: #2563eb;      /* white text on it: 5.2:1 */
+  --accent-hover: #1d4ed8;
+  --accent-text: #1d4ed8; /* accent as text on light surfaces: 6.7:1 */
+  --on-accent: #ffffff;
+  --accent-soft: rgba(37, 99, 235, 0.10);
+  --accent-2: #0891b2;    /* cyan from the logo glow, decorative only */
+  --success: #15803d;
+  --success-soft: rgba(21, 128, 61, 0.12);
+  --warning: #a16207;
+  --warning-soft: rgba(161, 98, 7, 0.14);
+  --danger: #b91c1c;
+  --danger-soft: rgba(185, 28, 28, 0.10);
+  --focus: #1d4ed8;
+  --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 1px rgba(15, 23, 42, 0.04);
+  --shadow-2: 0 4px 12px rgba(15, 23, 42, 0.07), 0 1px 3px rgba(15, 23, 42, 0.05);
+  --shadow-3: 0 18px 48px rgba(15, 23, 42, 0.14), 0 4px 12px rgba(15, 23, 42, 0.06);
+  --glass: rgba(246, 248, 252, 0.78);
+  --mesh-a: rgba(37, 99, 235, 0.16);
+  --mesh-b: rgba(8, 145, 178, 0.12);
+  --keycap-bg: linear-gradient(#ffffff, #eef2f9);
+  --keycap-edge: #b6c3d8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --surface-0: #0b0f19;
+    --surface-1: #121a2b;
+    --surface-2: #1a2235;
+    --surface-3: #232d42;
+    --text: #f1f5f9;
+    --text-muted: #9aa8bd;   /* 7.6:1 on surface-0 */
+    --border: #27324a;
+    --border-strong: #3a4966;
+    --accent: #2563eb;       /* keeps white button text at 5.2:1 */
+    --accent-hover: #3b82f6;
+    --accent-text: #6ea8fe;  /* 8.0:1 on surface-0 */
+    --on-accent: #ffffff;
+    --accent-soft: rgba(59, 130, 246, 0.16);
+    --accent-2: #22d3ee;
+    --success: #4ade80;
+    --success-soft: rgba(74, 222, 128, 0.14);
+    --warning: #fbbf24;
+    --warning-soft: rgba(251, 191, 36, 0.14);
+    --danger: #f87171;
+    --danger-soft: rgba(248, 113, 113, 0.14);
+    --focus: #93c5fd;
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-2: 0 6px 16px rgba(0, 0, 0, 0.35);
+    --shadow-3: 0 24px 60px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.35);
+    --glass: rgba(11, 15, 25, 0.72);
+    --mesh-a: rgba(59, 130, 246, 0.22);
+    --mesh-b: rgba(34, 211, 238, 0.12);
+    --keycap-bg: linear-gradient(#232d42, #1a2235);
+    --keycap-edge: #0b0f19;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-0: #0b0f19;
+  --surface-1: #121a2b;
+  --surface-2: #1a2235;
+  --surface-3: #232d42;
+  --text: #f1f5f9;
+  --text-muted: #9aa8bd;
+  --border: #27324a;
+  --border-strong: #3a4966;
+  --accent: #2563eb;
+  --accent-hover: #3b82f6;
+  --accent-text: #6ea8fe;
+  --on-accent: #ffffff;
+  --accent-soft: rgba(59, 130, 246, 0.16);
+  --accent-2: #22d3ee;
+  --success: #4ade80;
+  --success-soft: rgba(74, 222, 128, 0.14);
+  --warning: #fbbf24;
+  --warning-soft: rgba(251, 191, 36, 0.14);
+  --danger: #f87171;
+  --danger-soft: rgba(248, 113, 113, 0.14);
+  --focus: #93c5fd;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 6px 16px rgba(0, 0, 0, 0.35);
+  --shadow-3: 0 24px 60px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.35);
+  --glass: rgba(11, 15, 25, 0.72);
+  --mesh-a: rgba(59, 130, 246, 0.22);
+  --mesh-b: rgba(34, 211, 238, 0.12);
+  --keycap-bg: linear-gradient(#232d42, #1a2235);
+  --keycap-edge: #0b0f19;
+}

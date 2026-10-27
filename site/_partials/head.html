@@ -1,0 +1,36 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- CSP: only same-origin + the GitHub API fallback. The two hashes are computed by
+     build-site.py from the exact inlined text (theme boot script, tokens.css). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' {{hash:_partials/theme-boot.js}}; style-src 'self' {{hash:assets/css/tokens.css}}; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.github.com; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f6f8fc" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)">
+<meta name="author" content="Roderic Villena">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FCMS Pro">
+<meta property="og:image" content="{{site_url}}assets/img/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="FCMS Pro: freelance commission management that stays on your computer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{site_url}}assets/img/og-card.png">
+
+<link rel="icon" href="{{root}}favicon.ico" sizes="32x32">
+<link rel="icon" type="image/png" sizes="192x192" href="{{root}}assets/img/icon-192.png">
+<link rel="apple-touch-icon" href="{{root}}assets/img/apple-touch-icon.png">
+<link rel="manifest" href="{{root}}site.webmanifest">
+<link rel="alternate" type="application/atom+xml" title="FCMS Pro releases" href="https://github.com/villenaderic/FcmsPro/releases.atom">
+
+<link rel="preload" href="{{root}}assets/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Theme boot: runs before first paint so there is no flash of the wrong theme.
+     It must stay byte-identical to its CSP hash, so no whitespace inside the tag. -->
+<script>{{inline:_partials/theme-boot.js}}</script>
+<!-- Critical CSS (design tokens, both themes) inlined; the rest is small and same-origin. -->
+<style>{{inline:assets/css/tokens.css}}</style>
+<link rel="stylesheet" href="{{root}}assets/css/base.css">
+<link rel="stylesheet" href="{{root}}assets/css/components.css">
+<link rel="stylesheet" href="{{root}}assets/css/pages.css">
+<link rel="stylesheet" href="{{root}}assets/css/mockups.css">
+<link rel="modulepreload" href="{{root}}assets/js/main.js">

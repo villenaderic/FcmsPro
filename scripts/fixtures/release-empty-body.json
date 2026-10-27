@@ -1,0 +1,19 @@
+[
+  {
+    "tag_name": "v1.6.9",
+    "name": "v1.6.9",
+    "draft": false,
+    "prerelease": false,
+    "published_at": "2026-10-24T22:28:03Z",
+    "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.9",
+    "body": "",
+    "assets": [
+      {
+        "name": "FcmsPro-Setup-1.6.9.exe",
+        "size": 37710982,
+        "browser_download_url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-Setup-1.6.9.exe",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ]
+  }
+]

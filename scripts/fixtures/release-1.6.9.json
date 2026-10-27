@@ -1,0 +1,95 @@
+[
+  {
+    "tag_name": "v1.7.0",
+    "name": "v1.7.0",
+    "draft": true,
+    "prerelease": false,
+    "published_at": "2026-10-25T00:00:00Z",
+    "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.7.0",
+    "body": "unfinished",
+    "assets": [
+      {
+        "name": "FcmsPro-Setup-1.7.0.exe",
+        "size": 1,
+        "browser_download_url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.7.0/FcmsPro-Setup-1.7.0.exe"
+      }
+    ]
+  },
+  {
+    "tag_name": "v1.7.0-rc.1",
+    "name": "v1.7.0-rc.1",
+    "draft": false,
+    "prerelease": true,
+    "published_at": "2026-10-26T00:00:00Z",
+    "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.7.0-rc.1",
+    "body": "- release candidate",
+    "assets": [
+      {
+        "name": "FcmsPro-Setup-1.7.0-rc.1.exe",
+        "size": 2,
+        "browser_download_url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.7.0-rc.1/FcmsPro-Setup-1.7.0-rc.1.exe"
+      }
+    ]
+  },
+  {
+    "tag_name": "v1.6.9",
+    "name": "v1.6.9",
+    "draft": false,
+    "prerelease": false,
+    "published_at": "2026-10-24T22:28:03Z",
+    "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.9",
+    "body": "## What's Changed\n- Fixed taskbar icon\n\n**Full Changelog**: https://github.com/villenaderic/FcmsPro/compare/v1.6.8...v1.6.9",
+    "assets": [
+      {
+        "name": "FcmsPro-Setup-1.6.9.exe",
+        "size": 37710982,
+        "browser_download_url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-Setup-1.6.9.exe",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "name": "FcmsPro-1.6.9-arm64.dmg",
+        "size": 49263136,
+        "browser_download_url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-1.6.9-arm64.dmg",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      {
+        "name": "fcmspro_1.6.9_amd64.deb",
+        "size": 37523632,
+        "browser_download_url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/fcmspro_1.6.9_amd64.deb",
+        "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      {
+        "name": "FcmsPro-1.6.9-x86_64.AppImage",
+        "size": 91000000,
+        "browser_download_url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-1.6.9-x86_64.AppImage",
+        "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      {
+        "name": "SHA256SUMS.txt",
+        "size": 400,
+        "browser_download_url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/SHA256SUMS.txt"
+      }
+    ]
+  },
+  {
+    "tag_name": "v1.6.8",
+    "name": "v1.6.8",
+    "draft": false,
+    "prerelease": false,
+    "published_at": "2026-10-20T08:00:00Z",
+    "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.8",
+    "body": "- Fixed Inno Setup flags",
+    "assets": [
+      {
+        "name": "FcmsPro-Setup-1.6.8.exe",
+        "size": 37000000,
+        "browser_download_url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.8/FcmsPro-Setup-1.6.8.exe"
+      },
+      {
+        "name": "FcmsPro-1.6.8-arm64.dmg",
+        "size": 49000000,
+        "browser_download_url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.8/FcmsPro-1.6.8-arm64.dmg"
+      }
+    ]
+  }
+]

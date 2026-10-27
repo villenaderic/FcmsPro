@@ -112,7 +112,16 @@ discuss the approach is a good idea before writing code.
 ## Documentation
 
 `docs/USER_GUIDE.md` covers onboarding and every module in detail. `CHANGELOG.md` has the full
-release history.
+release history. See `docs/SITE_ARCHITECTURE.md` for details on how the website and release pipelines operate.
+
+## How the website updates itself
+
+The official website (<https://villenaderic.github.io/FcmsPro/>) updates automatically without manual edits:
+
+1. **Tag Trigger**: Pushing a tag `vX.Y.Z` builds the release installers and publishes a GitHub Release with notes extracted from `CHANGELOG.md` and `SHA256SUMS.txt`.
+2. **Site Deployment**: `.github/workflows/pages.yml` triggers via `workflow_run` after the release completes, queries the GitHub Releases API with `GITHUB_TOKEN`, pre-renders all version numbers, download links, file sizes, SHA-256 checksums, release history, and documentation into static HTML, and deploys directly to GitHub Pages.
+3. **No Commit Loops**: Generated files exist only in the deployed Pages artifact; nothing is committed back to the repository.
+4. **Client-Side Freshness**: `release.js` in the visitor's browser loads pre-rendered HTML instantly, checks `./data/release.json` (with fallback to `api.github.com`), and updates the UI live if a newer release exists.
 
 ## License
 

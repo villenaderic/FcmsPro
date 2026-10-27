@@ -1,0 +1,1 @@
+(function(d){try{var t=localStorage.getItem("fcms-theme");if(t==="light"||t==="dark")d.setAttribute("data-theme",t)}catch(e){}d.classList.add("js");setTimeout(function(){if(!d.hasAttribute("data-ready"))d.classList.remove("js")},4000)})(document.documentElement);
