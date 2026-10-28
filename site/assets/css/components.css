@@ -34,9 +34,9 @@
   -webkit-backdrop-filter: saturate(180%) blur(14px); backdrop-filter: saturate(180%) blur(14px);
 }
 .site-header__inner { height: 100%; display: flex; align-items: center; gap: var(--sp-5); }
-.brand { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--text); font-weight: 750; letter-spacing: -0.02em; text-decoration: none; }
+.brand { display: inline-flex; align-items: center; gap: 5px; color: var(--text); font-weight: 750; font-size: var(--fs-md); line-height: 1; letter-spacing: -0.02em; text-decoration: none; }
 .brand:hover { text-decoration: none; }
-.brand img, .brand svg { width: auto; height: 24px; display: block; }
+.brand img, .brand svg { width: auto; height: 19px; display: block; flex-shrink: 0; }
 .nav { display: flex; align-items: center; gap: var(--sp-1); margin-left: auto; }
 .nav a { padding: 0.5rem 0.75rem; color: var(--text-muted); font-size: var(--fs-sm); font-weight: 550; text-decoration: none; border-radius: var(--radius-sm); }
 .nav a:hover, .nav a[aria-current="page"] { color: var(--text); background: var(--surface-2); }
