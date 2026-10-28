@@ -66,8 +66,10 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     logo = Image.open(SRC).convert("RGBA")
 
-    # Header mark: transparent, 64px (rendered at 32px, so 2x for retina).
-    fit(logo, 64).save(OUT / "logo-64.png", optimize=True)
+    # Header mark: transparent, tight crop, 64px tall (retina 2x).
+    t = trimmed(logo)
+    w = max(1, round(t.width * (64 / t.height)))
+    t.resize((w, 64), Image.LANCZOS).save(OUT / "logo-64.png", optimize=True)
     # PWA / manifest icons: padded on navy so they survive circular masks.
     on_navy(192, logo, 0.16).save(OUT / "icon-192.png", optimize=True)
     on_navy(512, logo, 0.16).save(OUT / "icon-512.png", optimize=True)
