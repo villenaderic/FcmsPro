@@ -1,657 +1,935 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FCMS Pro | Freelance Commission Management System</title>
-    <meta name="description" content="A fast, offline-first desktop app for freelancers to track clients, commissions, payments and expenses. No account, no subscription, no cloud.">
-    <meta name="theme-color" content="#0b0f19">
-    <link rel="canonical" href="https://villenaderic.github.io/FcmsPro/">
+<meta charset="utf-8">
+<title>FCMS Pro: freelance commission management that stays on your computer</title>
+<meta name="description" content="Track clients, commissions, payments, expenses, analytics and tax summaries in one desktop app for Windows, macOS and Linux. No account, no subscription, no telemetry.">
+<link rel="canonical" href="https://villenaderic.github.io/FcmsPro/">
+<meta property="og:title" content="FCMS Pro: run your freelance business, keep your data">
+<meta property="og:description" content="A free, open-source desktop app for freelancers. Clients, commissions, payments, expenses and tax summaries, stored on your own computer.">
+<meta property="og:url" content="https://villenaderic.github.io/FcmsPro/">
+<meta name="twitter:title" content="FCMS Pro: run your freelance business, keep your data">
+<meta name="twitter:description" content="A free, open-source desktop app for freelancers. Everything stays on your own computer.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- CSP: only same-origin + the GitHub API fallback. The two hashes are computed by
+     build-site.py from the exact inlined text (theme boot script, tokens.css). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-BxSzXplG31i2kqvdIPCLCz/GkQHnroDH7kYZ2UC+2dc='; style-src 'self' 'sha256-NOjUBQNE7XEtEo7Gt03szvHLWXjtWEZ/7mdNpBnGmVE='; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.github.com; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f6f8fc" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)">
+<meta name="author" content="Roderic Villena">
 
-    <!-- Open Graph / Twitter -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="FCMS Pro | Freelance Commission Management System">
-    <meta property="og:description" content="Track clients, commissions, payments and expenses. Everything stays on your computer.">
-    <meta property="og:url" content="https://villenaderic.github.io/FcmsPro/">
-    <meta property="og:image" content="https://villenaderic.github.io/FcmsPro/logo.png">
-    <meta name="twitter:card" content="summary">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FCMS Pro">
+<meta property="og:image" content="https://villenaderic.github.io/FcmsPro/assets/img/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="FCMS Pro: freelance commission management that stays on your computer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://villenaderic.github.io/FcmsPro/assets/img/og-card.png">
 
-    <!-- Icons -->
-    <link rel="icon" type="image/svg+xml" href="logo.svg">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="apple-touch-icon" href="logo.png">
+<link rel="icon" href="./favicon.ico" sizes="32x32">
+<link rel="icon" type="image/png" sizes="192x192" href="./assets/img/icon-192.png">
+<link rel="apple-touch-icon" href="./assets/img/apple-touch-icon.png">
+<link rel="manifest" href="./site.webmanifest">
+<link rel="alternate" type="application/atom+xml" title="FCMS Pro releases" href="https://github.com/villenaderic/FcmsPro/releases.atom">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="./assets/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Theme boot: runs before first paint so there is no flash of the wrong theme.
+     It must stay byte-identical to its CSP hash, so no whitespace inside the tag. -->
+<script>(function(d){try{var t=localStorage.getItem("fcms-theme");if(t==="light"||t==="dark")d.setAttribute("data-theme",t)}catch(e){}d.classList.add("js");setTimeout(function(){if(!d.hasAttribute("data-ready"))d.classList.remove("js")},4000)})(document.documentElement);</script>
+<!-- Critical CSS (design tokens, both themes) inlined; the rest is small and same-origin. -->
+<style>:root { color-scheme: light; --font-ui: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; --fs-xs: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem); --fs-sm: clamp(0.875rem, 0.85rem + 0.12vw, 0.9375rem); --fs-md: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem); --fs-lg: clamp(1.125rem, 1.07rem + 0.3vw, 1.3125rem); --fs-xl: clamp(1.375rem, 1.2rem + 0.9vw, 1.875rem); --fs-2xl: clamp(1.75rem, 1.4rem + 1.7vw, 2.75rem); --fs-3xl: clamp(2.25rem, 1.6rem + 3.2vw, 4rem); --sp-1: 0.25rem; --sp-2: 0.5rem; --sp-3: 0.75rem; --sp-4: 1rem; --sp-5: 1.5rem; --sp-6: 2rem; --sp-7: 3rem; --sp-8: 4rem; --sp-9: 6rem; --sp-10: 8rem; --radius-sm: 8px; --radius: 12px; --radius-lg: 16px; --radius-pill: 999px; --content-max: 1160px; --header-h: 64px; --ease: cubic-bezier(0.2, 0.7, 0.2, 1); --dur-fast: 120ms; --dur: 220ms; --surface-0: #f6f8fc; --surface-1: #ffffff; --surface-2: #eef2f9; --surface-3: #e1e8f3; --text: #0b1220; --text-muted: #475569; --border: #d5deec; --border-strong: #b6c3d8; --accent: #2563eb; --accent-hover: #1d4ed8; --accent-text: #1d4ed8; --on-accent: #ffffff; --accent-soft: rgba(37, 99, 235, 0.10); --accent-2: #0891b2; --success: #15803d; --success-soft: rgba(21, 128, 61, 0.12); --warning: #a16207; --warning-soft: rgba(161, 98, 7, 0.14); --danger: #b91c1c; --danger-soft: rgba(185, 28, 28, 0.10); --focus: #1d4ed8; --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 1px rgba(15, 23, 42, 0.04); --shadow-2: 0 4px 12px rgba(15, 23, 42, 0.07), 0 1px 3px rgba(15, 23, 42, 0.05); --shadow-3: 0 18px 48px rgba(15, 23, 42, 0.14), 0 4px 12px rgba(15, 23, 42, 0.06); --glass: rgba(246, 248, 252, 0.78); --mesh-a: rgba(37, 99, 235, 0.16); --mesh-b: rgba(8, 145, 178, 0.12); --keycap-bg: linear-gradient(#ffffff, #eef2f9); --keycap-edge: #b6c3d8; } @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme: dark; --surface-0: #0b0f19; --surface-1: #121a2b; --surface-2: #1a2235; --surface-3: #232d42; --text: #f1f5f9; --text-muted: #9aa8bd; --border: #27324a; --border-strong: #3a4966; --accent: #2563eb; --accent-hover: #3b82f6; --accent-text: #6ea8fe; --on-accent: #ffffff; --accent-soft: rgba(59, 130, 246, 0.16); --accent-2: #22d3ee; --success: #4ade80; --success-soft: rgba(74, 222, 128, 0.14); --warning: #fbbf24; --warning-soft: rgba(251, 191, 36, 0.14); --danger: #f87171; --danger-soft: rgba(248, 113, 113, 0.14); --focus: #93c5fd; --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4); --shadow-2: 0 6px 16px rgba(0, 0, 0, 0.35); --shadow-3: 0 24px 60px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.35); --glass: rgba(11, 15, 25, 0.72); --mesh-a: rgba(59, 130, 246, 0.22); --mesh-b: rgba(34, 211, 238, 0.12); --keycap-bg: linear-gradient(#232d42, #1a2235); --keycap-edge: #0b0f19; } } :root[data-theme="dark"] { color-scheme: dark; --surface-0: #0b0f19; --surface-1: #121a2b; --surface-2: #1a2235; --surface-3: #232d42; --text: #f1f5f9; --text-muted: #9aa8bd; --border: #27324a; --border-strong: #3a4966; --accent: #2563eb; --accent-hover: #3b82f6; --accent-text: #6ea8fe; --on-accent: #ffffff; --accent-soft: rgba(59, 130, 246, 0.16); --accent-2: #22d3ee; --success: #4ade80; --success-soft: rgba(74, 222, 128, 0.14); --warning: #fbbf24; --warning-soft: rgba(251, 191, 36, 0.14); --danger: #f87171; --danger-soft: rgba(248, 113, 113, 0.14); --focus: #93c5fd; --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4); --shadow-2: 0 6px 16px rgba(0, 0, 0, 0.35); --shadow-3: 0 24px 60px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.35); --glass: rgba(11, 15, 25, 0.72); --mesh-a: rgba(59, 130, 246, 0.22); --mesh-b: rgba(34, 211, 238, 0.12); --keycap-bg: linear-gradient(#232d42, #1a2235); --keycap-edge: #0b0f19; }</style>
+<link rel="stylesheet" href="./assets/css/base.css?v=dev">
+<link rel="stylesheet" href="./assets/css/components.css?v=dev">
+<link rel="stylesheet" href="./assets/css/pages.css?v=dev">
+<link rel="stylesheet" href="./assets/css/mockups.css?v=dev">
+<link rel="modulepreload" href="./assets/js/main.js">
 
-    <style>
-        :root {
-            --bg-color: #0b0f19;
-            --surface-color: #1a2235;
-            --surface-hover: #232d42;
-            --primary-color: #3b82f6;
-            --primary-hover: #2563eb;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
-            --accent-glow: rgba(59, 130, 246, 0.5);
-            --tint: rgba(59, 130, 246, 0.14);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        :focus-visible {
-            outline: 2px solid #93c5fd;
-            outline-offset: 3px;
-            border-radius: 6px;
-        }
-
-        .skip-link {
-            position: absolute;
-            left: 16px;
-            top: -60px;
-            background: var(--primary-color);
-            color: #fff;
-            padding: 10px 16px;
-            border-radius: 8px;
-            z-index: 2000;
-            text-decoration: none;
-        }
-        .skip-link:focus { top: 16px; }
-
-        code {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            font-size: 0.9em;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--border-color);
-            padding: 1px 6px;
-            border-radius: 6px;
-            color: var(--text-main);
-            word-break: break-word;
-        }
-
-        /* Background glow */
-        .bg-glow, .bg-glow-2 {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(150px);
-            opacity: 0.15;
-            z-index: -1;
-            pointer-events: none;
-        }
-        .bg-glow  { width: 600px; height: 600px; background: var(--primary-color); top: -200px; left: -200px; }
-        .bg-glow-2 { width: 500px; height: 500px; background: #8b5cf6; bottom: -100px; right: -100px; }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-
-        /* Navbar */
-        .site-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px 24px;
-            padding: 28px 0;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--text-main);
-            text-decoration: none;
-        }
-        .logo img { width: 28px; height: 28px; }
-        .logo span { color: var(--primary-color); }
-
-        .nav-links { display: flex; gap: 24px; flex-wrap: wrap; }
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        .nav-links a:hover { color: var(--text-main); }
-
-        /* Hero */
-        .hero { padding: 56px 0 24px; text-align: center; }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 700;
-            line-height: 1.1;
-            letter-spacing: -0.03em;
-            margin-bottom: 24px;
-            color: #ffffff;
-        }
-        @supports ((-webkit-background-clip: text) or (background-clip: text)) {
-            .hero h1 {
-                background: linear-gradient(to right, #ffffff, #cbd5e1);
-                -webkit-background-clip: text;
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
-                color: transparent;
-            }
-        }
-
-        .subtitle {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            max-width: 620px;
-            margin: 0 auto 44px;
-        }
-
-        /* Downloads */
-        .downloads { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            text-decoration: none;
-            text-align: left;
-            transition: background-color 0.25s, transform 0.25s, box-shadow 0.25s, border-color 0.25s;
-            cursor: pointer;
-            border: 1px solid transparent;
-            line-height: 1.25;
-        }
-        .btn small { display: block; font-size: 0.78rem; font-weight: 500; opacity: 0.8; }
-
-        .btn-primary { background-color: var(--primary-color); color: #fff; box-shadow: 0 4px 20px var(--accent-glow); }
-        .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 8px 25px var(--accent-glow); }
-
-        .btn-secondary { background-color: var(--surface-color); color: var(--text-main); border-color: var(--border-color); }
-        .btn-secondary:hover { background-color: var(--surface-hover); border-color: var(--text-muted); transform: translateY(-2px); }
-
-        .os-icon { width: 26px; height: 26px; flex-shrink: 0; }
-        .os-icon-win { fill: currentColor; }
-
-        .release-line { font-size: 0.9rem; color: var(--text-muted); margin-top: 16px; }
-        .release-line a { color: #93c5fd; }
-        #alt-linux[hidden] { display: none; }
-
-        .note {
-            margin: 24px auto 0;
-            max-width: 640px;
-            padding: 14px 18px;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            background: rgba(26, 34, 53, 0.7);
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            text-align: left;
-        }
-        .note strong { color: var(--text-main); }
-
-        /* Screenshot (appears automatically when docs/screenshots/dashboard.png exists) */
-        .shot { margin: 48px auto 0; max-width: 1000px; }
-        .shot img {
-            display: block;
-            width: 100%;
-            height: auto;
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Section headings */
-        .section-title { font-size: 2.25rem; text-align: center; margin-bottom: 12px; letter-spacing: -0.02em; }
-        .section-lead { text-align: center; color: var(--text-muted); max-width: 560px; margin: 0 auto 40px; }
-
-        /* Features */
-        .features-section { padding: 56px 0 24px; scroll-margin-top: 16px; }
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 28px;
-        }
-
-        .feature-card {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 28px;
-            transition: transform 0.3s, border-color 0.3s;
-        }
-        .feature-card:hover { transform: translateY(-5px); border-color: var(--primary-color); }
-
-        .feature-icon {
-            width: 52px;
-            height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--tint);
-            border-radius: 14px;
-            margin-bottom: 20px;
-        }
-        .feature-icon svg { width: 28px; height: 28px; }
-
-        .feature-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 10px; }
-        .feature-desc { color: var(--text-muted); font-size: 0.95rem; }
-
-        .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 32px; list-style: none; }
-        .chips li {
-            padding: 6px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 999px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            background: rgba(26, 34, 53, 0.6);
-        }
-
-        /* Instructions */
-        .instructions { padding: 56px 0 24px; scroll-margin-top: 16px; }
-
-        .step {
-            display: flex;
-            gap: 24px;
-            align-items: flex-start;
-            margin-bottom: 24px;
-            background: var(--surface-color);
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-        }
-
-        .step-number {
-            width: 48px;
-            height: 48px;
-            background: var(--primary-color);
-            color: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            font-weight: 700;
-            flex-shrink: 0;
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
-
-        .step-content { min-width: 0; }
-        .step-content h3 { font-size: 1.25rem; line-height: 48px; margin-bottom: 4px; }
-        .step-content p { color: var(--text-muted); }
-
-        .os-list { list-style: none; display: grid; gap: 12px; margin-top: 4px; }
-        .os-list li { color: var(--text-muted); }
-        .os-list strong { color: var(--text-main); display: block; }
-
-        /* FAQ */
-        .faq { padding: 56px 0 72px; scroll-margin-top: 16px; max-width: 800px; margin: 0 auto; }
-        .faq details {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 12px;
-        }
-        .faq summary { cursor: pointer; font-weight: 600; }
-        .faq details p { color: var(--text-muted); margin-top: 10px; }
-        .faq a { color: #93c5fd; }
-
-        /* Footer */
-        .site-footer {
-            border-top: 1px solid var(--border-color);
-            padding: 36px 0 48px;
-            color: var(--text-muted);
-            text-align: center;
-            font-size: 0.95rem;
-        }
-        .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 16px; }
-        .footer-links a { color: var(--text-muted); text-decoration: none; }
-        .footer-links a:hover { color: var(--text-main); text-decoration: underline; }
-
-        /* Messenger button: desktop only so it never covers content on phones */
-        .messenger-fab {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #0084FF;
-            color: #fff;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 132, 255, 0.4);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            z-index: 1000;
-        }
-        .messenger-fab:hover { transform: scale(1.08); box-shadow: 0 6px 16px rgba(0, 132, 255, 0.6); }
-        .messenger-fab svg { width: 30px; height: 30px; fill: currentColor; }
-        @media (min-width: 769px) { .messenger-fab { display: flex; } }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .hero { padding-top: 32px; }
-            .btn { width: 100%; justify-content: flex-start; }
-            .step { flex-direction: column; gap: 16px; }
-            .step-content h3 { line-height: 1.3; }
-            .section-title { font-size: 1.9rem; }
-        }
-
-        @media (max-width: 480px) {
-            .container { padding: 0 18px; }
-            .site-nav { justify-content: center; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            html { scroll-behavior: auto; }
-            *, *::before, *::after { transition: none !important; animation: none !important; }
-            .btn:hover, .feature-card:hover, .messenger-fab:hover { transform: none; }
-        }
-    </style>
+<!-- Version, date and download data below are written at deploy time from the latest GitHub Release. -->
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "FCMS Pro",
+  "alternateName": "Freelance Commission Management System",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "softwareVersion": "1.6.9",
+  "datePublished": "2026-10-24T22:28:03Z",
+  "downloadUrl": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.9",
+  "releaseNotes": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.9",
+  "url": "https://villenaderic.github.io/FcmsPro/",
+  "license": "https://opensource.org/licenses/MIT",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Roderic Villena"
+  },
+  "description": "Local-first desktop app for freelancers to manage clients, commissions, quotes, payments, invoices and expenses. No account, no subscription, no telemetry."
+}</script>
 </head>
 <body>
-    <a class="skip-link" href="#main">Skip to content</a>
-    <div class="bg-glow"></div>
-    <div class="bg-glow-2"></div>
+<a class="skip-link" href="#main">Skip to content</a>
+<!-- SVG sprite: every icon on the site comes from here so they share one visual style.
+     Usage: <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-NAME"/></svg>
+     Strokes use currentColor, so icons follow the text colour in both themes. -->
+<svg class="visually-hidden" aria-hidden="true" focusable="false"><symbol id="i-check" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-x" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-info" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+<symbol id="i-dashboard" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></symbol>
+<symbol id="i-analytics" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M8 17v-6M13 17V7M18 17v-4"/></symbol>
+<symbol id="i-clients" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2M16 3.1a4 4 0 0 1 0 7.8M22 21v-2a4 4 0 0 0-3-3.9"/></symbol>
+<symbol id="i-commissions" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 12h6M9 16h6"/></symbol>
+<symbol id="i-kanban" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="14" rx="1"/><rect x="10" y="3" width="5" height="9" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></symbol>
+<symbol id="i-quote" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-invoice" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M9 15l2 2 4-4"/></symbol>
+<symbol id="i-payment" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></symbol>
+<symbol id="i-receipt" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l3-2 3 2 3-2 3 2 3-2V2l-3 2-3-2-3 2-3-2zM8 8h8M8 12h8"/></symbol>
+<symbol id="i-expense" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12l4 4 4-4"/></symbol>
+<symbol id="i-goal" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+<symbol id="i-template" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="7" rx="1"/><rect x="3" y="14" width="9" height="7" rx="1"/><rect x="16" y="14" width="5" height="7" rx="1"/></symbol>
+<symbol id="i-backup" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></symbol>
+<symbol id="i-logs" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+<symbol id="i-settings" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+<symbol id="i-search" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-trash" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></symbol>
+<symbol id="i-paperclip" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11.1-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></symbol>
+<symbol id="i-pdf" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M12 12v6M9 15l3 3 3-3"/></symbol>
+<symbol id="i-calculator" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/></symbol>
+<symbol id="i-repeat" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 1 4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+<symbol id="i-keyboard" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M7 15h10"/></symbol>
+<symbol id="i-lock" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+<symbol id="i-shield" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5zM9 12l2 2 4-4"/></symbol>
+<symbol id="i-download" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
+<symbol id="i-refresh" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-15.5 6.3L3 16M3 12A9 9 0 0 1 18.5 5.7L21 8M21 3v5h-5M3 21v-5h5"/></symbol>
+<symbol id="i-heart" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></symbol>
+<symbol id="i-contrast" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"/></symbol>
+<symbol id="i-rss" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></symbol>
+</svg>
 
-    <div class="container">
-        <nav class="site-nav" aria-label="Main">
-            <a class="logo" href="#top">
-                <img src="logo.svg" alt="" width="28" height="28">
-                <span style="color: var(--text-main)">FCMS</span> <span>Pro</span>
-            </a>
-            <div class="nav-links">
-                <a href="#features">Features</a>
-                <a href="#get-started">Get started</a>
-                <a href="#faq">FAQ</a>
-                <a href="https://github.com/villenaderic/FcmsPro" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a href="https://ko-fi.com/villenaderic" target="_blank" rel="noopener noreferrer" style="color: #fbbf24; font-weight: 600;">☕ Support</a>
-            </div>
-        </nav>
+<header class="site-header" id="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="./" aria-label="FCMS Pro home">
+      <img src="./assets/img/logo-64.png" width="13" height="19" alt=""><span>FCMS Pro</span>
+    </a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="./#features">Features</a>
+      <a href="./download/">Download</a>
+      <a href="./changelog/">What&rsquo;s new</a>
+      <a href="./docs/">Docs</a>
+      <a href="./#faq">FAQ</a>
+    </nav>
+    <div class="header-actions">
+      <a class="icon-btn" href="https://github.com/villenaderic/FcmsPro" rel="noopener noreferrer" aria-label="FCMS Pro on GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+      </a>
+      <button class="icon-btn theme-toggle" type="button" id="theme-toggle" aria-label="Switch color theme">
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <a class="btn btn--primary" href="./download/">Download</a>
+      <button class="icon-btn nav-toggle" type="button" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
 
-        <main id="main">
-            <header class="hero" id="top">
-                <h1>Your Freelance Business,<br>Perfectly Managed.</h1>
-                <p class="subtitle">A fast, native desktop app for tracking clients, commissions, and payments. Everything is stored locally. No subscriptions, no cloud syncing.</p>
+<main id="main">
 
-                <div class="downloads">
-                    <!-- Direct download links for the latest release; upgraded automatically by JS if newer builds exist -->
-                    <a id="btn-win" href="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-Setup-1.6.9.exe" class="btn btn-primary">
-                        <svg class="os-icon os-icon-win" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 11 4.4v7.1H3zM12 4.3 21 3v8.5h-9zM3 12.5h8v7.1L3 18.5zM12 12.5h9V21l-9-1.3z"/></svg>
-                        <span>Download for Windows<small>64-bit installer (.exe)</small></span>
-                    </a>
-                    <a id="btn-mac" href="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-1.6.9-arm64.dmg" class="btn btn-secondary">
-                        <img class="os-icon" src="assets/apple.svg" alt="" width="26" height="26">
-                        <span>Download for Mac<small>Apple Silicon (M1 or newer), macOS 11+</small></span>
-                    </a>
-                    <a id="btn-lin" href="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/fcmspro_1.6.9_amd64.deb" class="btn btn-secondary">
-                        <img class="os-icon" src="assets/linux.svg" alt="" width="26" height="26">
-                        <span>Download for Linux<small>64-bit .deb package</small></span>
-                    </a>
-                </div>
+<!-- 2. HERO -->
+<section class="hero">
+  <div class="container">
+    <p class="eyebrow">Version <span data-release="version">1.6.9</span> <span class="badge badge--new" data-release="new-badge" hidden>New</span></p>
+    <h1>Run your freelance business. Keep your data.</h1>
+    <p class="hero__sub">Track clients, commissions, payments, expenses and tax summaries in one desktop app. Everything is stored on your own computer, not on someone else&rsquo;s server.</p>
 
-                <p class="release-line" id="version-text">
-                    Latest release: v1.6.9 · <a href="https://github.com/villenaderic/FcmsPro/releases/latest">all downloads and release notes</a>
-                </p>
-                <p class="release-line" id="alt-linux">
-                    Prefer a portable Linux build? <a id="btn-appimage" href="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-1.6.9-x86_64.AppImage">Download the AppImage</a>
-                </p>
-
-                <div class="note">
-                    <strong>First launch warning:</strong> FCMS Pro is independently developed and not code signed, so your system may warn you.
-                    <strong>Windows:</strong> click <strong>More info</strong>, then <strong>Run anyway</strong>.
-                    <strong>macOS:</strong> right-click the app, choose <strong>Open</strong>, then confirm.
-                    Only download from this page or the project's GitHub Releases.
-                </div>
-
-                <!-- Drop a screenshot at docs/screenshots/dashboard.png and it appears here automatically. -->
-                <figure class="shot">
-                    <img src="screenshots/dashboard.png" alt="FCMS Pro dashboard showing income, balances and due-soon items" width="1600" height="1000" loading="lazy" onerror="this.closest('figure').remove()">
-                </figure>
-            </header>
-
-            <section id="features" class="features-section" aria-labelledby="features-title">
-                <h2 class="section-title" id="features-title">Features</h2>
-                <p class="section-lead">Everything a solo freelancer needs to stay on top of the money, in one place.</p>
-
-                <div class="features">
-                    <article class="feature-card">
-                        <div class="feature-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                        </div>
-                        <h3 class="feature-title">Native &amp; Fast</h3>
-                        <p class="feature-desc">Built with Avalonia UI and .NET 8, so it runs as a real desktop app on Windows, macOS and Linux instead of a web page in disguise.</p>
-                    </article>
-                    <article class="feature-card">
-                        <div class="feature-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                        </div>
-                        <h3 class="feature-title">Local &amp; Private</h3>
-                        <p class="feature-desc">Your clients and finances are yours. Everything lives in a SQLite file on your own computer. No account, no server, no telemetry.</p>
-                    </article>
-                    <article class="feature-card">
-                        <div class="feature-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                        </div>
-                        <h3 class="feature-title">Financial Tracking</h3>
-                        <p class="feature-desc">Track commissions, payments and expenses with automatic balances, overdue and due-soon warnings, and income analytics.</p>
-                    </article>
-                    <article class="feature-card">
-                        <div class="feature-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        </div>
-                        <h3 class="feature-title">Client Management</h3>
-                        <p class="feature-desc">Keep client details, notes, attachments and full commission history together in one profile.</p>
-                    </article>
-                    <article class="feature-card">
-                        <div class="feature-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
-                        </div>
-                        <h3 class="feature-title">Recurring Commissions</h3>
-                        <p class="feature-desc">Set a repeat frequency (weekly, monthly) and the next commission is created automatically when the current one is delivered.</p>
-                    </article>
-                    <article class="feature-card">
-                        <div class="feature-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
-                        </div>
-                        <h3 class="feature-title">Backups You Control</h3>
-                        <p class="feature-desc">Automatic local backups with a retention count you choose, plus manual export and import of your whole database.</p>
-                    </article>
-                </div>
-
-                <ul class="chips" aria-label="More inside the app">
-                    <li>Dashboard</li>
-                    <li>Analytics</li>
-                    <li>Goals</li>
-                    <li>Global search (press <code>/</code>)</li>
-                    <li>Trash &amp; restore</li>
-                    <li>Light &amp; dark theme</li>
-                    <li>Keyboard shortcuts</li>
-                </ul>
-            </section>
-
-            <section id="get-started" class="instructions" aria-labelledby="start-title">
-                <h2 class="section-title" id="start-title">How to Get Started</h2>
-                <p class="section-lead">Three steps, about two minutes.</p>
-
-                <div class="step">
-                    <div class="step-number" aria-hidden="true">1</div>
-                    <div class="step-content">
-                        <h3>Download the app</h3>
-                        <p>Pick the build for your operating system with the buttons at the top of this page.</p>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <div class="step-number" aria-hidden="true">2</div>
-                    <div class="step-content">
-                        <h3>Install</h3>
-                        <ul class="os-list">
-                            <li><strong>Windows</strong>Run the downloaded installer and follow the setup wizard.</li>
-                            <li><strong>Mac (Apple Silicon)</strong>Open the <code>.dmg</code> file and drag FCMS Pro into your Applications folder.</li>
-                            <li><strong>Linux</strong>Install the <code>.deb</code> package from the folder you downloaded it to: <code>sudo apt install ./fcmspro_*_amd64.deb</code></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <div class="step-number" aria-hidden="true">3</div>
-                    <div class="step-content">
-                        <h3>Run &amp; onboard</h3>
-                        <p>Launch FCMS Pro. The first time you open it, an interactive tour walks you through creating your first client and tracking a commission.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="faq" class="faq" aria-labelledby="faq-title">
-                <h2 class="section-title" id="faq-title">FAQ</h2>
-                <details>
-                    <summary>Where is my data stored?</summary>
-                    <p>In a SQLite file on your own computer. There is no server, no account and no telemetry. That also means backups are your responsibility, so use the built-in backup and export regularly.</p>
-                </details>
-                <details>
-                    <summary>Does it work on an Intel Mac?</summary>
-                    <p>The current macOS download is built for Apple Silicon (M1 or newer) only. If you need an Intel build, please <a href="https://github.com/villenaderic/FcmsPro/issues/new/choose" target="_blank" rel="noopener noreferrer">open an issue</a>.</p>
-                </details>
-                <details>
-                    <summary>Why does my system show a security warning?</summary>
-                    <p>The app is not code signed, because that needs a paid certificate. Windows SmartScreen and macOS Gatekeeper both warn about unsigned apps. Follow the steps in the note near the download buttons, and only download from this site or the GitHub Releases page.</p>
-                </details>
-                <details>
-                    <summary>How do updates work?</summary>
-                    <p>FCMS Pro checks GitHub for a newer version when it starts and offers to install it. You can always download the newest installer from the buttons above. The full history is in the <a href="https://github.com/villenaderic/FcmsPro/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">changelog</a>.</p>
-                </details>
-                <details>
-                    <summary>I found a bug or want a feature.</summary>
-                    <p>Please use <a href="https://github.com/villenaderic/FcmsPro/issues/new/choose" target="_blank" rel="noopener noreferrer">GitHub Issues</a>. You can also reach the author on Messenger using the button at the bottom right (or the footer link).</p>
-                </details>
-
-                <div class="support-card" style="margin-top: 32px; padding: 28px 24px; background: rgba(251, 191, 36, 0.06); border: 1px solid rgba(251, 191, 36, 0.25); border-radius: 14px; text-align: center;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 8px;">Enjoying FCMS Pro?</h3>
-                    <p style="color: var(--text-muted); max-width: 540px; margin: 0 auto 18px; font-size: 0.95rem;">FCMS Pro is free, privacy-first, and open source. If it saves you time managing commissions and payments, consider buying me a coffee to support future development!</p>
-                    <a href="https://ko-fi.com/villenaderic" target="_blank" rel="noopener noreferrer" class="btn" style="display: inline-flex; align-items: center; gap: 8px; background: #fbbf24; color: #1e1e24; font-weight: 700; text-decoration: none; padding: 10px 22px; border-radius: 9999px; font-size: 0.95rem; border: none; box-shadow: 0 4px 14px rgba(251, 191, 36, 0.35);">
-                        <span>☕ Support on Ko-fi</span>
-                    </a>
-                </div>
-            </section>
-        </main>
-
-        <footer class="site-footer">
-            <nav class="footer-links" aria-label="Footer">
-                <a href="https://github.com/villenaderic/FcmsPro" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a href="https://github.com/villenaderic/FcmsPro/releases" target="_blank" rel="noopener noreferrer">Releases</a>
-                <a href="https://github.com/villenaderic/FcmsPro/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">Changelog</a>
-                <a href="https://ko-fi.com/villenaderic" target="_blank" rel="noopener noreferrer" style="color: #fbbf24; font-weight: 600;">☕ Support on Ko-fi</a>
-                <a href="https://github.com/villenaderic/FcmsPro/issues/new/choose" target="_blank" rel="noopener noreferrer">Report an issue</a>
-                <a href="https://github.com/villenaderic/FcmsPro/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
-                <a href="https://m.me/roderic.villena" target="_blank" rel="noopener noreferrer">Messenger</a>
-            </nav>
-            <p>&copy; 2026 Roderic Villena. FCMS Pro is open source on GitHub.</p>
-        </footer>
+    <div class="hero__cta">
+      <div>
+        <a class="btn btn--primary btn--lg" id="hero-download" href="./download/" data-os-download>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>
+          <span data-os-label>Download</span>
+        </a>
+        <span class="btn-sub" data-os-meta>v<span data-release="version">1.6.9</span> &middot; Windows, macOS, Linux</span>
+      </div>
+      <div>
+        <a class="btn btn--lg" href="./download/">All platforms</a>
+      </div>
+    </div>
+    <p class="platform-note" data-platform-note aria-live="polite"></p>
+    <div class="platform-note" data-mobile-note hidden>
+      <p>FCMS Pro is a desktop app. Send yourself the link and download it on your computer.</p>
+      <div class="link-row">
+        <a class="btn" href="mailto:?subject=FCMS%20Pro%20download&amp;body=https://villenaderic.github.io/FcmsPro/download/">Email me the link</a>
+        <button class="btn" type="button" data-copy-text="https://villenaderic.github.io/FcmsPro/download/">Copy link</button>
+      </div>
     </div>
 
-    <a class="messenger-fab" href="https://m.me/roderic.villena" target="_blank" rel="noopener noreferrer" aria-label="Contact the author on Messenger" title="Contact me on Messenger for support or bugs">
-        <svg viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm8.42,121.21L110.15,117a15.93,15.93,0,0,0-17.72,1.3l-34.9,26.17a4,4,0,0,1-6.19-4.8l26.27-46.85a15.93,15.93,0,0,1,17.72-7.39l26.27,9.85a15.93,15.93,0,0,0,17.72-1.3l34.9-26.17a4,4,0,0,1,6.19,4.8l-26.27,46.85A15.93,15.93,0,0,1,136.42,145.21Z"/></svg>
-    </a>
+    <ul class="trust-strip" role="list">
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>No account</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>No subscription</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>No telemetry</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Open source, MIT</li>
+    </ul>
 
-    <script>
-        const GITHUB_REPO = "villenaderic/FcmsPro";
-        const RELEASES_URL = `https://github.com/${GITHUB_REPO}/releases/latest`;
-        const CACHE_KEY = "fcms-latest-release";
-        const CACHE_MS = 10 * 60 * 1000; // stay well under GitHub's 60 requests/hour/IP limit
+    <div class="hero__visual">
+      <div class="window">
+        <div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">FCMS Pro</span></div>
+        <div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro dashboard with income, balances and due-soon warnings"><div class="mk" aria-hidden="true">
+  <aside class="mk-side">
+    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
+    <div class="mk-nav is-on"><i></i>Dashboard</div>
+    <div class="mk-nav"><i></i>Analytics</div>
+    <div class="mk-nav"><i></i>Clients</div>
+    <div class="mk-nav"><i></i>Commissions</div>
+    <div class="mk-nav"><i></i>Income</div>
+    <div class="mk-nav"><i></i>Expenses</div>
+    <div class="mk-nav"><i></i>Goals</div>
+    <div class="mk-nav"><i></i>Backup</div>
+    <div class="mk-nav"><i></i>Settings</div>
+  </aside>
+  <div class="mk-main">
+    <div class="mk-top">
+      <h3 class="mk-title">Dashboard</h3>
+      <div class="mk-search">Search<span class="mk-key">/</span></div>
+    </div>
+    <div class="mk-cards">
+      <div class="mk-card"><small>Income this month</small><b class="mk-num is-ok">$4,820</b><em>3 payments</em></div>
+      <div class="mk-card"><small>Outstanding</small><b class="mk-num">$2,150</b><em>3 balances</em></div>
+      <div class="mk-card"><small>Overdue</small><b class="mk-num is-bad">$640</b><em>1 commission</em></div>
+      <div class="mk-card"><small>Active commissions</small><b class="mk-num">7</b><em>2 due soon</em></div>
+    </div>
+    <div class="mk-split">
+      <div class="mk-panel">
+        <h4>Income by month</h4>
+        <div class="mk-bars">
+          <div class="mk-bar"><span class="h-40"></span></div>
+          <div class="mk-bar"><span class="h-55"></span></div>
+          <div class="mk-bar"><span class="h-35"></span></div>
+          <div class="mk-bar"><span class="h-70"></span></div>
+          <div class="mk-bar"><span class="h-60"></span></div>
+          <div class="mk-bar is-now"><span class="h-85"></span></div>
+        </div>
+        <div class="mk-months"><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span></div>
+      </div>
+      <div class="mk-panel">
+        <h4>Due soon</h4>
+        <div class="mk-list">
+          <div class="mk-row"><div>Logo redesign<small>Sample Client A</small></div><span class="mk-pill is-warn">2 days</span></div>
+          <div class="mk-row"><div>Poster campaign<small>Sample Client B</small></div><span class="mk-pill is-bad">Overdue</span></div>
+          <div class="mk-row"><div>Brand guide<small>Sample Client C</small></div><span class="mk-pill is-info">5 days</span></div>
+          <div class="mk-row"><div>Monthly retainer<small>Sample Client D</small></div><span class="mk-pill is-ok">Delivered</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        // Make the visitor's own OS the highlighted button.
-        function highlightDetectedOs() {
-            const ua = (navigator.userAgent || "").toLowerCase();
-            const platform = (navigator.platform || "").toLowerCase();
-            let id = "btn-win";
-            const isMobile = /iphone|ipad|ipod|android/.test(ua);
-            if (isMobile) id = "btn-win"; // no mobile build; keep the default highlight
-            else if (ua.includes("mac") || platform.includes("mac")) id = "btn-mac";
-            else if (ua.includes("linux")) id = "btn-lin";
-            ["btn-win", "btn-mac", "btn-lin"].forEach(b => {
-                const el = document.getElementById(b);
-                el.classList.toggle("btn-primary", b === id);
-                el.classList.toggle("btn-secondary", b !== id);
-            });
-        }
+<!-- 3. PRODUCT SHOWCASE -->
+<section class="section" id="showcase" aria-labelledby="showcase-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">The app</span>
+      <h2 id="showcase-h">Everything for your commissions, from inquiry to delivery</h2>
+      <p>One window for the whole freelance client lifecycle.</p>
+    </div>
+    <div class="tabs showcase reveal" data-tabs>
+      <div role="tablist" aria-label="Product screens">
+        <button type="button" role="tab" id="tab-dashboard" aria-selected="true" aria-controls="panel-dashboard">Dashboard</button>
+        <button type="button" role="tab" id="tab-commissions" aria-selected="false" aria-controls="panel-commissions" tabindex="-1">Commissions</button>
+        <button type="button" role="tab" id="tab-clients" aria-selected="false" aria-controls="panel-clients" tabindex="-1">Clients</button>
+        <button type="button" role="tab" id="tab-tax-pdf" aria-selected="false" aria-controls="panel-tax-pdf" tabindex="-1">Tax PDF</button>
+        <button type="button" role="tab" id="tab-analytics" aria-selected="false" aria-controls="panel-analytics" tabindex="-1">Analytics</button>
+        <button type="button" role="tab" id="tab-search" aria-selected="false" aria-controls="panel-search" tabindex="-1">Search</button>
+        <button type="button" role="tab" id="tab-theme" aria-selected="false" aria-controls="panel-theme" tabindex="-1">Light &amp; dark</button>
+      </div>
 
-        function readCache() {
-            try {
-                const raw = sessionStorage.getItem(CACHE_KEY);
-                if (!raw) return null;
-                const cached = JSON.parse(raw);
-                return Date.now() - cached.time < CACHE_MS ? cached.data : null;
-            } catch { return null; }
-        }
+      <div role="tabpanel" id="panel-dashboard" aria-labelledby="tab-dashboard" tabindex="0">
+        <h3 class="visually-hidden">Dashboard</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Dashboard</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro dashboard with income, balances and due-soon warnings"><div class="mk" aria-hidden="true">
+  <aside class="mk-side">
+    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
+    <div class="mk-nav is-on"><i></i>Dashboard</div>
+    <div class="mk-nav"><i></i>Analytics</div>
+    <div class="mk-nav"><i></i>Clients</div>
+    <div class="mk-nav"><i></i>Commissions</div>
+    <div class="mk-nav"><i></i>Income</div>
+    <div class="mk-nav"><i></i>Expenses</div>
+    <div class="mk-nav"><i></i>Goals</div>
+    <div class="mk-nav"><i></i>Backup</div>
+    <div class="mk-nav"><i></i>Settings</div>
+  </aside>
+  <div class="mk-main">
+    <div class="mk-top">
+      <h3 class="mk-title">Dashboard</h3>
+      <div class="mk-search">Search<span class="mk-key">/</span></div>
+    </div>
+    <div class="mk-cards">
+      <div class="mk-card"><small>Income this month</small><b class="mk-num is-ok">$4,820</b><em>3 payments</em></div>
+      <div class="mk-card"><small>Outstanding</small><b class="mk-num">$2,150</b><em>3 balances</em></div>
+      <div class="mk-card"><small>Overdue</small><b class="mk-num is-bad">$640</b><em>1 commission</em></div>
+      <div class="mk-card"><small>Active commissions</small><b class="mk-num">7</b><em>2 due soon</em></div>
+    </div>
+    <div class="mk-split">
+      <div class="mk-panel">
+        <h4>Income by month</h4>
+        <div class="mk-bars">
+          <div class="mk-bar"><span class="h-40"></span></div>
+          <div class="mk-bar"><span class="h-55"></span></div>
+          <div class="mk-bar"><span class="h-35"></span></div>
+          <div class="mk-bar"><span class="h-70"></span></div>
+          <div class="mk-bar"><span class="h-60"></span></div>
+          <div class="mk-bar is-now"><span class="h-85"></span></div>
+        </div>
+        <div class="mk-months"><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span></div>
+      </div>
+      <div class="mk-panel">
+        <h4>Due soon</h4>
+        <div class="mk-list">
+          <div class="mk-row"><div>Logo redesign<small>Sample Client A</small></div><span class="mk-pill is-warn">2 days</span></div>
+          <div class="mk-row"><div>Poster campaign<small>Sample Client B</small></div><span class="mk-pill is-bad">Overdue</span></div>
+          <div class="mk-row"><div>Brand guide<small>Sample Client C</small></div><span class="mk-pill is-info">5 days</span></div>
+          <div class="mk-row"><div>Monthly retainer<small>Sample Client D</small></div><span class="mk-pill is-ok">Delivered</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div></div></div>
+        <p class="showcase__caption">Income, balances, overdue items and due-soon warnings at a glance.</p>
+      </div>
+      <div role="tabpanel" id="panel-commissions" aria-labelledby="tab-commissions" tabindex="0" hidden>
+        <h3 class="visually-hidden">Commissions</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Commissions</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro commissions table with status badges and client details"><div class="mk" aria-hidden="true">
+  <aside class="mk-side">
+    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
+    <div class="mk-nav"><i></i>Dashboard</div>
+    <div class="mk-nav"><i></i>Analytics</div>
+    <div class="mk-nav"><i></i>Clients</div>
+    <div class="mk-nav is-on"><i></i>Commissions</div>
+    <div class="mk-nav"><i></i>Income</div>
+    <div class="mk-nav"><i></i>Expenses</div>
+    <div class="mk-nav"><i></i>Goals</div>
+    <div class="mk-nav"><i></i>Backup</div>
+    <div class="mk-nav"><i></i>Settings</div>
+  </aside>
+  <div class="mk-main">
+    <div class="mk-top">
+      <h3 class="mk-title">Commissions</h3>
+      <div class="mk-search">Filter status: All</div>
+    </div>
+    <div class="mk-list" style="margin-top: 1rem;">
+      <div class="mk-row" style="padding: 0.85rem 1rem;">
+        <div><b>Brand Identity Package</b><small>Acme Corp &middot; $1,800 total &middot; $900 paid</small></div>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <span class="mk-pill is-info">In progress</span>
+          <small class="muted">Due in 4 days</small>
+        </div>
+      </div>
+      <div class="mk-row" style="padding: 0.85rem 1rem;">
+        <div><b>Mobile App UI Design</b><small>Starlight Studios &middot; $2,400 total &middot; Paid in full</small></div>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <span class="mk-pill is-ok">Delivered</span>
+          <small class="muted">Delivered</small>
+        </div>
+      </div>
+      <div class="mk-row" style="padding: 0.85rem 1rem;">
+        <div><b>Packaging Illustrations</b><small>Bean &amp; Leaf Coffee &middot; $1,100 total &middot; $0 paid</small></div>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <span class="mk-pill is-warn">Pending</span>
+          <small class="muted">Nov 12</small>
+        </div>
+      </div>
+      <div class="mk-row" style="padding: 0.85rem 1rem;">
+        <div><b>Custom Icon Set</b><small>Nordic Tech &middot; $650 total &middot; Paid in full</small></div>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <span class="mk-pill is-ok">Completed</span>
+          <small class="muted">Oct 20</small>
+        </div>
+      </div>
+      <div class="mk-row" style="padding: 0.85rem 1rem;">
+        <div><b>Editorial Cover Art</b><small>Chronicle Media &middot; $450 total &middot; Paid in full</small></div>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <span class="mk-pill is-warn">Revision</span>
+          <small class="muted">Due tomorrow</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div></div></div>
+        <p class="showcase__caption">Status pipeline from Pending through Delivered, with quick inline status updates and balance tracking.</p>
+      </div>
+      <div role="tabpanel" id="panel-clients" aria-labelledby="tab-clients" tabindex="0" hidden>
+        <h3 class="visually-hidden">Clients</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Clients</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro client profile with balances, history and attachments"><div class="mk" aria-hidden="true">
+  <aside class="mk-side">
+    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
+    <div class="mk-nav"><i></i>Dashboard</div>
+    <div class="mk-nav"><i></i>Analytics</div>
+    <div class="mk-nav is-on"><i></i>Clients</div>
+    <div class="mk-nav"><i></i>Commissions</div>
+    <div class="mk-nav"><i></i>Income</div>
+    <div class="mk-nav"><i></i>Expenses</div>
+    <div class="mk-nav"><i></i>Goals</div>
+    <div class="mk-nav"><i></i>Backup</div>
+    <div class="mk-nav"><i></i>Settings</div>
+  </aside>
+  <div class="mk-main">
+    <div class="mk-top">
+      <h3 class="mk-title">Client Profile: Starlight Studios</h3>
+    </div>
+    <div class="mk-cards" style="margin-top: 0.75rem;">
+      <div class="mk-card"><small>Total Billed</small><b class="mk-num">$6,400</b><em>4 commissions</em></div>
+      <div class="mk-card"><small>Paid to Date</small><b class="mk-num is-ok">$4,800</b><em>3 payments</em></div>
+      <div class="mk-card"><small>Balance Due</small><b class="mk-num is-warn">$1,600</b><em>1 active</em></div>
+    </div>
+    <div class="mk-split" style="margin-top: 1rem;">
+      <div class="mk-panel">
+        <h4>Recent Commissions</h4>
+        <div class="mk-list">
+          <div class="mk-row"><div>Mobile App UI Design<small>Oct 2026</small></div><span class="mk-pill is-ok">$2,400</span></div>
+          <div class="mk-row"><div>Design System Components<small>Sep 2026</small></div><span class="mk-pill is-info">$1,600</span></div>
+          <div class="mk-row"><div>Initial Prototyping<small>Aug 2026</small></div><span class="mk-pill is-ok">$2,400</span></div>
+        </div>
+      </div>
+      <div class="mk-panel">
+        <h4>File Attachments</h4>
+        <div class="mk-list">
+          <div class="mk-row"><div>Master_Service_Agreement.pdf<small>Signed contract &middot; 1.4 MB</small></div><span class="mk-pill">PDF</span></div>
+          <div class="mk-row"><div>Brand_Style_Guide.pdf<small>Design specs &middot; 3.8 MB</small></div><span class="mk-pill">PDF</span></div>
+          <div class="mk-row"><div>App_Flowchart.png<small>Architecture ref &middot; 840 KB</small></div><span class="mk-pill">Image</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div></div></div>
+        <p class="showcase__caption">Client profiles showing total billed, payments received, commission history, and file attachments like signed contracts.</p>
+      </div>
+      <div role="tabpanel" id="panel-tax-pdf" aria-labelledby="tab-tax-pdf" tabindex="0" hidden>
+        <h3 class="visually-hidden">Tax Summary PDF</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Tax &amp; Quarterly Summary</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: Tax and quarterly summary exported to PDF from FCMS Pro"><div class="mk" aria-hidden="true">
+  <aside class="mk-side">
+    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
+    <div class="mk-nav"><i></i>Dashboard</div>
+    <div class="mk-nav is-on"><i></i>Analytics</div>
+    <div class="mk-nav"><i></i>Clients</div>
+    <div class="mk-nav"><i></i>Commissions</div>
+    <div class="mk-nav"><i></i>Income</div>
+    <div class="mk-nav"><i></i>Expenses</div>
+    <div class="mk-nav"><i></i>Goals</div>
+    <div class="mk-nav"><i></i>Backup</div>
+    <div class="mk-nav"><i></i>Settings</div>
+  </aside>
+  <div class="mk-main">
+    <div class="mk-top"><h3 class="mk-title">Tax &amp; Quarterly Summary PDF</h3></div>
+    <div class="mk-desk">
+      <div class="mk-paper">
+        <div class="mk-paper-head">
+          <div><b class="mk-paper-biz">Sample Studio</b><small>Tax Year 2026 &middot; Exported from Analytics</small></div>
+          <div class="mk-paper-no"><b>ANNUAL REPORT</b><small>PDF Export</small></div>
+        </div>
+        <div class="mk-paper-meta">
+          <div><small>Gross Income</small><b>$42,850.00</b></div>
+          <div><small>Total Expenses</small><b>$8,940.00</b></div>
+          <div><small>Net Freelance Profit</small><b class="is-ok">$33,910.00</b></div>
+        </div>
+        <div class="mk-paper-table">
+          <div class="mk-paper-row is-head"><span>Quarter Breakdown</span><span>Gross</span><span>Expenses</span><span>Net</span></div>
+          <div class="mk-paper-row"><span>Q1 (Jan &ndash; Mar)</span><span>$9,400.00</span><span>$1,900.00</span><span class="mk-num">$7,500.00</span></div>
+          <div class="mk-paper-row"><span>Q2 (Apr &ndash; Jun)</span><span>$11,250.00</span><span>$2,300.00</span><span class="mk-num">$8,950.00</span></div>
+          <div class="mk-paper-row"><span>Q3 (Jul &ndash; Sep)</span><span>$10,800.00</span><span>$2,050.00</span><span class="mk-num">$8,750.00</span></div>
+          <div class="mk-paper-row"><span>Q4 (Oct &ndash; Dec, YTD)</span><span>$11,400.00</span><span>$2,690.00</span><span class="mk-num">$8,710.00</span></div>
+          <div class="mk-paper-row is-total"><span>Total Annual Net</span><span></span><span></span><span class="mk-num">$33,910.00</span></div>
+        </div>
+        <div class="mk-paper-foot"><small>Full-page export generated locally with PdfSharpCore. Perfect for tax filing and accountants.</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div></div></div>
+        <p class="showcase__caption">Export annual and quarterly financial summaries to clean, printable PDF reports for tax preparation.</p>
+      </div>
+      <div role="tabpanel" id="panel-analytics" aria-labelledby="tab-analytics" tabindex="0" hidden>
+        <h3 class="visually-hidden">Analytics</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Analytics</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro analytics with income breakdown charts"><div class="mk" aria-hidden="true">
+  <aside class="mk-side">
+    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
+    <div class="mk-nav"><i></i>Dashboard</div>
+    <div class="mk-nav is-on"><i></i>Analytics</div>
+    <div class="mk-nav"><i></i>Clients</div>
+    <div class="mk-nav"><i></i>Commissions</div>
+    <div class="mk-nav"><i></i>Income</div>
+    <div class="mk-nav"><i></i>Expenses</div>
+    <div class="mk-nav"><i></i>Goals</div>
+    <div class="mk-nav"><i></i>Backup</div>
+    <div class="mk-nav"><i></i>Settings</div>
+  </aside>
+  <div class="mk-main">
+    <div class="mk-top"><h3 class="mk-title">Analytics</h3></div>
+    <div class="mk-split mk-split--even">
+      <div class="mk-panel">
+        <h4>Income by client</h4>
+        <div class="mk-hbars">
+          <div class="mk-hbar"><span>Sample Client C</span><i class="w-90"></i><b class="mk-num">$3,000</b></div>
+          <div class="mk-hbar"><span>Sample Client B</span><i class="w-65"></i><b class="mk-num">$2,180</b></div>
+          <div class="mk-hbar"><span>Sample Client E</span><i class="w-40"></i><b class="mk-num">$1,500</b></div>
+          <div class="mk-hbar"><span>Sample Client D</span><i class="w-30"></i><b class="mk-num">$900</b></div>
+          <div class="mk-hbar"><span>Sample Client G</span><i class="w-20"></i><b class="mk-num">$700</b></div>
+        </div>
+      </div>
+      <div class="mk-panel">
+        <h4>By payment method</h4>
+        <div class="mk-donut-wrap">
+          <div class="mk-donut"></div>
+          <div class="mk-legend">
+            <div><i class="c1"></i>GCash<b class="mk-num">45%</b></div>
+            <div><i class="c2"></i>Bank transfer<b class="mk-num">27%</b></div>
+            <div><i class="c3"></i>PayPal<b class="mk-num">18%</b></div>
+            <div><i class="c4"></i>Cash<b class="mk-num">10%</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mk-panel mk-qpanel">
+      <h4>Quarterly summary</h4>
+      <div class="mk-qtable">
+        <div class="is-head"><span>Quarter</span><span>Income</span><span>Expenses</span><span>Net</span></div>
+        <div><span>Q1</span><span class="mk-num">$9,400</span><span class="mk-num">$1,900</span><span class="mk-num">$7,500</span></div>
+        <div><span>Q2</span><span class="mk-num">$11,250</span><span class="mk-num">$2,300</span><span class="mk-num">$8,950</span></div>
+        <div><span>Q3</span><span class="mk-num">$10,800</span><span class="mk-num">$2,050</span><span class="mk-num">$8,750</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div></div></div>
+        <p class="showcase__caption">Income breakdowns by client, payment method distribution, and net profit trends.</p>
+      </div>
+      <div role="tabpanel" id="panel-search" aria-labelledby="tab-search" tabindex="0" hidden>
+        <h3 class="visually-hidden">Search</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Search</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro global search opened with the / shortcut"><div class="mk" aria-hidden="true">
+  <aside class="mk-side">
+    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
+    <div class="mk-nav is-on"><i></i>Dashboard</div>
+    <div class="mk-nav"><i></i>Analytics</div>
+    <div class="mk-nav"><i></i>Clients</div>
+    <div class="mk-nav"><i></i>Commissions</div>
+    <div class="mk-nav"><i></i>Income</div>
+    <div class="mk-nav"><i></i>Expenses</div>
+    <div class="mk-nav"><i></i>Goals</div>
+    <div class="mk-nav"><i></i>Backup</div>
+    <div class="mk-nav"><i></i>Settings</div>
+  </aside>
+  <div class="mk-main">
+    <div class="mk-top">
+      <h3 class="mk-title">Dashboard</h3>
+      <div class="mk-searchwrap">
+        <div class="mk-search is-focus"><span>logo</span><span class="mk-key">/</span></div>
+        <div class="mk-results">
+          <div class="mk-group">Commissions</div>
+          <div class="mk-res is-on"><div>Logo redesign<small>Sample Client C</small></div><span class="mk-pill is-info">In progress</span></div>
+          <div class="mk-res"><div>Logo usage sheet<small>Sample Client D</small></div><span class="mk-pill is-ok">Delivered</span></div>
+          <div class="mk-group">Clients</div>
+          <div class="mk-res"><div>LogoCraft Agency<small>Active &middot; 3 commissions</small></div><span class="mk-pill is-info">Client</span></div>
+          <div class="mk-group">Expenses</div>
+          <div class="mk-res"><div>Logo font license<small>Design software</small></div><span class="mk-pill is-warn">Expense</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="mk-cards mk-faded">
+      <div class="mk-card"><small>Income this month</small><b class="mk-num">$4,820</b></div>
+      <div class="mk-card"><small>Outstanding</small><b class="mk-num">$2,150</b></div>
+      <div class="mk-card"><small>Overdue</small><b class="mk-num">$640</b></div>
+      <div class="mk-card"><small>Active commissions</small><b class="mk-num">7</b></div>
+    </div>
+  </div>
+</div>
+</div></div></div>
+        <p class="showcase__caption">Press <kbd>/</kbd> anywhere to search clients, commissions, income, and expenses instantly.</p>
+      </div>
+      <div role="tabpanel" id="panel-theme" aria-labelledby="tab-theme" tabindex="0" hidden>
+        <h3 class="visually-hidden">Light and dark theme</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Light theme</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro dashboard in the light theme"><div class="mk-light"><div class="mk" aria-hidden="true">
+  <aside class="mk-side">
+    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
+    <div class="mk-nav is-on"><i></i>Dashboard</div>
+    <div class="mk-nav"><i></i>Analytics</div>
+    <div class="mk-nav"><i></i>Clients</div>
+    <div class="mk-nav"><i></i>Commissions</div>
+    <div class="mk-nav"><i></i>Income</div>
+    <div class="mk-nav"><i></i>Expenses</div>
+    <div class="mk-nav"><i></i>Goals</div>
+    <div class="mk-nav"><i></i>Backup</div>
+    <div class="mk-nav"><i></i>Settings</div>
+  </aside>
+  <div class="mk-main">
+    <div class="mk-top">
+      <h3 class="mk-title">Dashboard</h3>
+      <div class="mk-search">Search<span class="mk-key">/</span></div>
+    </div>
+    <div class="mk-cards">
+      <div class="mk-card"><small>Income this month</small><b class="mk-num is-ok">$4,820</b><em>3 payments</em></div>
+      <div class="mk-card"><small>Outstanding</small><b class="mk-num">$2,150</b><em>3 balances</em></div>
+      <div class="mk-card"><small>Overdue</small><b class="mk-num is-bad">$640</b><em>1 commission</em></div>
+      <div class="mk-card"><small>Active commissions</small><b class="mk-num">7</b><em>2 due soon</em></div>
+    </div>
+    <div class="mk-split">
+      <div class="mk-panel">
+        <h4>Income by month</h4>
+        <div class="mk-bars">
+          <div class="mk-bar"><span class="h-40"></span></div>
+          <div class="mk-bar"><span class="h-55"></span></div>
+          <div class="mk-bar"><span class="h-35"></span></div>
+          <div class="mk-bar"><span class="h-70"></span></div>
+          <div class="mk-bar"><span class="h-60"></span></div>
+          <div class="mk-bar is-now"><span class="h-85"></span></div>
+        </div>
+        <div class="mk-months"><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span></div>
+      </div>
+      <div class="mk-panel">
+        <h4>Due soon</h4>
+        <div class="mk-list">
+          <div class="mk-row"><div>Logo redesign<small>Sample Client A</small></div><span class="mk-pill is-warn">2 days</span></div>
+          <div class="mk-row"><div>Poster campaign<small>Sample Client B</small></div><span class="mk-pill is-bad">Overdue</span></div>
+          <div class="mk-row"><div>Brand guide<small>Sample Client C</small></div><span class="mk-pill is-info">5 days</span></div>
+          <div class="mk-row"><div>Monthly retainer<small>Sample Client D</small></div><span class="mk-pill is-ok">Delivered</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div></div></div>
+        <p class="showcase__caption">Light or dark mode with customizable accent colors. Switch with <strong>Toggle Theme</strong> in the sidebar.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-        function writeCache(data) {
-            try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ time: Date.now(), data })); } catch { /* storage unavailable */ }
-        }
+<!-- 4. WHY LOCAL-FIRST -->
+<section class="section section--alt" id="local-first" aria-labelledby="local-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Why local-first</span>
+      <h2 id="local-h">Your records, on your machine</h2>
+      <p>Many invoicing tools keep your financial data on the provider&rsquo;s servers. FCMS Pro does the opposite.</p>
+    </div>
+    <div class="compare reveal">
+      <article class="card card--us">
+        <h3>FCMS Pro <span class="badge">Local-first</span></h3>
+        <ul role="list">
+          <li class="yes"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>All data lives in one SQLite file on your computer</li>
+          <li class="yes"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>No account to create and no monthly fee</li>
+          <li class="yes"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>No telemetry</li>
+          <li class="yes"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Export everything to a single .json file whenever you like</li>
+          <li class="yes"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Open source under the MIT license, so you can read the code</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Typical subscription tools</h3>
+        <ul role="list">
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-x"/></svg>Your data sits on the company&rsquo;s servers</li>
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-x"/></svg>An account and a recurring fee</li>
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-x"/></svg>Access depends on the company staying in business</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>The trade-offs</h3>
+        <ul role="list">
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-info"/></svg>Backups are your responsibility: there is no cloud copy</li>
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-info"/></svg>No cloud sync between computers</li>
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-info"/></svg>Uninstalling on Windows also deletes your data folder</li>
+          <li class="no"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-info"/></svg>The app is not code signed, so your OS will show a warning</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
 
-        function setLink(id, url) {
-            const el = document.getElementById(id);
-            if (el) el.href = url;
-        }
+<!-- 5. FEATURES -->
+<section class="section" id="features" aria-labelledby="features-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Features</span>
+      <h2 id="features-h">Every module you need, nothing you don&rsquo;t</h2>
+    </div>
+    <div class="grid grid--features reveal">
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-dashboard"/></svg></span><h3>Dashboard</h3><p>Income, balances, overdue items and due-soon warnings at a glance.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clients"/></svg></span><h3>Clients</h3><p>Profiles with what each client owes and has paid, their commission history, and file attachments such as signed contracts.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-commissions"/></svg></span><h3>Commissions</h3><p>Full lifecycle tracking with instant filtering by status, search, and due-date visibility.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-repeat"/></svg></span><h3>Recurring work</h3><p>Repeat commissions weekly, biweekly or monthly, and recurring expenses like subscriptions.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-paperclip"/></svg></span><h3>Client attachments</h3><p>Keep contracts, briefs, reference photos, and assets organized directly under each client.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-payment"/></svg></span><h3>Income &amp; payments</h3><p>Recording a payment reduces the balance automatically. Refund to undo it and restore the balance.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pdf"/></svg></span><h3>Tax summary PDF</h3><p>Generate clean, professional annual or quarterly tax summaries formatted for accounting with QuestPDF.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-expense"/></svg></span><h3>Expenses</h3><p>Log expenses by category and track net profit: income minus expenses.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-goal"/></svg></span><h3>Goals</h3><p>Set monthly or yearly income and expense targets and see how you&rsquo;re tracking.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-analytics"/></svg></span><h3>Analytics</h3><p>Visual breakdowns of revenue, payment status distribution, and commission trends over time.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg></span><h3>Global search</h3><p>Press <kbd>/</kbd> to search across clients, commissions, income, and expenses.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-keyboard"/></svg></span><h3>Keyboard shortcuts</h3><p>Jump to any section with <kbd>g</kbd> sequences or create records with <kbd>n</kbd> sequences without touching the mouse.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-contrast"/></svg></span><h3>Light &amp; dark themes</h3><p>Carefully tuned high-contrast dark and light modes, switchable instantly or synced to system preference.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-trash"/></svg></span><h3>Trash &amp; recovery</h3><p>Soft delete means a client, commission, or expense you remove by accident isn&rsquo;t gone for good.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-backup"/></svg></span><h3>Backup</h3><p>Manual export and import, plus automatic local backups with a configurable retention count.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-logs"/></svg></span><h3>Logs</h3><p>A read-only audit history of records created, updated and deleted, and backups.</p></article>
+    </div>
+  </div>
+</section>
 
-        function applyRelease(data) {
-            const version = data.tag_name;
-            const versionText = document.getElementById("version-text");
-            versionText.textContent = "";
-            versionText.append(`Latest release: ${version} · `);
-            const all = document.createElement("a");
-            all.href = RELEASES_URL;
-            all.textContent = "all downloads and release notes";
-            versionText.append(all);
+<!-- 6. HOW IT WORKS -->
+<section class="section section--alt" id="how" aria-labelledby="how-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Getting started</span>
+      <h2 id="how-h">Three steps to your first commission</h2>
+    </div>
+    <ol class="steps reveal" role="list">
+      <li class="card step">
+        <h3>Download</h3>
+        <p class="muted">Pick the installer for your system from the <a href="./download/">download page</a>. Your OS will warn that the app is unsigned; <a href="#security">here is why and what to do</a>.</p>
+      </li>
+      <li class="card step">
+        <h3>Install</h3>
+        <p class="muted">Run the Windows installer, open the macOS .dmg, or install the Linux .deb or run the AppImage. No account is needed at any point.</p>
+      </li>
+      <li class="card step">
+        <h3>Set up</h3>
+        <p class="muted">A short first-run flow:</p>
+        <ol>
+          <li>Welcome</li>
+          <li>Terms &amp; data handling</li>
+          <li>Where your data lives</li>
+          <li>Quick start guide</li>
+          <li>Ready</li>
+        </ol>
+      </li>
+    </ol>
+  </div>
+</section>
 
-            let foundWin = false, foundMac = false, foundLin = false;
-            for (const asset of data.assets || []) {
-                const name = asset.name.toLowerCase();
-                const url = asset.browser_download_url;
-                if (name.endsWith(".exe") && !foundWin) { setLink("btn-win", url); foundWin = true; }
-                else if (name.endsWith(".dmg") && !foundMac) { setLink("btn-mac", url); foundMac = true; }
-                else if (name.endsWith(".deb") && !foundLin) { setLink("btn-lin", url); foundLin = true; }
-                else if (name.endsWith(".appimage")) {
-                    setLink("btn-appimage", url);
-                    document.getElementById("alt-linux").hidden = false;
-                }
-            }
-            // Any platform without a matching file keeps pointing at the release page, never a guessed filename.
-        }
+<!-- 7. KEYBOARD-FIRST -->
+<section class="section" id="keyboard" aria-labelledby="kbd-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Keyboard-first</span>
+      <h2 id="kbd-h">Get around without the mouse</h2>
+      <p>Shortcuts are switched off while you&rsquo;re typing in a text field. Two-key shortcuts need the second key within about a second.</p>
+    </div>
+    <div class="shortcuts reveal">
+      <div>
+        <div class="shortcut"><span>Search everything</span><span class="shortcut__keys"><kbd>/</kbd></span></div>
+        <div class="shortcut"><span>Collapse or expand the sidebar</span><span class="shortcut__keys"><kbd>[</kbd></span></div>
+        <div class="shortcut"><span>Go to Dashboard</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>d</kbd></span></div>
+        <div class="shortcut"><span>Go to Analytics</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>a</kbd></span></div>
+        <div class="shortcut"><span>Go to Clients</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>c</kbd></span></div>
+        <div class="shortcut"><span>Go to Commissions</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>w</kbd></span></div>
+        <div class="shortcut"><span>Go to Income (Payments)</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>p</kbd></span></div>
+      </div>
+      <div>
+        <div class="shortcut"><span>Go to Expenses</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>e</kbd></span></div>
+        <div class="shortcut"><span>Go to Goals</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>g</kbd></span></div>
+        <div class="shortcut"><span>Go to Backup</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>b</kbd></span></div>
+        <div class="shortcut"><span>Go to Logs</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>l</kbd></span></div>
+        <div class="shortcut"><span>Go to Settings</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>s</kbd></span></div>
+        <div class="shortcut"><span>New client</span><span class="shortcut__keys"><kbd>n</kbd> then <kbd>c</kbd></span></div>
+        <div class="shortcut"><span>New commission</span><span class="shortcut__keys"><kbd>n</kbd> then <kbd>w</kbd></span></div>
+        <div class="shortcut"><span>New payment</span><span class="shortcut__keys"><kbd>n</kbd> then <kbd>p</kbd></span></div>
+        <div class="shortcut"><span>New expense</span><span class="shortcut__keys"><kbd>n</kbd> then <kbd>e</kbd></span></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        async function fetchLatestRelease() {
-            highlightDetectedOs();
-            try {
-                let data = readCache();
-                if (!data) {
-                    const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases/latest`, {
-                        headers: { Accept: "application/vnd.github+json" }
-                    });
-                    if (!response.ok) throw new Error(`GitHub API returned ${response.status}`);
-                    data = await response.json();
-                    writeCache(data);
-                }
-                applyRelease(data);
-            } catch (error) {
-                // Buttons already link to the releases page, so downloads still work.
-                console.error("Failed to fetch release info:", error);
-            }
-        }
+<!-- 8. AUTO-UPDATES & RELEASES + 9. SECURITY -->
+<section class="section section--alt" id="updates" aria-labelledby="updates-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Always current</span>
+      <h2 id="updates-h">Updates arrive on their own</h2>
+      <p>FCMS Pro checks for a newer version when it starts and offers to install it. This page always shows the latest release.</p>
+    </div>
+    <div class="split reveal">
+      <article class="card release-card" aria-labelledby="rel-h">
+        <h3 class="visually-hidden" id="rel-h">Latest release</h3>
+        <div class="release-card__head">
+          <span class="release-card__version">v<span data-release="version">1.6.9</span></span>
+          <span class="badge badge--new" data-release="new-badge" hidden>New</span>
+          <time class="muted" data-release="date" datetime="2026-10-24T22:28:03Z">24 Oct 2026</time>
+        </div>
+        <div>
+          <strong>What&rsquo;s new</strong>
+          <ul data-release="highlights"><li>Fixed opaque dark bounding box on the FCMS Pro wordmark logo in the Welcome / Onboarding window by converting <code>logo-wordmark.png</code> to a transparent RGBA asset.</li>
+<li>Fixed Windows taskbar icon binding by explicitly declaring <code>AppUserModelID</code> in <code>Program.cs</code> and installer shortcuts, and binding <code>WindowIcon</code> across window constructors.</li></ul>
+        </div>
+        <p class="muted" data-release="status" aria-live="polite"></p>
+        <div class="link-row">
+          <a class="btn" data-asset-link="windows" href="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-Setup-1.6.9.exe" rel="noopener noreferrer">Windows <span class="meta">.exe &middot; 36.0 MB</span></a>
+          <a class="btn" data-asset-link="macos" href="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-1.6.9-arm64.dmg" rel="noopener noreferrer">macOS <span class="meta">.dmg &middot; 47.0 MB</span></a>
+          <a class="btn" data-asset-link="linux_deb" href="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/fcmspro_1.6.9_amd64.deb" rel="noopener noreferrer">Linux <span class="meta">.deb &middot; 35.8 MB</span></a>
+          <a class="btn" data-asset-link="linux_appimage" href="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-1.6.9-x86_64.AppImage" rel="noopener noreferrer">AppImage <span class="meta">44.8 MB</span></a>
+        </div>
+        <div class="link-row">
+          <a class="btn btn--ghost" href="./changelog/">Full changelog</a>
+          <a class="btn btn--ghost" href="https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.9" rel="noopener noreferrer">Release on GitHub</a>
+          <a class="btn btn--ghost" href="https://github.com/villenaderic/FcmsPro/releases.atom" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-rss"/></svg>Subscribe to releases</a>
+        </div>
+      </article>
 
-        document.addEventListener("DOMContentLoaded", fetchLatestRelease);
-    </script>
+      <article class="card" id="security" aria-labelledby="sec-h">
+        <span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield"/></svg></span>
+        <h3 id="sec-h">Security &amp; trust</h3>
+        <div class="stack">
+          <p class="muted">FCMS Pro is <strong>not code signed</strong>, because that needs a paid certificate. Windows SmartScreen and macOS Gatekeeper warn about unsigned apps. That is expected, as long as you downloaded it from this site or the project&rsquo;s GitHub Releases page.</p>
+          <p><strong>Windows:</strong> click <em>More info</em>, then <em>Run anyway</em>.<br><strong>macOS 14 or earlier:</strong> right-click the app, choose <em>Open</em>, then confirm.<br><strong>macOS 15 or newer:</strong> try to open it once, then use <em>System Settings &rarr; Privacy &amp; Security &rarr; Open Anyway</em>.</p>
+          <div class="callout callout--info">
+            <strong>Verify your download</strong>
+            Compare the file&rsquo;s SHA-256 with the value on the <a href="./download/">download page</a> (also published as <code>SHA256SUMS.txt</code> with each release). It confirms the file matches what was published.
+          </div>
+          <div class="codeblock">
+            <pre><code>Get-FileHash -Algorithm SHA256 .\<span data-asset-name="windows">FcmsPro-Setup-1.6.9.exe</span></code></pre>
+            <button class="copy-btn" type="button" data-copy-code>Copy</button>
+          </div>
+          <div class="codeblock">
+            <pre><code>shasum -a 256 <span data-asset-name="macos">FcmsPro-1.6.9-arm64.dmg</span></code></pre>
+            <button class="copy-btn" type="button" data-copy-code>Copy</button>
+          </div>
+          <p class="muted">On Linux use <code>sha256sum</code> the same way. FCMS Pro has no telemetry, and the full source code is on GitHub.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 10. FAQ -->
+<section class="section" id="faq" aria-labelledby="faq-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2 id="faq-h">Questions, answered</h2>
+    </div>
+    <div class="faq reveal">
+      <details>
+        <summary>Where is my data stored?</summary>
+        <div class="faq__body">
+          <p>In a single SQLite file on your own computer: <code>%APPDATA%\FcmsPro</code> on Windows, <code>~/Library/Application Support/FcmsPro</code> on macOS, and <code>~/.local/share/FcmsPro</code> on Linux. There is no server, no account and no telemetry. The first-run setup also shows you this folder.</p>
+        </div>
+      </details>
+      <details>
+        <summary>How do I back up?</summary>
+        <div class="faq__body">
+          <p>Open <strong>Backup</strong> and choose <strong>Export</strong>. It saves your clients, commissions, payments, expenses and more to a single <code>.json</code> file. Import restores it, either merging with or replacing what is there. FCMS Pro also keeps automatic local backups with a retention count you can configure.</p>
+          <p>Those automatic backups live on the same computer, so keep an export somewhere else too. There is no cloud copy to fall back on. Everything is stored locally on your machine with zero cloud dependency.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Will my data survive updates?</summary>
+        <div class="faq__body">
+          <p>Your database is kept in your user data folder, separate from the program files, so installing a new version doesn&rsquo;t replace it. When a new version changes how data is stored, the app applies those database migrations automatically on launch. It is still good practice to export a backup before you update.</p>
+          <p><strong>Uninstalling is different:</strong> on Windows the uninstaller also deletes the <code>%APPDATA%\FcmsPro</code> data folder, so export a backup first if you want to keep your records.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Why does my system show a security warning?</summary>
+        <div class="faq__body">
+          <p>The app is not code signed, because that needs a paid certificate. See <a href="#security">Security &amp; trust</a> for the steps on Windows and macOS.</p>
+        </div>
+      </details>
+      <details>
+        <summary>How do I verify my download?</summary>
+        <div class="faq__body">
+          <p>Run <code>Get-FileHash -Algorithm SHA256</code> in PowerShell on Windows, or <code>shasum -a 256</code> on macOS or <code>sha256sum</code> on Linux, and compare the result with the SHA-256 on the <a href="./download/">download page</a>.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Which systems are supported?</summary>
+        <div class="faq__body">
+          <p>Windows (64-bit installer), macOS on Apple Silicon (macOS 11 or newer), and Linux x64 as a <code>.deb</code> or <code>.AppImage</code>. There is no Intel Mac build and no native ARM build for Windows or Linux yet. If you need one, <a href="https://github.com/villenaderic/FcmsPro/issues/new?template=feature_request.yml&amp;title=Build%20request%3A%20" rel="noopener noreferrer">open a request</a>.</p>
+        </div>
+      </details>
+      <details>
+        <summary>How do updates work?</summary>
+        <div class="faq__body">
+          <p>FCMS Pro checks GitHub for a newer version when it starts and offers to install it. You can always download the newest installer from the <a href="./download/">download page</a>, and the full history is in the <a href="./changelog/">changelog</a>.</p>
+        </div>
+      </details>
+      <details>
+        <summary>I found a bug or want a feature.</summary>
+        <div class="faq__body">
+          <p>Please use <a href="https://github.com/villenaderic/FcmsPro/issues/new/choose" rel="noopener noreferrer">GitHub Issues</a>. You can also reach the author on <a href="https://m.me/roderic.villena" rel="noopener noreferrer">Messenger</a>.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- 11. SUPPORT + FINAL CTA -->
+<section class="section section--tight" id="support" aria-labelledby="support-h">
+  <div class="container">
+    <div class="cta-band reveal">
+      <h2 id="support-h">Ready to take your records back?</h2>
+      <p>FCMS Pro is free, privacy-first and open source. If it saves you time, you can help fund future development.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary btn--lg" href="./download/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>Download FCMS Pro</a>
+        <a class="btn btn--lg" href="https://ko-fi.com/villenaderic" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart"/></svg>Support on Ko-fi</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="./"><img src="./assets/img/logo-64.png" width="13" height="19" alt=""><span>FCMS Pro</span></a>
+        <p class="muted">Freelance commission management that stays on your computer.</p>
+      </div>
+      <div>
+        <h2>Product</h2>
+        <ul>
+          <li><a href="./#features">Features</a></li>
+          <li><a href="./download/">Download</a></li>
+          <li><a href="./changelog/">What&rsquo;s new</a></li>
+          <li><a href="./docs/">Docs</a></li>
+          <li><a href="./#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Project</h2>
+        <ul>
+          <li><a href="https://github.com/villenaderic/FcmsPro" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href="https://github.com/villenaderic/FcmsPro/releases" rel="noopener noreferrer">Releases</a></li>
+          <li><a href="https://github.com/villenaderic/FcmsPro/releases.atom" rel="noopener noreferrer">Subscribe to releases</a></li>
+          <li><a href="https://github.com/villenaderic/FcmsPro/blob/main/LICENSE" rel="noopener noreferrer">MIT License</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Help &amp; support</h2>
+        <ul>
+          <li><a href="https://github.com/villenaderic/FcmsPro/issues/new/choose" rel="noopener noreferrer">Report an issue</a></li>
+          <li><a href="https://m.me/roderic.villena" rel="noopener noreferrer">Message on Messenger</a></li>
+          <li><a href="https://ko-fi.com/villenaderic" rel="noopener noreferrer">Support on Ko-fi</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Roderic Villena</span>
+      <span class="mono">FCMS Pro <span data-release="version">1.6.9</span> &middot; MIT</span>
+    </div>
+  </div>
+</footer>
+<div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+<script type="module" src="./assets/js/main.js"></script>
+
 </body>
 </html>

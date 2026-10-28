@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "repo": "villenaderic/FcmsPro",
+  "version": "1.6.9",
+  "tag": "v1.6.9",
+  "name": "v1.6.9",
+  "published_at": "2026-10-24T22:28:03Z",
+  "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.9",
+  "notes_markdown": "### Fixed\n- Fixed opaque dark bounding box on the FCMS Pro wordmark logo in the Welcome / Onboarding window by converting `logo-wordmark.png` to a transparent RGBA asset.\n- Fixed Windows taskbar icon binding by explicitly declaring `AppUserModelID` in `Program.cs` and installer shortcuts, and binding `WindowIcon` across window constructors.",
+  "notes_source": "changelog",
+  "highlights": [
+    "Fixed opaque dark bounding box on the FCMS Pro wordmark logo in the Welcome / Onboarding window by converting `logo-wordmark.png` to a transparent RGBA asset.",
+    "Fixed Windows taskbar icon binding by explicitly declaring `AppUserModelID` in `Program.cs` and installer shortcuts, and binding `WindowIcon` across window constructors."
+  ],
+  "assets": {
+    "macos": {
+      "name": "FcmsPro-1.6.9-arm64.dmg",
+      "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-1.6.9-arm64.dmg",
+      "size": 49263136,
+      "sha256": "f006908e48bc59a99ee5378fc8efc276c82dfb531a80cc0036d22dd2c1f875e5",
+      "arch": "arm64"
+    },
+    "linux_appimage": {
+      "name": "FcmsPro-1.6.9-x86_64.AppImage",
+      "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-1.6.9-x86_64.AppImage",
+      "size": 47023296,
+      "sha256": "726b1ce0365a37228573b5e8ab5289cb1e60239832df3c03235d6640de682548",
+      "arch": "x64"
+    },
+    "windows": {
+      "name": "FcmsPro-Setup-1.6.9.exe",
+      "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-Setup-1.6.9.exe",
+      "size": 37710982,
+      "sha256": "1cd67e18fafb7c134a4ef707e4346db048600bc07a2a1eb41feee825b7a8cab8",
+      "arch": "x64"
+    },
+    "linux_deb": {
+      "name": "fcmspro_1.6.9_amd64.deb",
+      "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/fcmspro_1.6.9_amd64.deb",
+      "size": 37523632,
+      "sha256": "68e2dd3af343d1f51959080c6e9a0b59a367ccbe3181ec3e1769c24ebe550dd7",
+      "arch": "x64"
+    }
+  },
+  "generated_at": "2026-10-27T17:43:16Z"
+}

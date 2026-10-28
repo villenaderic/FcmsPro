@@ -1,0 +1,265 @@
+{
+  "schema": 1,
+  "releases": [
+    {
+      "version": "1.6.9",
+      "tag": "v1.6.9",
+      "published_at": "2026-10-24T22:28:03Z",
+      "prerelease": false,
+      "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.9",
+      "assets": {
+        "macos": {
+          "name": "FcmsPro-1.6.9-arm64.dmg",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-1.6.9-arm64.dmg",
+          "size": 49263136
+        },
+        "linux_appimage": {
+          "name": "FcmsPro-1.6.9-x86_64.AppImage",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-1.6.9-x86_64.AppImage",
+          "size": 47023296
+        },
+        "windows": {
+          "name": "FcmsPro-Setup-1.6.9.exe",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-Setup-1.6.9.exe",
+          "size": 37710982
+        },
+        "linux_deb": {
+          "name": "fcmspro_1.6.9_amd64.deb",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/fcmspro_1.6.9_amd64.deb",
+          "size": 37523632
+        }
+      }
+    },
+    {
+      "version": "1.6.8",
+      "tag": "v1.6.8",
+      "published_at": "2026-10-24T21:44:03Z",
+      "prerelease": false,
+      "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.8",
+      "assets": {
+        "macos": {
+          "name": "FcmsPro-1.6.8-arm64.dmg",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.8/FcmsPro-1.6.8-arm64.dmg",
+          "size": 49990588
+        },
+        "linux_appimage": {
+          "name": "FcmsPro-1.6.8-x86_64.AppImage",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.8/FcmsPro-1.6.8-x86_64.AppImage",
+          "size": 47711424
+        },
+        "windows": {
+          "name": "FcmsPro-Setup-1.6.8.exe",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.8/FcmsPro-Setup-1.6.8.exe",
+          "size": 38427402
+        },
+        "linux_deb": {
+          "name": "fcmspro_1.6.8_amd64.deb",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.8/fcmspro_1.6.8_amd64.deb",
+          "size": 38237482
+        }
+      }
+    },
+    {
+      "version": "1.6.7",
+      "tag": "v1.6.7",
+      "published_at": "2026-10-24T20:14:28Z",
+      "prerelease": false,
+      "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.7",
+      "assets": {
+        "macos": {
+          "name": "FcmsPro-1.6.7-arm64.dmg",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.7/FcmsPro-1.6.7-arm64.dmg",
+          "size": 49990453
+        },
+        "linux_appimage": {
+          "name": "FcmsPro-1.6.7-x86_64.AppImage",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.7/FcmsPro-1.6.7-x86_64.AppImage",
+          "size": 47711424
+        },
+        "windows": {
+          "name": "FcmsPro-Setup-1.6.7.exe",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.7/FcmsPro-Setup-1.6.7.exe",
+          "size": 38426035
+        },
+        "linux_deb": {
+          "name": "fcmspro_1.6.7_amd64.deb",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.7/fcmspro_1.6.7_amd64.deb",
+          "size": 38234802
+        }
+      }
+    },
+    {
+      "version": "1.6.6",
+      "tag": "v1.6.6",
+      "published_at": "2026-10-23T17:41:37Z",
+      "prerelease": false,
+      "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.6",
+      "assets": {
+        "macos": {
+          "name": "FcmsPro-1.6.6-arm64.dmg",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.6/FcmsPro-1.6.6-arm64.dmg",
+          "size": 49606652
+        },
+        "linux_appimage": {
+          "name": "FcmsPro-1.6.6-x86_64.AppImage",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.6/FcmsPro-1.6.6-x86_64.AppImage",
+          "size": 47649984
+        },
+        "windows": {
+          "name": "FcmsPro-Setup-1.6.6.exe",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.6/FcmsPro-Setup-1.6.6.exe",
+          "size": 38869067
+        },
+        "linux_deb": {
+          "name": "fcmspro_1.6.6_amd64.deb",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.6/fcmspro_1.6.6_amd64.deb",
+          "size": 38709912
+        }
+      }
+    },
+    {
+      "version": "1.6.5",
+      "tag": "v1.6.5",
+      "published_at": "2026-10-08T17:03:52Z",
+      "prerelease": false,
+      "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.5",
+      "assets": {
+        "macos": {
+          "name": "FcmsPro-1.6.5-arm64.dmg",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.5/FcmsPro-1.6.5-arm64.dmg",
+          "size": 49612833
+        },
+        "windows": {
+          "name": "FcmsPro-Setup-1.6.5.exe",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.5/FcmsPro-Setup-1.6.5.exe",
+          "size": 38844796
+        },
+        "linux_deb": {
+          "name": "fcmspro_1.6.5_amd64.deb",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.5/fcmspro_1.6.5_amd64.deb",
+          "size": 38709992
+        }
+      }
+    },
+    {
+      "version": "1.6.4",
+      "tag": "v1.6.4",
+      "published_at": "2026-10-08T16:09:19Z",
+      "prerelease": false,
+      "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.4",
+      "assets": {
+        "macos": {
+          "name": "FcmsPro-1.6.4-arm64.dmg",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.4/FcmsPro-1.6.4-arm64.dmg",
+          "size": 49612818
+        },
+        "windows": {
+          "name": "FcmsPro-Setup-1.6.4.exe",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.4/FcmsPro-Setup-1.6.4.exe",
+          "size": 38855646
+        },
+        "linux_deb": {
+          "name": "fcmspro_1.6.4_amd64.deb",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.4/fcmspro_1.6.4_amd64.deb",
+          "size": 38709448
+        }
+      }
+    },
+    {
+      "version": "1.6.2",
+      "tag": "v1.6.2",
+      "published_at": "2026-10-04T08:57:02Z",
+      "prerelease": false,
+      "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.2",
+      "assets": {
+        "macos": {
+          "name": "FcmsPro-1.6.2-arm64.dmg",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.2/FcmsPro-1.6.2-arm64.dmg",
+          "size": 49603668
+        },
+        "windows": {
+          "name": "FcmsPro-Setup-1.6.2.exe",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.2/FcmsPro-Setup-1.6.2.exe",
+          "size": 38852182
+        },
+        "linux_deb": {
+          "name": "fcmspro_1.6.2_amd64.deb",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.2/fcmspro_1.6.2_amd64.deb",
+          "size": 38721002
+        }
+      }
+    },
+    {
+      "version": "1.6.1",
+      "tag": "v1.6.1",
+      "published_at": "2026-10-04T08:15:41Z",
+      "prerelease": false,
+      "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.1",
+      "assets": {
+        "macos": {
+          "name": "FcmsPro-1.6.1-arm64.dmg",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.1/FcmsPro-1.6.1-arm64.dmg",
+          "size": 49604246
+        },
+        "windows": {
+          "name": "FcmsPro-Setup-1.6.1.exe",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.1/FcmsPro-Setup-1.6.1.exe",
+          "size": 38851929
+        },
+        "linux_deb": {
+          "name": "fcmspro_1.6.1_amd64.deb",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.1/fcmspro_1.6.1_amd64.deb",
+          "size": 38719248
+        }
+      }
+    },
+    {
+      "version": "1.6.0",
+      "tag": "v1.6.0",
+      "published_at": "2026-10-04T07:45:11Z",
+      "prerelease": false,
+      "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.6.0",
+      "assets": {
+        "macos": {
+          "name": "FcmsPro-1.6.0-arm64.dmg",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.0/FcmsPro-1.6.0-arm64.dmg",
+          "size": 49610855
+        },
+        "windows": {
+          "name": "FcmsPro-Setup-1.6.0.exe",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.0/FcmsPro-Setup-1.6.0.exe",
+          "size": 38863019
+        },
+        "linux_deb": {
+          "name": "fcmspro_1.6.0_amd64.deb",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.6.0/fcmspro_1.6.0_amd64.deb",
+          "size": 38715006
+        }
+      }
+    },
+    {
+      "version": "1.5.1",
+      "tag": "v1.5.1",
+      "published_at": "2026-10-04T07:28:27Z",
+      "prerelease": false,
+      "html_url": "https://github.com/villenaderic/FcmsPro/releases/tag/v1.5.1",
+      "assets": {
+        "macos": {
+          "name": "FcmsPro-1.4.0-arm64.dmg",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.5.1/FcmsPro-1.4.0-arm64.dmg",
+          "size": 51066261
+        },
+        "windows": {
+          "name": "FcmsPro-Setup-1.4.0.exe",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.5.1/FcmsPro-Setup-1.4.0.exe",
+          "size": 39830990
+        },
+        "linux_deb": {
+          "name": "fcmspro_1.4.0_amd64.deb",
+          "url": "https://github.com/villenaderic/FcmsPro/releases/download/v1.5.1/fcmspro_1.4.0_amd64.deb",
+          "size": 39526684
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FCMS Pro documentation: user guide</title>
+<meta name="description" content="The FCMS Pro user guide: first-run setup, navigation, keyboard shortcuts, clients, commissions, payments, expenses, analytics, tax summary, backup and settings.">
+<link rel="canonical" href="https://villenaderic.github.io/FcmsPro/docs/">
+<meta property="og:title" content="FCMS Pro documentation">
+<meta property="og:description" content="Step-by-step user guide for FCMS Pro, the local-first freelance commission manager.">
+<meta property="og:url" content="https://villenaderic.github.io/FcmsPro/docs/">
+<meta name="twitter:title" content="FCMS Pro documentation">
+<meta name="twitter:description" content="Step-by-step user guide for FCMS Pro, the local-first freelance commission manager.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- CSP: only same-origin + the GitHub API fallback. The two hashes are computed by
+     build-site.py from the exact inlined text (theme boot script, tokens.css). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-BxSzXplG31i2kqvdIPCLCz/GkQHnroDH7kYZ2UC+2dc='; style-src 'self' 'sha256-NOjUBQNE7XEtEo7Gt03szvHLWXjtWEZ/7mdNpBnGmVE='; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.github.com; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f6f8fc" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)">
+<meta name="author" content="Roderic Villena">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FCMS Pro">
+<meta property="og:image" content="https://villenaderic.github.io/FcmsPro/assets/img/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="FCMS Pro: freelance commission management that stays on your computer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://villenaderic.github.io/FcmsPro/assets/img/og-card.png">
+
+<link rel="icon" href="../favicon.ico" sizes="32x32">
+<link rel="icon" type="image/png" sizes="192x192" href="../assets/img/icon-192.png">
+<link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="alternate" type="application/atom+xml" title="FCMS Pro releases" href="https://github.com/villenaderic/FcmsPro/releases.atom">
+
+<link rel="preload" href="../assets/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Theme boot: runs before first paint so there is no flash of the wrong theme.
+     It must stay byte-identical to its CSP hash, so no whitespace inside the tag. -->
+<script>(function(d){try{var t=localStorage.getItem("fcms-theme");if(t==="light"||t==="dark")d.setAttribute("data-theme",t)}catch(e){}d.classList.add("js");setTimeout(function(){if(!d.hasAttribute("data-ready"))d.classList.remove("js")},4000)})(document.documentElement);</script>
+<!-- Critical CSS (design tokens, both themes) inlined; the rest is small and same-origin. -->
+<style>:root { color-scheme: light; --font-ui: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; --fs-xs: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem); --fs-sm: clamp(0.875rem, 0.85rem + 0.12vw, 0.9375rem); --fs-md: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem); --fs-lg: clamp(1.125rem, 1.07rem + 0.3vw, 1.3125rem); --fs-xl: clamp(1.375rem, 1.2rem + 0.9vw, 1.875rem); --fs-2xl: clamp(1.75rem, 1.4rem + 1.7vw, 2.75rem); --fs-3xl: clamp(2.25rem, 1.6rem + 3.2vw, 4rem); --sp-1: 0.25rem; --sp-2: 0.5rem; --sp-3: 0.75rem; --sp-4: 1rem; --sp-5: 1.5rem; --sp-6: 2rem; --sp-7: 3rem; --sp-8: 4rem; --sp-9: 6rem; --sp-10: 8rem; --radius-sm: 8px; --radius: 12px; --radius-lg: 16px; --radius-pill: 999px; --content-max: 1160px; --header-h: 64px; --ease: cubic-bezier(0.2, 0.7, 0.2, 1); --dur-fast: 120ms; --dur: 220ms; --surface-0: #f6f8fc; --surface-1: #ffffff; --surface-2: #eef2f9; --surface-3: #e1e8f3; --text: #0b1220; --text-muted: #475569; --border: #d5deec; --border-strong: #b6c3d8; --accent: #2563eb; --accent-hover: #1d4ed8; --accent-text: #1d4ed8; --on-accent: #ffffff; --accent-soft: rgba(37, 99, 235, 0.10); --accent-2: #0891b2; --success: #15803d; --success-soft: rgba(21, 128, 61, 0.12); --warning: #a16207; --warning-soft: rgba(161, 98, 7, 0.14); --danger: #b91c1c; --danger-soft: rgba(185, 28, 28, 0.10); --focus: #1d4ed8; --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 1px rgba(15, 23, 42, 0.04); --shadow-2: 0 4px 12px rgba(15, 23, 42, 0.07), 0 1px 3px rgba(15, 23, 42, 0.05); --shadow-3: 0 18px 48px rgba(15, 23, 42, 0.14), 0 4px 12px rgba(15, 23, 42, 0.06); --glass: rgba(246, 248, 252, 0.78); --mesh-a: rgba(37, 99, 235, 0.16); --mesh-b: rgba(8, 145, 178, 0.12); --keycap-bg: linear-gradient(#ffffff, #eef2f9); --keycap-edge: #b6c3d8; } @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme: dark; --surface-0: #0b0f19; --surface-1: #121a2b; --surface-2: #1a2235; --surface-3: #232d42; --text: #f1f5f9; --text-muted: #9aa8bd; --border: #27324a; --border-strong: #3a4966; --accent: #2563eb; --accent-hover: #3b82f6; --accent-text: #6ea8fe; --on-accent: #ffffff; --accent-soft: rgba(59, 130, 246, 0.16); --accent-2: #22d3ee; --success: #4ade80; --success-soft: rgba(74, 222, 128, 0.14); --warning: #fbbf24; --warning-soft: rgba(251, 191, 36, 0.14); --danger: #f87171; --danger-soft: rgba(248, 113, 113, 0.14); --focus: #93c5fd; --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4); --shadow-2: 0 6px 16px rgba(0, 0, 0, 0.35); --shadow-3: 0 24px 60px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.35); --glass: rgba(11, 15, 25, 0.72); --mesh-a: rgba(59, 130, 246, 0.22); --mesh-b: rgba(34, 211, 238, 0.12); --keycap-bg: linear-gradient(#232d42, #1a2235); --keycap-edge: #0b0f19; } } :root[data-theme="dark"] { color-scheme: dark; --surface-0: #0b0f19; --surface-1: #121a2b; --surface-2: #1a2235; --surface-3: #232d42; --text: #f1f5f9; --text-muted: #9aa8bd; --border: #27324a; --border-strong: #3a4966; --accent: #2563eb; --accent-hover: #3b82f6; --accent-text: #6ea8fe; --on-accent: #ffffff; --accent-soft: rgba(59, 130, 246, 0.16); --accent-2: #22d3ee; --success: #4ade80; --success-soft: rgba(74, 222, 128, 0.14); --warning: #fbbf24; --warning-soft: rgba(251, 191, 36, 0.14); --danger: #f87171; --danger-soft: rgba(248, 113, 113, 0.14); --focus: #93c5fd; --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4); --shadow-2: 0 6px 16px rgba(0, 0, 0, 0.35); --shadow-3: 0 24px 60px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.35); --glass: rgba(11, 15, 25, 0.72); --mesh-a: rgba(59, 130, 246, 0.22); --mesh-b: rgba(34, 211, 238, 0.12); --keycap-bg: linear-gradient(#232d42, #1a2235); --keycap-edge: #0b0f19; }</style>
+<link rel="stylesheet" href="../assets/css/base.css?v=dev">
+<link rel="stylesheet" href="../assets/css/components.css?v=dev">
+<link rel="stylesheet" href="../assets/css/pages.css?v=dev">
+<link rel="stylesheet" href="../assets/css/mockups.css?v=dev">
+<link rel="modulepreload" href="../assets/js/main.js">
+
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<!-- SVG sprite: every icon on the site comes from here so they share one visual style.
+     Usage: <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-NAME"/></svg>
+     Strokes use currentColor, so icons follow the text colour in both themes. -->
+<svg class="visually-hidden" aria-hidden="true" focusable="false"><symbol id="i-check" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-x" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-info" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+<symbol id="i-dashboard" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></symbol>
+<symbol id="i-analytics" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M8 17v-6M13 17V7M18 17v-4"/></symbol>
+<symbol id="i-clients" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2M16 3.1a4 4 0 0 1 0 7.8M22 21v-2a4 4 0 0 0-3-3.9"/></symbol>
+<symbol id="i-commissions" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 12h6M9 16h6"/></symbol>
+<symbol id="i-kanban" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="14" rx="1"/><rect x="10" y="3" width="5" height="9" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></symbol>
+<symbol id="i-quote" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-invoice" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M9 15l2 2 4-4"/></symbol>
+<symbol id="i-payment" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></symbol>
+<symbol id="i-receipt" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l3-2 3 2 3-2 3 2 3-2V2l-3 2-3-2-3 2-3-2zM8 8h8M8 12h8"/></symbol>
+<symbol id="i-expense" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12l4 4 4-4"/></symbol>
+<symbol id="i-goal" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+<symbol id="i-template" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="7" rx="1"/><rect x="3" y="14" width="9" height="7" rx="1"/><rect x="16" y="14" width="5" height="7" rx="1"/></symbol>
+<symbol id="i-backup" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></symbol>
+<symbol id="i-logs" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+<symbol id="i-settings" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+<symbol id="i-search" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-trash" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></symbol>
+<symbol id="i-paperclip" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11.1-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></symbol>
+<symbol id="i-pdf" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M12 12v6M9 15l3 3 3-3"/></symbol>
+<symbol id="i-calculator" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/></symbol>
+<symbol id="i-repeat" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 1 4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+<symbol id="i-keyboard" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M7 15h10"/></symbol>
+<symbol id="i-lock" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+<symbol id="i-shield" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5zM9 12l2 2 4-4"/></symbol>
+<symbol id="i-download" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
+<symbol id="i-refresh" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-15.5 6.3L3 16M3 12A9 9 0 0 1 18.5 5.7L21 8M21 3v5h-5M3 21v-5h5"/></symbol>
+<symbol id="i-heart" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></symbol>
+<symbol id="i-contrast" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"/></symbol>
+<symbol id="i-rss" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></symbol>
+</svg>
+
+<header class="site-header" id="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="../" aria-label="FCMS Pro home">
+      <img src="../assets/img/logo-64.png" width="13" height="19" alt=""><span>FCMS Pro</span>
+    </a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="../#features">Features</a>
+      <a href="../download/">Download</a>
+      <a href="../changelog/">What&rsquo;s new</a>
+      <a href="../docs/" aria-current="page">Docs</a>
+      <a href="../#faq">FAQ</a>
+    </nav>
+    <div class="header-actions">
+      <a class="icon-btn" href="https://github.com/villenaderic/FcmsPro" rel="noopener noreferrer" aria-label="FCMS Pro on GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+      </a>
+      <button class="icon-btn theme-toggle" type="button" id="theme-toggle" aria-label="Switch color theme">
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <a class="btn btn--primary" href="../download/">Download</a>
+      <button class="icon-btn nav-toggle" type="button" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="container docs-layout">
+
+  <aside class="docs-side" aria-label="Documentation navigation">
+    <label class="visually-hidden" for="docs-search">Search the documentation</label>
+    <input class="docs-search" id="docs-search" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" hidden>
+    <ul class="docs-results" data-docs-results aria-live="polite" hidden></ul>
+    <nav aria-label="On this page" data-docs-toc>
+<ul class="toc">
+<li class="toc-l2"><a href="#getting-started">Getting Started</a></li>
+<li class="toc-l2"><a href="#navigating-the-app">Navigating the App</a></li>
+<li class="toc-l3"><a href="#keyboard-shortcuts">Keyboard Shortcuts</a></li>
+<li class="toc-l2"><a href="#clients">Clients</a></li>
+<li class="toc-l2"><a href="#commissions">Commissions</a></li>
+<li class="toc-l2"><a href="#payments-income">Payments &amp; Income</a></li>
+<li class="toc-l2"><a href="#expenses-net-profit">Expenses &amp; Net Profit</a></li>
+<li class="toc-l2"><a href="#analytics-tax-summary">Analytics &amp; Tax Summary</a></li>
+<li class="toc-l2"><a href="#goals">Goals</a></li>
+<li class="toc-l2"><a href="#backup-restore">Backup &amp; Restore</a></li>
+<li class="toc-l2"><a href="#trash-soft-delete">Trash (Soft Delete)</a></li>
+<li class="toc-l2"><a href="#settings-auto-updates">Settings &amp; Auto-Updates</a></li>
+<li class="toc-l2"><a href="#logs">Logs</a></li>
+</ul>
+    </nav>
+    <p class="muted platform-note">Guide for FCMS Pro <span class="mono" data-release="version">1.6.9</span>.
+      Found a mistake?
+      <a href="https://github.com/villenaderic/FcmsPro/issues/new/choose" rel="noopener noreferrer">Tell us</a>.</p>
+  </aside>
+
+  <article class="prose" data-docs-body>
+<h1 id="fcms-pro-user-guide">FCMS Pro — User Guide</h1>
+<h2 id="getting-started">Getting Started <a class="anchor" href="#getting-started" aria-label="Link to Getting Started">#</a></h2>
+<p>The first time you launch FCMS Pro, you'll go through a short first-run setup:</p>
+<ol><li><strong>Welcome</strong> — a quick intro to FCMS Pro.</li><li><strong>Terms &amp; Data Handling</strong> — explains that all your data stays on this computer (no cloud sync), and that you're responsible for your own backups.</li><li><strong>Where Your Data Lives</strong> — displays the folder your SQLite database is stored in, with an option to select a custom data folder.</li><li><strong>Quick Start Guide</strong> — a fast overview of key concepts, shortcuts, and navigation.</li><li><strong>You're All Set</strong> — click Finish to enter your workspace. No passwords or account setup required.</li></ol>
+<h2 id="navigating-the-app">Navigating the App <a class="anchor" href="#navigating-the-app" aria-label="Link to Navigating the App">#</a></h2>
+<p>The sidebar on the left provides access to every module: <strong>Dashboard</strong>, <strong>Analytics</strong>, <strong>Clients</strong>, <strong>Commissions</strong>, <strong>Income (Payments)</strong>, <strong>Expenses</strong>, <strong>Goals</strong>, <strong>Backup</strong>, <strong>Settings</strong>, and <strong>Logs</strong>.</p>
+<p>You can also collapse the sidebar to maximize screen space using the toggle button in the sidebar header or pressing <code>[</code>.</p>
+<h3 id="keyboard-shortcuts">Keyboard Shortcuts <a class="anchor" href="#keyboard-shortcuts" aria-label="Link to Keyboard Shortcuts">#</a></h3>
+<p>Two-key shortcut sequences let you move quickly through the app (press the second key within one second):</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Shortcut</th><th scope="col">Action</th></tr></thead><tbody><tr><td><code>/</code></td><td>Focus global search</td></tr><tr><td><code>[</code></td><td>Collapse or expand sidebar</td></tr><tr><td><code>g</code> then <code>d</code></td><td>Go to Dashboard</td></tr><tr><td><code>g</code> then <code>a</code></td><td>Go to Analytics</td></tr><tr><td><code>g</code> then <code>c</code></td><td>Go to Clients</td></tr><tr><td><code>g</code> then <code>w</code></td><td>Go to Commissions</td></tr><tr><td><code>g</code> then <code>p</code></td><td>Go to Income (Payments)</td></tr><tr><td><code>g</code> then <code>e</code></td><td>Go to Expenses</td></tr><tr><td><code>g</code> then <code>g</code></td><td>Go to Goals</td></tr><tr><td><code>g</code> then <code>b</code></td><td>Go to Backup</td></tr><tr><td><code>g</code> then <code>l</code></td><td>Go to Logs</td></tr><tr><td><code>g</code> then <code>s</code></td><td>Go to Settings</td></tr><tr><td><code>n</code> then <code>w</code></td><td>New Commission</td></tr><tr><td><code>n</code> then <code>c</code></td><td>New Client</td></tr><tr><td><code>n</code> then <code>p</code></td><td>New Payment</td></tr><tr><td><code>n</code> then <code>e</code></td><td>New Expense</td></tr></tbody></table></div>
+<p>Shortcuts are automatically disabled while focus is inside any text box or input field.</p>
+<h2 id="clients">Clients <a class="anchor" href="#clients" aria-label="Link to Clients">#</a></h2>
+<p>Add and manage your freelance clients:</p>
+<ul><li>Store name, client type (individual, business, agency, etc.), contact details, and notes.</li><li>Click <strong>View</strong> to open a client's profile, displaying total billed, payments received, outstanding balance, and full commission history.</li><li><strong>Attachments</strong>: attach signed contracts, design briefs, or reference documents (PDFs and images) directly to the client's profile.</li></ul>
+<blockquote><p>Deleting a client does <strong>not</strong> delete their commissions — those stay in place so historical financial records remain intact, with the client listed as deleted.</p></blockquote>
+<h2 id="commissions">Commissions <a class="anchor" href="#commissions" aria-label="Link to Commissions">#</a></h2>
+<p>Track each commission from inquiry to delivery:</p>
+<ul><li><strong>Status pipeline</strong>: <strong>Pending → In Progress → Revision → Completed → Delivered</strong>, or <strong>Cancelled</strong>. You can update statuses directly from the list.</li><li><strong>Sorting &amp; Filtering</strong>: filter by status or search by commission title and client name.</li><li><strong>Recurring commissions</strong>: set a recurrence frequency (weekly, biweekly, monthly) to automatically create the next commission as soon as the current one is marked <strong>Delivered</strong>.</li><li><strong>Attachments</strong>: upload reference images and project files directly to any commission.</li></ul>
+<h2 id="payments-income">Payments &amp; Income <a class="anchor" href="#payments-income" aria-label="Link to Payments &amp; Income">#</a></h2>
+<p>Record payments against commissions to keep balances accurate:</p>
+<ul><li>Recording a payment automatically decreases the commission's remaining balance.</li><li>Filter and search past income by client, date, or amount.</li><li><strong>Refunds</strong>: if an error occurs or a payment is reversed, use <strong>Refund</strong> to remove the payment and automatically restore the commission's balance owed.</li></ul>
+<h2 id="expenses-net-profit">Expenses &amp; Net Profit <a class="anchor" href="#expenses-net-profit" aria-label="Link to Expenses &amp; Net Profit">#</a></h2>
+<p>Log your freelance business costs:</p>
+<ul><li>Track expenses by category (software subscriptions, hardware, office supplies, subcontractor fees).</li><li><strong>Recurring expenses</strong>: set weekly, biweekly, or monthly repeat schedules for ongoing expenses like cloud tools and software subscriptions.</li><li>Net profit is calculated automatically: <strong>Net Profit = Gross Income − Expenses</strong>.</li></ul>
+<h2 id="analytics-tax-summary">Analytics &amp; Tax Summary <a class="anchor" href="#analytics-tax-summary" aria-label="Link to Analytics &amp; Tax Summary">#</a></h2>
+<p>Analyze your freelance business performance:</p>
+<ul><li>View visual income breakdowns by category and month.</li><li>Track gross revenue, total expenses, and net profit over time.</li><li><strong>Tax &amp; Quarterly Summary PDF</strong>: export a clean, printable PDF report breaking down revenue, expenses, and net earnings by quarter and year for your accountant or tax filing.</li></ul>
+<h2 id="goals">Goals <a class="anchor" href="#goals" aria-label="Link to Goals">#</a></h2>
+<p>Set monthly and annual income targets and expense budgets to visualize progress towards your freelance financial benchmarks.</p>
+<h2 id="backup-restore">Backup &amp; Restore <a class="anchor" href="#backup-restore" aria-label="Link to Backup &amp; Restore">#</a></h2>
+<ul><li><strong>Export</strong>: save your entire database — clients, commissions, payments, expenses, and settings — to a portable <code>.json</code> file.</li><li><strong>Import</strong>: restore from a backup file, with options to <strong>merge</strong> records or <strong>replace</strong> all local data.</li><li><strong>Automatic Backups</strong>: FCMS Pro automatically creates local database backups upon app exit, retaining a configurable number of backup archives in your data directory.</li></ul>
+<h2 id="trash-soft-delete">Trash (Soft Delete) <a class="anchor" href="#trash-soft-delete" aria-label="Link to Trash (Soft Delete)">#</a></h2>
+<p>Accidentally deleted a client, commission, payment, or expense? Deleted items are moved to <strong>Trash</strong> where they can be restored or permanently removed.</p>
+<h2 id="settings-auto-updates">Settings &amp; Auto-Updates <a class="anchor" href="#settings-auto-updates" aria-label="Link to Settings &amp; Auto-Updates">#</a></h2>
+<ul><li>Configure your business name, freelancer contact info, currency symbol, and tax options.</li><li>Choose between <strong>Dark</strong> and <strong>Light</strong> themes with customizable accent colors.</li><li><strong>Software Updates</strong>: check for updates on demand with the "Check for Updates" button or review recent release notes in the "What's New" dialog.</li></ul>
+<h2 id="logs">Logs <a class="anchor" href="#logs" aria-label="Link to Logs">#</a></h2>
+<p>A read-only audit log tracking every operation: records created, updated, soft-deleted, restored, and database backups.</p>
+<hr>
+<p><strong>Questions or data management?</strong> All data is stored in a single SQLite database (<code>fcms.db</code>) on your computer. Export backups regularly via the Backup page.</p>
+  </article>
+
+</div>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="../"><img src="../assets/img/logo-64.png" width="13" height="19" alt=""><span>FCMS Pro</span></a>
+        <p class="muted">Freelance commission management that stays on your computer.</p>
+      </div>
+      <div>
+        <h2>Product</h2>
+        <ul>
+          <li><a href="../#features">Features</a></li>
+          <li><a href="../download/">Download</a></li>
+          <li><a href="../changelog/">What&rsquo;s new</a></li>
+          <li><a href="../docs/">Docs</a></li>
+          <li><a href="../#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Project</h2>
+        <ul>
+          <li><a href="https://github.com/villenaderic/FcmsPro" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href="https://github.com/villenaderic/FcmsPro/releases" rel="noopener noreferrer">Releases</a></li>
+          <li><a href="https://github.com/villenaderic/FcmsPro/releases.atom" rel="noopener noreferrer">Subscribe to releases</a></li>
+          <li><a href="https://github.com/villenaderic/FcmsPro/blob/main/LICENSE" rel="noopener noreferrer">MIT License</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Help &amp; support</h2>
+        <ul>
+          <li><a href="https://github.com/villenaderic/FcmsPro/issues/new/choose" rel="noopener noreferrer">Report an issue</a></li>
+          <li><a href="https://m.me/roderic.villena" rel="noopener noreferrer">Message on Messenger</a></li>
+          <li><a href="https://ko-fi.com/villenaderic" rel="noopener noreferrer">Support on Ko-fi</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Roderic Villena</span>
+      <span class="mono">FCMS Pro <span data-release="version">1.6.9</span> &middot; MIT</span>
+    </div>
+  </div>
+</footer>
+<div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+<script type="module" src="../assets/js/main.js"></script>
+
+</body>
+</html>

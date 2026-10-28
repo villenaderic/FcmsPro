@@ -1,0 +1,221 @@
+/* FCMS Pro website - reusable components. Page-specific layout lives in pages.css.
+   Class names here are the contract the HTML templates use; keep them stable. */
+
+/* ============ Buttons ============ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  min-height: 44px; padding: 0.65rem 1.25rem;
+  font-size: var(--fs-sm); font-weight: 600; line-height: 1.2; text-decoration: none;
+  color: var(--text); background: var(--surface-1);
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+              transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.btn:hover { background: var(--surface-2); text-decoration: none; }
+.btn:active { transform: translateY(1px); }
+.btn svg { width: 1.1em; height: 1.1em; flex: none; }
+.btn--primary { color: var(--on-accent); background: var(--accent); border-color: transparent; box-shadow: var(--shadow-2); }
+.btn--primary:hover { background: var(--accent-hover); }
+.btn--lg { min-height: 52px; padding: 0.85rem 1.75rem; font-size: var(--fs-md); border-radius: var(--radius-lg); }
+.btn--ghost { background: transparent; box-shadow: none; border-color: transparent; }
+.btn--ghost:hover { background: var(--surface-2); }
+.btn[aria-disabled="true"], .btn:disabled { opacity: 0.55; cursor: not-allowed; pointer-events: none; }
+.btn-sub { display: block; margin-top: var(--sp-2); font-size: var(--fs-xs); color: var(--text-muted); font-family: var(--font-mono); }
+
+/* ============ Header (glass on scroll) ============ */
+.site-header {
+  position: sticky; top: 0; z-index: 100; height: var(--header-h);
+  border-bottom: 1px solid transparent;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), backdrop-filter var(--dur) var(--ease);
+}
+.site-header.is-scrolled {
+  background: var(--glass); border-bottom-color: var(--border);
+  -webkit-backdrop-filter: saturate(180%) blur(14px); backdrop-filter: saturate(180%) blur(14px);
+}
+.site-header__inner { height: 100%; display: flex; align-items: center; gap: var(--sp-5); }
+.brand { display: inline-flex; align-items: center; gap: 5px; color: var(--text); font-weight: 750; font-size: var(--fs-md); line-height: 1; letter-spacing: -0.02em; text-decoration: none; }
+.brand:hover { text-decoration: none; }
+.brand img, .brand svg { width: auto; height: 19px; display: block; flex-shrink: 0; }
+.nav { display: flex; align-items: center; gap: var(--sp-1); margin-left: auto; }
+.nav a { padding: 0.5rem 0.75rem; color: var(--text-muted); font-size: var(--fs-sm); font-weight: 550; text-decoration: none; border-radius: var(--radius-sm); }
+.nav a:hover, .nav a[aria-current="page"] { color: var(--text); background: var(--surface-2); }
+.header-actions { display: flex; align-items: center; gap: var(--sp-2); }
+.icon-btn {
+  display: inline-grid; place-items: center; width: 44px; height: 44px;
+  color: var(--text-muted); background: transparent; border: 0; border-radius: var(--radius); text-decoration: none;
+}
+.icon-btn:hover { color: var(--text); background: var(--surface-2); }
+.icon-btn svg { width: 20px; height: 20px; }
+/* Theme toggle shows the icon of the theme you would switch TO */
+.theme-toggle .i-sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .i-sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .i-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .i-sun { display: block; }
+  :root:not([data-theme="light"]) .theme-toggle .i-moon { display: none; }
+}
+.nav-toggle { display: none; }
+@media (max-width: 860px) {
+  .nav-toggle { display: inline-grid; margin-left: auto; }
+  .nav {
+    display: none; position: absolute; inset: var(--header-h) 0 auto 0; flex-direction: column; align-items: stretch;
+    margin: 0; padding: var(--sp-3) var(--sp-5) var(--sp-5); background: var(--surface-1);
+    border-bottom: 1px solid var(--border); box-shadow: var(--shadow-3);
+  }
+  .nav.is-open { display: flex; }
+  .nav a { padding: 0.85rem 0.75rem; font-size: var(--fs-md); }
+  .header-actions .btn { display: none; }
+}
+
+/* ============ Cards ============ */
+.card {
+  padding: var(--sp-5); background: var(--surface-1);
+  border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
+}
+.card--hover { transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+.card--hover:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); border-color: var(--border-strong); }
+.card h3 { margin-bottom: var(--sp-2); }
+.card p { color: var(--text-muted); font-size: var(--fs-sm); }
+.feature-icon {
+  display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: var(--sp-4);
+  color: var(--accent-text); background: var(--accent-soft); border-radius: var(--radius);
+}
+.feature-icon svg { width: 22px; height: 22px; }
+.grid { display: grid; gap: var(--sp-4); }
+.grid--features { grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); }
+.grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+
+/* ============ Badges & pills ============ */
+.badge {
+  display: inline-flex; align-items: center; gap: 0.35em; padding: 0.2em 0.65em;
+  font-size: var(--fs-xs); font-weight: 650; line-height: 1.4; white-space: nowrap;
+  color: var(--accent-text); background: var(--accent-soft); border-radius: var(--radius-pill);
+}
+.badge--new     { color: var(--success); background: var(--success-soft); }
+.badge--added   { color: var(--success); background: var(--success-soft); }
+.badge--changed { color: var(--warning); background: var(--warning-soft); }
+.badge--fixed   { color: var(--accent-text); background: var(--accent-soft); }
+.badge--removed { color: var(--danger); background: var(--danger-soft); }
+/* A text label always accompanies the colour, so type is never colour-only. */
+.trust-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-2) var(--sp-5); margin: 0; padding: 0; list-style: none; color: var(--text-muted); font-size: var(--fs-sm); }
+.trust-strip li { display: inline-flex; align-items: center; gap: var(--sp-2); }
+.trust-strip svg { width: 16px; height: 16px; color: var(--success); }
+
+/* ============ Tabs (WAI-ARIA tabs; keyboard handled in JS) ============ */
+.tabs [role="tablist"] {
+  display: inline-flex; max-width: 100%; gap: var(--sp-1); padding: var(--sp-1); overflow-x: auto;
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.tabs [role="tab"] {
+  min-height: 40px; padding: 0.45rem 1rem; white-space: nowrap;
+  font-size: var(--fs-sm); font-weight: 600; color: var(--text-muted);
+  background: transparent; border: 0; border-radius: var(--radius-sm);
+}
+.tabs [role="tab"]:hover { color: var(--text); }
+.tabs [role="tab"][aria-selected="true"] { color: var(--text); background: var(--surface-1); box-shadow: var(--shadow-1); }
+.tabs [role="tabpanel"] { margin-top: var(--sp-5); }
+.tabs [role="tabpanel"][hidden] { display: none; }
+
+/* ============ Accordion (native <details>) ============ */
+.faq details { border-bottom: 1px solid var(--border); }
+.faq summary {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4);
+  padding: var(--sp-4) 0; font-weight: 600; cursor: pointer; list-style: none;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: ""; flex: none; width: 10px; height: 10px; margin-right: 4px;
+  border-right: 2px solid var(--text-muted); border-bottom: 2px solid var(--text-muted);
+  transform: rotate(45deg); transition: transform var(--dur) var(--ease);
+}
+.faq details[open] > summary::after { transform: rotate(-135deg); }
+.faq .faq__body { padding: 0 0 var(--sp-5); color: var(--text-muted); max-width: 70ch; }
+.faq .faq__body > * + * { margin-top: var(--sp-3); }
+
+/* ============ Keycaps ============ */
+kbd, .keycap {
+  display: inline-block; min-width: 1.9em; padding: 0.15em 0.55em; text-align: center;
+  font-family: var(--font-mono); font-size: 0.85em; font-weight: 600; line-height: 1.5; color: var(--text);
+  background: var(--keycap-bg); border: 1px solid var(--border-strong); border-bottom-width: 3px;
+  border-color: var(--border-strong) var(--border-strong) var(--keycap-edge); border-radius: 7px;
+}
+.shortcut { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); padding: var(--sp-3) 0; border-bottom: 1px solid var(--border); }
+.shortcut__keys { display: inline-flex; align-items: center; gap: var(--sp-1); color: var(--text-muted); }
+
+/* ============ Code / checksum block with copy button ============ */
+.codeblock { position: relative; }
+.codeblock pre { padding-right: 5.5rem; }
+.copy-btn {
+  position: absolute; top: var(--sp-2); right: var(--sp-2); min-height: 32px; padding: 0.25rem 0.7rem;
+  font-size: var(--fs-xs); font-weight: 600; color: var(--text-muted);
+  background: var(--surface-1); border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+}
+.copy-btn:hover { color: var(--text); background: var(--surface-3); }
+.hash {
+  display: flex; align-items: center; gap: var(--sp-2); padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.hash code { flex: 1; min-width: 0; padding: 0; background: none; border: 0; overflow-wrap: anywhere; font-size: var(--fs-xs); }
+.hash .copy-btn { position: static; flex: none; }
+
+/* ============ Toast (copy confirmations; aria-live region) ============ */
+.toast-region { position: fixed; z-index: 1100; left: 50%; bottom: var(--sp-5); transform: translateX(-50%); pointer-events: none; }
+.toast {
+  padding: 0.65rem 1.1rem; font-size: var(--fs-sm); font-weight: 600;
+  color: var(--surface-0); background: var(--text); border-radius: var(--radius-pill); box-shadow: var(--shadow-3);
+  animation: toast-in var(--dur) var(--ease);
+}
+@keyframes toast-in { from { opacity: 0; transform: translateY(8px); } }
+
+/* ============ Tables ============ */
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-1); }
+.table-wrap table { min-width: 560px; font-size: var(--fs-sm); }
+th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+th { font-size: var(--fs-xs); font-weight: 650; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); background: var(--surface-2); }
+tbody tr:last-child td { border-bottom: 0; }
+
+/* ============ App-window frame (screenshots and "Sample data" mockups) ============ */
+.window {
+  overflow: hidden; background: var(--surface-1); border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-3);
+}
+.window__bar { display: flex; align-items: center; gap: 6px; padding: 0.65rem 0.9rem; background: var(--surface-2); border-bottom: 1px solid var(--border); }
+.window__dot { width: 11px; height: 11px; border-radius: 50%; background: var(--border-strong); }
+.window__title { margin-left: var(--sp-3); font-size: var(--fs-xs); color: var(--text-muted); }
+.window__body img, .window__body picture { width: 100%; }
+.sample-tag {
+  position: absolute; top: var(--sp-3); right: var(--sp-3); z-index: 2; padding: 0.15em 0.6em;
+  font-size: var(--fs-xs); font-weight: 650; color: var(--warning); background: var(--warning-soft); border-radius: var(--radius-pill);
+}
+
+/* ============ Live release card ============ */
+.release-card { display: grid; gap: var(--sp-4); }
+.release-card__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-3); }
+.release-card__version { font-family: var(--font-mono); font-size: var(--fs-xl); font-weight: 700; letter-spacing: -0.02em; }
+.release-card ul { margin: 0; padding-left: 1.2rem; color: var(--text-muted); font-size: var(--fs-sm); }
+.release-card li + li { margin-top: var(--sp-1); }
+
+/* ============ Callouts ============ */
+.callout { padding: var(--sp-4) var(--sp-5); border: 1px solid var(--border); border-left-width: 4px; border-radius: var(--radius); background: var(--surface-1); }
+.callout--info    { border-left-color: var(--accent); }
+.callout--warning { border-left-color: var(--warning); background: var(--warning-soft); }
+.callout strong:first-child { display: block; margin-bottom: var(--sp-1); }
+
+/* ============ Footer ============ */
+.site-footer { padding-block: var(--sp-8) var(--sp-6); border-top: 1px solid var(--border); background: var(--surface-1); font-size: var(--fs-sm); }
+.footer-grid { display: grid; gap: var(--sp-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); }
+.footer-grid h2 { margin-bottom: var(--sp-3); font-size: var(--fs-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+.footer-grid ul { margin: 0; padding: 0; list-style: none; }
+.footer-grid li + li { margin-top: var(--sp-2); }
+.footer-grid a { color: var(--text); text-decoration: none; }
+.footer-grid a:hover { color: var(--accent-text); text-decoration: underline; }
+.footer-bottom { margin-top: var(--sp-7); padding-top: var(--sp-5); border-top: 1px solid var(--border); color: var(--text-muted); display: flex; flex-wrap: wrap; gap: var(--sp-3) var(--sp-5); justify-content: space-between; }
+
+/* ============ Additions (home page) ============ */
+/* Tabs need JS to switch panels; without JS all panels simply show in sequence. */
+html:not(.js) .tabs [role="tablist"] { display: none; }
+html:not(.js) .tabs [role="tabpanel"] + [role="tabpanel"] { margin-top: var(--sp-7); }
+.link-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.link-row .btn { min-height: 40px; padding: 0.45rem 0.9rem; }
+.btn .meta { font-family: var(--font-mono); font-weight: 500; font-size: var(--fs-xs); color: var(--text-muted); }
