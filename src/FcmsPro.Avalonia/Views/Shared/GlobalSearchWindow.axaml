@@ -5,6 +5,7 @@
         x:Class="FcmsPro.Avalonia.Views.Shared.GlobalSearchWindow"
         x:DataType="vm:GlobalSearchViewModel"
         Title="Search"
+        Background="{DynamicResource SystemAltHighColor}"
         Width="520" MinHeight="120" MaxHeight="520" SizeToContent="Height"
         CanResize="False"
         WindowStartupLocation="CenterOwner"

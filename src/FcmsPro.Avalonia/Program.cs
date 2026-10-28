@@ -53,9 +53,10 @@ internal static class Program
             e.SetObserved();
         };
 
-        using var mutex = new Mutex(initiallyOwned: true, SingleInstanceMutexName, out var createdNew);
+        var isScreenshotMode = Environment.GetEnvironmentVariable("FCMS_CAPTURE_SCREENSHOTS") == "1";
+        using var mutex = new Mutex(initiallyOwned: true, isScreenshotMode ? $"{SingleInstanceMutexName}.Screen" : SingleInstanceMutexName, out var createdNew);
 
-        if (!createdNew)
+        if (!createdNew && !isScreenshotMode)
         {
             // Another instance is already running. Signal it to come to the
             // foreground (mechanism implemented in SingleInstanceService via a

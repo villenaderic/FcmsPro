@@ -14,6 +14,13 @@ public static class FcmsPaths
     /// </summary>
     public static string GetAppDataDirectory()
     {
+        var customDir = Environment.GetEnvironmentVariable("FCMS_DATA_DIR");
+        if (!string.IsNullOrWhiteSpace(customDir))
+        {
+            Directory.CreateDirectory(customDir);
+            return customDir;
+        }
+
         var baseDir = Environment.GetFolderPath(
             Environment.SpecialFolder.ApplicationData,
             Environment.SpecialFolderOption.Create);

@@ -109,6 +109,16 @@ public partial class App : Application
             // first-run flow implementation.
         }
 
+        if (Environment.GetEnvironmentVariable("FCMS_CAPTURE_SCREENSHOTS") == "1")
+        {
+            if (desktop is not null)
+            {
+                await ScreenshotGenerator.RunAsync(desktop, Services);
+                desktop.Shutdown();
+                return;
+            }
+        }
+
         var startupWindow = await ResolveStartupWindowAsync();
 
         if (desktop is not null)

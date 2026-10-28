@@ -22,6 +22,13 @@ public class UpdateService
 
     public void Initialize()
     {
+        var disableUpdates = Environment.GetEnvironmentVariable("FCMS_DISABLE_UPDATES")?.Trim();
+        if (disableUpdates == "1" || string.Equals(disableUpdates, "true", StringComparison.OrdinalIgnoreCase))
+        {
+            Log.Information("Updater: disabled via FCMS_DISABLE_UPDATES");
+            return;
+        }
+
         try
         {
             // Logged so a "no update appeared" report can be diagnosed from the app log.
