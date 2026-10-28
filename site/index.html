@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <title>FCMS Pro: freelance commission management that stays on your computer</title>
-<meta name="description" content="Track clients, commissions, quotes, invoices, payments and expenses in one desktop app for Windows, macOS and Linux. No account, no subscription, no telemetry.">
+<meta name="description" content="Track clients, commissions, payments, expenses, analytics and tax summaries in one desktop app for Windows, macOS and Linux. No account, no subscription, no telemetry.">
 <link rel="canonical" href="{{canonical}}">
 <meta property="og:title" content="FCMS Pro: run your freelance business, keep your data">
-<meta property="og:description" content="A free, open-source desktop app for freelancers. Commissions, quotes, invoices, payments and expenses, stored on your own computer.">
+<meta property="og:description" content="A free, open-source desktop app for freelancers. Clients, commissions, payments, expenses and tax summaries, stored on your own computer.">
 <meta property="og:url" content="{{canonical}}">
 <meta name="twitter:title" content="FCMS Pro: run your freelance business, keep your data">
 <meta name="twitter:description" content="A free, open-source desktop app for freelancers. Everything stays on your own computer.">
@@ -23,7 +23,7 @@
   <div class="container">
     <p class="eyebrow">Version <span data-release="version">{{version}}</span> <span class="badge badge--new" data-release="new-badge" hidden>New</span></p>
     <h1>Run your freelance business. Keep your data.</h1>
-    <p class="hero__sub">Track clients, commissions, quotes, invoices, payments and expenses in one desktop app. Everything is stored on your own computer, not on someone else&rsquo;s server.</p>
+    <p class="hero__sub">Track clients, commissions, payments, expenses and tax summaries in one desktop app. Everything is stored on your own computer, not on someone else&rsquo;s server.</p>
 
     <div class="hero__cta">
       <div>
@@ -67,14 +67,15 @@
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">The app</span>
-      <h2 id="showcase-h">Everything for the job, from quote to payment</h2>
-      <p>One window for the whole commission lifecycle.</p>
+      <h2 id="showcase-h">Everything for your commissions, from inquiry to delivery</h2>
+      <p>One window for the whole freelance client lifecycle.</p>
     </div>
     <div class="tabs showcase reveal" data-tabs>
       <div role="tablist" aria-label="Product screens">
         <button type="button" role="tab" id="tab-dashboard" aria-selected="true" aria-controls="panel-dashboard">Dashboard</button>
-        <button type="button" role="tab" id="tab-kanban" aria-selected="false" aria-controls="panel-kanban" tabindex="-1">Kanban</button>
-        <button type="button" role="tab" id="tab-invoice" aria-selected="false" aria-controls="panel-invoice" tabindex="-1">Invoice PDF</button>
+        <button type="button" role="tab" id="tab-commissions" aria-selected="false" aria-controls="panel-commissions" tabindex="-1">Commissions</button>
+        <button type="button" role="tab" id="tab-clients" aria-selected="false" aria-controls="panel-clients" tabindex="-1">Clients</button>
+        <button type="button" role="tab" id="tab-tax-pdf" aria-selected="false" aria-controls="panel-tax-pdf" tabindex="-1">Tax PDF</button>
         <button type="button" role="tab" id="tab-analytics" aria-selected="false" aria-controls="panel-analytics" tabindex="-1">Analytics</button>
         <button type="button" role="tab" id="tab-search" aria-selected="false" aria-controls="panel-search" tabindex="-1">Search</button>
         <button type="button" role="tab" id="tab-theme" aria-selected="false" aria-controls="panel-theme" tabindex="-1">Light &amp; dark</button>
@@ -85,30 +86,35 @@
         <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Dashboard</span></div><div class="window__body">{{shot:dashboard}}</div></div>
         <p class="showcase__caption">Income, balances, overdue items and due-soon warnings at a glance.</p>
       </div>
-      <div role="tabpanel" id="panel-kanban" aria-labelledby="tab-kanban" tabindex="0">
-        <h3 class="visually-hidden">Kanban</h3>
-        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Commissions</span></div><div class="window__body">{{shot:commissions-kanban}}</div></div>
-        <p class="showcase__caption">Switch Commissions between a table and a kanban board. Change status right from the list.</p>
+      <div role="tabpanel" id="panel-commissions" aria-labelledby="tab-commissions" tabindex="0" hidden>
+        <h3 class="visually-hidden">Commissions</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Commissions</span></div><div class="window__body">{{shot:commissions}}</div></div>
+        <p class="showcase__caption">Status pipeline from Pending through Delivered, with quick inline status updates and balance tracking.</p>
       </div>
-      <div role="tabpanel" id="panel-invoice" aria-labelledby="tab-invoice" tabindex="0">
-        <h3 class="visually-hidden">Invoice PDF</h3>
-        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Invoice</span></div><div class="window__body">{{shot:invoice-pdf}}</div></div>
-        <p class="showcase__caption">Quotes, invoices and receipts export to PDF, using the business details and terms you set once in Settings.</p>
+      <div role="tabpanel" id="panel-clients" aria-labelledby="tab-clients" tabindex="0" hidden>
+        <h3 class="visually-hidden">Clients</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Clients</span></div><div class="window__body">{{shot:clients}}</div></div>
+        <p class="showcase__caption">Client profiles showing total billed, payments received, commission history, and file attachments like signed contracts.</p>
       </div>
-      <div role="tabpanel" id="panel-analytics" aria-labelledby="tab-analytics" tabindex="0">
+      <div role="tabpanel" id="panel-tax-pdf" aria-labelledby="tab-tax-pdf" tabindex="0" hidden>
+        <h3 class="visually-hidden">Tax Summary PDF</h3>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Tax &amp; Quarterly Summary</span></div><div class="window__body">{{shot:tax-pdf}}</div></div>
+        <p class="showcase__caption">Export annual and quarterly financial summaries to clean, printable PDF reports for tax preparation.</p>
+      </div>
+      <div role="tabpanel" id="panel-analytics" aria-labelledby="tab-analytics" tabindex="0" hidden>
         <h3 class="visually-hidden">Analytics</h3>
         <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Analytics</span></div><div class="window__body">{{shot:analytics}}</div></div>
-        <p class="showcase__caption">Income breakdowns, plus a tax and quarterly summary you can export.</p>
+        <p class="showcase__caption">Income breakdowns by client, payment method distribution, and net profit trends.</p>
       </div>
-      <div role="tabpanel" id="panel-search" aria-labelledby="tab-search" tabindex="0">
+      <div role="tabpanel" id="panel-search" aria-labelledby="tab-search" tabindex="0" hidden>
         <h3 class="visually-hidden">Search</h3>
         <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Search</span></div><div class="window__body">{{shot:search}}</div></div>
-        <p class="showcase__caption">Press <kbd>/</kbd> anywhere to search clients, commissions, invoices, quotes and expenses.</p>
+        <p class="showcase__caption">Press <kbd>/</kbd> anywhere to search clients, commissions, income, and expenses instantly.</p>
       </div>
-      <div role="tabpanel" id="panel-theme" aria-labelledby="tab-theme" tabindex="0">
+      <div role="tabpanel" id="panel-theme" aria-labelledby="tab-theme" tabindex="0" hidden>
         <h3 class="visually-hidden">Light and dark theme</h3>
         <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Light theme</span></div><div class="window__body">{{shot:dashboard-light}}</div></div>
-        <p class="showcase__caption">Light or dark, with your choice of accent colour. Switch with <strong>Toggle Theme</strong> in the sidebar.</p>
+        <p class="showcase__caption">Light or dark mode with customizable accent colors. Switch with <strong>Toggle Theme</strong> in the sidebar.</p>
       </div>
     </div>
   </div>
@@ -164,20 +170,20 @@
     <div class="grid grid--features reveal">
       <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-dashboard"/></svg></span><h3>Dashboard</h3><p>Income, balances, overdue items and due-soon warnings at a glance.</p></article>
       <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clients"/></svg></span><h3>Clients</h3><p>Profiles with what each client owes and has paid, their commission history, and file attachments such as signed contracts.</p></article>
-      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-kanban"/></svg></span><h3>Commissions</h3><p>Table or kanban board. Move jobs from Pending through Delivered, or Cancelled at any point.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-commissions"/></svg></span><h3>Commissions</h3><p>Full lifecycle tracking with instant filtering by status, search, and due-date visibility.</p></article>
       <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-repeat"/></svg></span><h3>Recurring work</h3><p>Repeat commissions weekly, biweekly or monthly, and recurring expenses like subscriptions.</p></article>
-      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-quote"/></svg></span><h3>Quotes</h3><p>Send scope and price first. Convert an accepted quote into a pre-filled commission.</p></article>
-      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-payment"/></svg></span><h3>Payments</h3><p>Recording a payment reduces the balance automatically. Refund to undo it and restore the balance.</p></article>
-      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-receipt"/></svg></span><h3>Receipts</h3><p>Every payment generates a receipt you can download as a PDF.</p></article>
-      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-invoice"/></svg></span><h3>Invoices</h3><p>Standalone billing documents, linked to a commission or not, with PDF export and attachments.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-paperclip"/></svg></span><h3>Client attachments</h3><p>Keep contracts, briefs, reference photos, and assets organized directly under each client.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-payment"/></svg></span><h3>Income &amp; payments</h3><p>Recording a payment reduces the balance automatically. Refund to undo it and restore the balance.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pdf"/></svg></span><h3>Tax summary PDF</h3><p>Generate clean, professional annual or quarterly tax summaries formatted for accounting with QuestPDF.</p></article>
       <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-expense"/></svg></span><h3>Expenses</h3><p>Log expenses by category and track net profit: income minus expenses.</p></article>
       <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-goal"/></svg></span><h3>Goals</h3><p>Set monthly or yearly income and expense targets and see how you&rsquo;re tracking.</p></article>
-      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-analytics"/></svg></span><h3>Analytics &amp; tax summary</h3><p>Income breakdowns with a tax and quarterly summary export.</p></article>
-      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-template"/></svg></span><h3>Templates</h3><p>Eight ready-made starting points, like Icon Commission or Logo Package, plus your own.</p></article>
-      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg></span><h3>Global search</h3><p>Press <kbd>/</kbd> to search across clients, commissions, invoices, quotes and expenses.</p></article>
-      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-trash"/></svg></span><h3>Trash</h3><p>Soft delete means a client or commission you remove by accident isn&rsquo;t gone for good.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-analytics"/></svg></span><h3>Analytics</h3><p>Visual breakdowns of revenue, payment status distribution, and commission trends over time.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg></span><h3>Global search</h3><p>Press <kbd>/</kbd> to search across clients, commissions, income, and expenses.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-keyboard"/></svg></span><h3>Keyboard shortcuts</h3><p>Jump to any section with <kbd>g</kbd> sequences or create records with <kbd>n</kbd> sequences without touching the mouse.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-contrast"/></svg></span><h3>Light &amp; dark themes</h3><p>Carefully tuned high-contrast dark and light modes, switchable instantly or synced to system preference.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-trash"/></svg></span><h3>Trash &amp; recovery</h3><p>Soft delete means a client, commission, or expense you remove by accident isn&rsquo;t gone for good.</p></article>
       <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-backup"/></svg></span><h3>Backup</h3><p>Manual export and import, plus automatic local backups with a configurable retention count.</p></article>
-      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-logs"/></svg></span><h3>Logs</h3><p>A read-only history of records created, updated and deleted, logins, and backups.</p></article>
+      <article class="card card--hover"><span class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-logs"/></svg></span><h3>Logs</h3><p>A read-only audit history of records created, updated and deleted, and backups.</p></article>
     </div>
   </div>
 </section>
@@ -205,8 +211,8 @@
           <li>Welcome</li>
           <li>Terms &amp; data handling</li>
           <li>Where your data lives</li>
-          <li>Create your admin account</li>
-          <li>Finish</li>
+          <li>Quick start guide</li>
+          <li>Ready</li>
         </ol>
       </li>
     </ol>
@@ -229,7 +235,7 @@
         <div class="shortcut"><span>Go to Analytics</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>a</kbd></span></div>
         <div class="shortcut"><span>Go to Clients</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>c</kbd></span></div>
         <div class="shortcut"><span>Go to Commissions</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>w</kbd></span></div>
-        <div class="shortcut"><span>Go to Payments</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>p</kbd></span></div>
+        <div class="shortcut"><span>Go to Income (Payments)</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>p</kbd></span></div>
       </div>
       <div>
         <div class="shortcut"><span>Go to Expenses</span><span class="shortcut__keys"><kbd>g</kbd> then <kbd>e</kbd></span></div>
@@ -322,8 +328,8 @@
       <details>
         <summary>How do I back up?</summary>
         <div class="faq__body">
-          <p>Open <strong>Backup</strong> and choose <strong>Export</strong>. It saves your clients, commissions, payments, invoices and more to a single <code>.json</code> file. Import restores it, either merging with or replacing what is there. FCMS Pro also keeps automatic local backups with a retention count you can configure.</p>
-          <p>Those automatic backups live on the same computer, so keep an export somewhere else too. There is no cloud copy to fall back on. Your password is never included in a backup.</p>
+          <p>Open <strong>Backup</strong> and choose <strong>Export</strong>. It saves your clients, commissions, payments, expenses and more to a single <code>.json</code> file. Import restores it, either merging with or replacing what is there. FCMS Pro also keeps automatic local backups with a retention count you can configure.</p>
+          <p>Those automatic backups live on the same computer, so keep an export somewhere else too. There is no cloud copy to fall back on. Everything is stored locally on your machine with zero cloud dependency.</p>
         </div>
       </details>
       <details>

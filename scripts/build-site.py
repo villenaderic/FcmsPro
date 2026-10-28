@@ -69,8 +69,11 @@ PROCESSED_NAMES = {"sw.js"}
 # Dropping the real file in is therefore the ONLY step needed: no template edit.
 SHOT_ALT = {
     "dashboard": "FCMS Pro dashboard with income, balances and due-soon warnings",
-    "commissions-kanban": "FCMS Pro commissions kanban board grouped by status",
-    "invoice-pdf": "An invoice exported to PDF from FCMS Pro",
+    "commissions": "FCMS Pro commissions table with status badges and client details",
+    "commissions-kanban": "FCMS Pro commissions table grouped by status",
+    "clients": "FCMS Pro client profile with balances, history and attachments",
+    "tax-pdf": "Tax and quarterly summary exported to PDF from FCMS Pro",
+    "invoice-pdf": "Tax and quarterly summary exported to PDF from FCMS Pro",
     "analytics": "FCMS Pro analytics with income breakdown charts",
     "search": "FCMS Pro global search opened with the / shortcut",
     "dashboard-light": "FCMS Pro dashboard in the light theme",

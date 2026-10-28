@@ -2,84 +2,107 @@
 
 ## Getting Started
 
-The first time you launch FCMS Pro, you'll go through a short setup:
+The first time you launch FCMS Pro, you'll go through a short first-run setup:
 
-1. **Welcome** — a quick intro.
+1. **Welcome** — a quick intro to FCMS Pro.
 2. **Terms & Data Handling** — explains that all your data stays on this computer (no cloud sync), and that you're responsible for your own backups.
-3. **Where Your Data Lives** — shows the folder your database is stored in.
-4. **Create Your Admin Account** — set a username and password. This protects the app on this computer; it cannot be recovered if forgotten, only reset by deleting your local data.
-5. **You're All Set** — click Finish to start using the app.
-
-After that first run, you'll see a login screen instead — enter your password to get in.
+3. **Where Your Data Lives** — displays the folder your SQLite database is stored in, with an option to select a custom data folder.
+4. **Quick Start Guide** — a fast overview of key concepts, shortcuts, and navigation.
+5. **You're All Set** — click Finish to enter your workspace. No passwords or account setup required.
 
 ## Navigating the App
 
-The sidebar on the left lists every section: Dashboard, Analytics, Clients, Commissions, Quotes, Payments, Receipts, Invoices, Expenses, Goals, Templates, Backup, Logs, and Settings.
+The sidebar on the left provides access to every module: **Dashboard**, **Analytics**, **Clients**, **Commissions**, **Income (Payments)**, **Expenses**, **Goals**, **Backup**, **Settings**, and **Logs**.
+
+You can also collapse the sidebar to maximize screen space using the toggle button in the sidebar header or pressing `[`.
 
 ### Keyboard Shortcuts
 
+Two-key shortcut sequences let you move quickly through the app (press the second key within one second):
+
 | Shortcut | Action |
 |---|---|
-| `/` | Focus the search box |
-| `?` | Show/hide the shortcuts overlay |
-| `[` | Collapse/expand the sidebar |
-| `Shift` + `T` | Toggle light/dark theme |
-| `r` | Refresh the current page |
-| `g` then a letter | Jump to a page (e.g. `g` `c` → Clients, `g` `w` → Commissions) |
-| `n` then a letter | Open a "new" form (e.g. `n` `c` → New Client, `n` `w` → New Commission) |
+| `/` | Focus global search |
+| `[` | Collapse or expand sidebar |
+| `g` then `d` | Go to Dashboard |
+| `g` then `a` | Go to Analytics |
+| `g` then `c` | Go to Clients |
+| `g` then `w` | Go to Commissions |
+| `g` then `p` | Go to Income (Payments) |
+| `g` then `e` | Go to Expenses |
+| `g` then `g` | Go to Goals |
+| `g` then `b` | Go to Backup |
+| `g` then `l` | Go to Logs |
+| `g` then `s` | Go to Settings |
+| `n` then `w` | New Commission |
+| `n` then `c` | New Client |
+| `n` then `p` | New Payment |
+| `n` then `e` | New Expense |
 
-Shortcuts are disabled while you're typing in a text field.
+Shortcuts are automatically disabled while focus is inside any text box or input field.
 
 ## Clients
 
-Add and manage your clients — name, type (individual, business, government, etc.), contact info, and notes. Clicking a client's **View** button opens their profile, showing everything they owe and have paid, plus their commission history.
+Add and manage your freelance clients:
+- Store name, client type (individual, business, agency, etc.), contact details, and notes.
+- Click **View** to open a client's profile, displaying total billed, payments received, outstanding balance, and full commission history.
+- **Attachments**: attach signed contracts, design briefs, or reference documents (PDFs and images) directly to the client's profile.
 
-> Deleting a client does **not** delete their commissions — those stay in place but no longer show a client name.
+> Deleting a client does **not** delete their commissions — those stay in place so historical financial records remain intact, with the client listed as deleted.
 
 ## Commissions
 
-Track each job from start to finish: **Pending → In Progress → Revision → Completed → Delivered**, or **Cancelled** at any point. You can change status right from the list without opening the full form.
+Track each commission from inquiry to delivery:
+- **Status pipeline**: **Pending → In Progress → Revision → Completed → Delivered**, or **Cancelled**. You can update statuses directly from the list.
+- **Sorting & Filtering**: filter by status or search by commission title and client name.
+- **Recurring commissions**: set a recurrence frequency (weekly, biweekly, monthly) to automatically create the next commission as soon as the current one is marked **Delivered**.
+- **Attachments**: upload reference images and project files directly to any commission.
 
-**Recurring commissions**: if you set a repeat frequency (weekly, biweekly, monthly), a new commission is automatically created — with the balance reset to the full price — as soon as the current one reaches **Delivered**.
+## Payments & Income
 
-## Quotes
+Record payments against commissions to keep balances accurate:
+- Recording a payment automatically decreases the commission's remaining balance.
+- Filter and search past income by client, date, or amount.
+- **Refunds**: if an error occurs or a payment is reversed, use **Refund** to remove the payment and automatically restore the commission's balance owed.
 
-Send a scope of work and price before committing to a commission. Once a quote is **Accepted**, use **Convert to Commission** to open a pre-filled commission form — you'll still need to hit Save to actually create it.
+## Expenses & Net Profit
 
-## Payments & Receipts
+Log your freelance business costs:
+- Track expenses by category (software subscriptions, hardware, office supplies, subcontractor fees).
+- **Recurring expenses**: set weekly, biweekly, or monthly repeat schedules for ongoing expenses like cloud tools and software subscriptions.
+- Net profit is calculated automatically: **Net Profit = Gross Income − Expenses**.
 
-Recording a payment against a commission automatically:
-- Reduces that commission's remaining balance.
-- Generates a receipt you can download as a PDF.
+## Analytics & Tax Summary
 
-If you need to undo a payment, use **Refund** — this deletes the payment and its receipt, and restores the balance owed. There's no separate "edit payment" option; refund and re-record instead.
+Analyze your freelance business performance:
+- View visual income breakdowns by category and month.
+- Track gross revenue, total expenses, and net profit over time.
+- **Tax & Quarterly Summary PDF**: export a clean, printable PDF report breaking down revenue, expenses, and net earnings by quarter and year for your accountant or tax filing.
 
-## Invoices
+## Goals
 
-Standalone billing documents — they can be linked to a commission or created independently. **Mark Paid** just updates the invoice's status; it doesn't check whether an actual payment was recorded against it, so keep your Payments and Invoices in sync manually if you use both.
+Set monthly and annual income targets and expense budgets to visualize progress towards your freelance financial benchmarks.
 
-## Expenses & Goals
+## Backup & Restore
 
-Log business expenses by category to track your net profit (Income − Expenses). Set monthly/yearly income and expense targets under Goals to see how you're tracking.
+- **Export**: save your entire database — clients, commissions, payments, expenses, and settings — to a portable `.json` file.
+- **Import**: restore from a backup file, with options to **merge** records or **replace** all local data.
+- **Automatic Backups**: FCMS Pro automatically creates local database backups upon app exit, retaining a configurable number of backup archives in your data directory.
 
-## Templates
+## Trash (Soft Delete)
 
-Reusable starting points for common jobs (the app ships with 8 defaults, like "Icon Commission" or "Logo Package"). Click **Use** on a template to open a pre-filled new-commission form. **Reset Defaults** restores the original 8 without touching any custom templates you've made.
+Accidentally deleted a client, commission, payment, or expense? Deleted items are moved to **Trash** where they can be restored or permanently removed.
 
-## Backup
+## Settings & Auto-Updates
 
-- **Export** saves everything — clients, commissions, payments, invoices, and more — to a single `.json` file. Save this somewhere safe; it's your only way to recover your data if something happens to this computer.
-- **Import** restores from a backup file, including one exported from the older web version of this app. You can choose to **merge** (add/update records) or **replace** (wipe and restore everything).
-- Your password is **never** included in a backup, in either direction — importing a backup does not change or restore your login.
-
-## Settings
-
-Business info (name, address, contact details, currency symbol), document defaults (invoice/quote terms, receipt footer), appearance (theme, accent color), and changing your password all live here.
+- Configure your business name, freelancer contact info, currency symbol, and tax options.
+- Choose between **Dark** and **Light** themes with customizable accent colors.
+- **Software Updates**: check for updates on demand with the "Check for Updates" button or review recent release notes in the "What's New" dialog.
 
 ## Logs
 
-A read-only history of everything that's happened in the app — records created, updated, deleted, logins, and backups/restores. Useful for retracing your steps.
+A read-only audit log tracking every operation: records created, updated, soft-deleted, restored, and database backups.
 
 ---
 
-**Questions or something not working as expected?** All of your data lives in a single SQLite file on this computer — back it up regularly via the Backup page.
+**Questions or data management?** All data is stored in a single SQLite database (`fcms.db`) on your computer. Export backups regularly via the Backup page.

@@ -42,18 +42,17 @@ anyway." On macOS, right click the app and choose "Open," then confirm.
 ## Features
 
 - **Dashboard** with income, balances, overdue items, and due-soon warnings at a glance
-- **Clients** with profile pages, activity history, and file attachments for things like signed
-  contracts
-- **Commissions** with both a table view and a kanban board, plus optional recurring commissions
-- **Quotes and Invoices** with PDF export and file attachments
-- **Payments and Receipts** with automatic balance tracking and refund handling
-- **Expenses** with category tracking and support for recurring expenses like subscriptions
-- **Analytics** with income breakdowns and a tax and quarterly summary export
-- **Global search** across clients, commissions, invoices, quotes, and expenses, triggered by
-  pressing `/` anywhere in the app
-- **Automatic local backups** with a configurable retention count, plus manual export and import
-- **Soft delete and Trash** so a client or commission you remove by accident isn't gone for good
-- **Templates and Goals** for repeatable commission types and income targets
+- **Clients** with profile pages, activity history, and file attachments for signed contracts and briefs
+- **Commissions** with status pipeline tracking, search, sorting, and optional recurring schedules
+- **Payments & Income** with automatic balance tracking and instant refund handling
+- **Expenses** with category tracking and support for recurring subscriptions
+- **Analytics & Tax Summary** with income breakdowns and full-page PDF tax and quarterly summary exports
+- **Goals** for monthly and yearly freelance income and expense targets
+- **Global search** across clients, commissions, payments, and expenses, triggered by pressing `/` anywhere
+- **Automatic local backups** on exit with a configurable retention count, plus manual JSON export and import
+- **Soft delete and Trash** with a 30-day recovery window for deleted records
+- **App Tour** guided onboarding walk-through for new users
+- **Software Updates** with Ed25519 cryptographic signing, on-demand checks, and What's New notes
 
 ## Your data stays local
 
