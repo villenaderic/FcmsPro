@@ -22,7 +22,7 @@ on:
     paths:
       - "site/**"
       - "scripts/**"
-      - "docs/USER_GUIDE.md"
+      - "docs/**"
       - "CHANGELOG.md"
       - ".github/workflows/pages.yml"
   schedule:
