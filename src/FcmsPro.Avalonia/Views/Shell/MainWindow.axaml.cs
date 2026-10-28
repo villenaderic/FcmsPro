@@ -53,7 +53,21 @@ public partial class MainWindow : Window
         // queryable in the constructor (before the native window exists),
         // so this runs on Opened instead, once the window actually has a
         // screen to check against.
-        Opened += (_, _) => ClampToWorkingArea();
+        Opened += async (_, _) =>
+        {
+            ClampToWorkingArea();
+            if (WhatsNewService.ShouldShowWhatsNew(out var ver, out var notes))
+            {
+                try
+                {
+                    await new Views.Shared.WhatsNewWindow(ver, notes).ShowDialog(this);
+                }
+                catch (System.Exception ex)
+                {
+                    Serilog.Log.Warning(ex, "Could not display What's New dialog");
+                }
+            }
+        };
 
         // Dialogs (client add/edit form, confirm-delete, etc.) are centered
         // over this window and modal to it - DialogService needs a live

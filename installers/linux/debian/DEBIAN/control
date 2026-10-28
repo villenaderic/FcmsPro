@@ -3,7 +3,7 @@ Version: 1.6.9
 Section: office
 Priority: optional
 Architecture: amd64
-Maintainer: Roderic Villena <REPLACE_WITH_YOUR_EMAIL@example.com>
+Maintainer: Roderic Villena <villenaderic@gmail.com>
 Description: FCMS Pro - Freelance Commission Management System
  Cross-platform desktop app for managing freelance commissions, clients,
  invoices, quotes, payments, and receipts. All data is stored locally in

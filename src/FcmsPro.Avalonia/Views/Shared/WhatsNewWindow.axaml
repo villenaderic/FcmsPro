@@ -1,0 +1,43 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="FcmsPro.Avalonia.Views.Shared.WhatsNewWindow"
+        Title="What's New in FCMS Pro"
+        Width="540" Height="480"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        ShowInTaskbar="False"
+        Background="{DynamicResource AppSurfaceBrush}">
+
+  <Grid RowDefinitions="Auto,*,Auto" Margin="24">
+    <!-- Header -->
+    <StackPanel Grid.Row="0" Spacing="6" Margin="0,0,0,16">
+      <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+        <TextBlock Text="🚀" FontSize="24" VerticalAlignment="Center" />
+        <TextBlock Text="What's New in FCMS Pro" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" />
+        <Border Background="{DynamicResource AppAccentBrush}" CornerRadius="10" Padding="8,2" VerticalAlignment="Center">
+          <TextBlock x:Name="VersionBadge" Text="v1.6.9" FontSize="11" FontWeight="SemiBold" Foreground="White" />
+        </Border>
+      </StackPanel>
+      <TextBlock Text="Here are the latest improvements and fixes added to your app:"
+                 FontSize="13" Foreground="{DynamicResource AppTextSecondaryBrush}" />
+    </StackPanel>
+
+    <!-- Notes Content -->
+    <Border Grid.Row="1" Background="{DynamicResource AppSurfaceVariantBrush}" CornerRadius="8" Padding="16">
+      <ScrollViewer>
+        <SelectableTextBlock x:Name="NotesBlock"
+                             TextWrapping="Wrap"
+                             FontSize="13"
+                             LineHeight="22" />
+      </ScrollViewer>
+    </Border>
+
+    <!-- Footer -->
+    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0" Spacing="12">
+      <Button Content="Got it"
+              Classes="accent"
+              Padding="24,8"
+              Click="OnCloseClicked" />
+    </StackPanel>
+  </Grid>
+</Window>

@@ -23,6 +23,7 @@ public partial class SettingsViewModel : ObservableObject
     private readonly IUnitOfWork _uow;
     private readonly ThemeService _themeService;
     private readonly NavigationService _navigation;
+    private readonly UpdateService _updateService;
 
     [ObservableProperty] private string? _businessName;
     [ObservableProperty] private string? _freelancerName;
@@ -40,12 +41,58 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private string? _statusMessage;
 
-    public SettingsViewModel(IUnitOfWork uow, ThemeService themeService, NavigationService navigation)
+    [ObservableProperty] private bool _isCheckingForUpdates;
+    [ObservableProperty] private string _currentVersionDisplay = "v1.6.9";
+    [ObservableProperty] private string _lastCheckedDisplay = "Not checked yet this session";
+
+    public SettingsViewModel(IUnitOfWork uow, ThemeService themeService, NavigationService navigation, UpdateService updateService)
     {
         _uow = uow;
         _themeService = themeService;
         _navigation = navigation;
+        _updateService = updateService;
+        CurrentVersionDisplay = $"v{_updateService.CurrentVersion}";
+        UpdateLastCheckedDisplay();
         _ = LoadAsync();
+    }
+
+    private void UpdateLastCheckedDisplay()
+    {
+        LastCheckedDisplay = _updateService.LastCheckedTime.HasValue
+            ? $"Last checked: {_updateService.LastCheckedTime.Value:h:mm tt}"
+            : "Not checked yet this session";
+    }
+
+    [RelayCommand]
+    private async Task CheckForUpdatesAsync()
+    {
+        if (IsCheckingForUpdates) return;
+        IsCheckingForUpdates = true;
+        try
+        {
+            await _updateService.CheckNowAsync();
+            UpdateLastCheckedDisplay();
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Update check failed: {ex.Message}";
+        }
+        finally
+        {
+            IsCheckingForUpdates = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task ViewWhatsNewAsync()
+    {
+        var ver = WhatsNewService.GetCurrentVersion();
+        var notes = WhatsNewService.GetReleaseNotesForVersion(ver);
+        var dialog = new Views.Shared.WhatsNewWindow(ver, notes);
+        if (App.Services.GetService(typeof(DialogService)) is DialogService ds && ds.OwnerWindow is { } owner)
+        {
+            await dialog.ShowDialog(owner);
+        }
     }
 
     [RelayCommand]

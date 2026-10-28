@@ -54,6 +54,25 @@ def os_for(name):
     return None
 
 
+def sign_asset(url, signer, token=None):
+    req = urllib.request.Request(url)
+    req.add_header("User-Agent", "FcmsPro-Appcast-Signer")
+    req.add_header("Accept", "application/octet-stream")
+    if token:
+        req.add_header("Authorization", f"Bearer {token}")
+    for attempt in range(1, 4):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                content = resp.read()
+            import base64
+            sig = signer.sign(content)
+            return base64.b64encode(sig).decode("ascii")
+        except Exception as e:
+            print(f"Signing download attempt {attempt} failed for {url}: {e}")
+            time.sleep(3 * attempt)
+    sys.exit(f"Could not download and sign {url}")
+
+
 def main():
     data = fetch_release()
     version = data["tag_name"].lstrip("v")
@@ -62,6 +81,20 @@ def main():
     body = "\n".join(
         l for l in (data.get("body") or "").split("\n") if not l.startswith("**Full Changelog**:")
     ).strip()
+
+    priv_key_raw = os.environ.get("NETSPARKLE_PRIVATE_KEY", "").strip()
+    signer = None
+    if priv_key_raw:
+        try:
+            import base64
+            from cryptography.hazmat.primitives.asymmetric import ed25519
+            priv_bytes = base64.b64decode(priv_key_raw)
+            signer = ed25519.Ed25519PrivateKey.from_private_bytes(priv_bytes)
+            print("Loaded Ed25519 private key for signing appcast items.")
+        except Exception as e:
+            print(f"Warning: Failed to load NETSPARKLE_PRIVATE_KEY: {e}", file=sys.stderr)
+    else:
+        print("Notice: NETSPARKLE_PRIVATE_KEY not set; skipping sparkle:edSignature.")
 
     ET.register_namespace("sparkle", SPARKLE_NS)
     rss = ET.Element("rss", {"version": "2.0"})
@@ -84,6 +117,10 @@ def main():
         enc.set(f"{{{SPARKLE_NS}}}os", os_name)
         enc.set("length", str(asset["size"]))
         enc.set("type", "application/octet-stream")
+        if signer is not None:
+            sig_b64 = sign_asset(asset["browser_download_url"], signer, os.environ.get("GITHUB_TOKEN"))
+            enc.set(f"{{{SPARKLE_NS}}}edSignature", sig_b64)
+            print(f"Signed {asset['name']} ({os_name}): {sig_b64[:16]}...")
 
     if "windows" not in found:
         sys.exit(f"Release v{version} has no .exe asset - refusing to write appcast. Assets: "

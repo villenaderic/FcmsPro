@@ -6,19 +6,19 @@
       <title>v1.6.9 (macos)</title>
       <pubDate>Sat, 24 Oct 2026 22:28:03 -0000</pubDate>
       <description />
-      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-1.6.9-arm64.dmg" sparkle:version="1.6.9" sparkle:os="macos" length="49263136" type="application/octet-stream" />
+      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-1.6.9-arm64.dmg" sparkle:version="1.6.9" sparkle:os="macos" sparkle:edSignature="7IEdEb8huUbNAaY8Qeis6CEYWZLGhcrRCOcfykmRA5bLg3lzT3jC1Mv+V08os3U1bR2cr1a29PEaEk9F02vwAA==" length="49263136" type="application/octet-stream" />
     </item>
     <item>
       <title>v1.6.9 (windows)</title>
       <pubDate>Sat, 24 Oct 2026 22:28:03 -0000</pubDate>
       <description />
-      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-Setup-1.6.9.exe" sparkle:version="1.6.9" sparkle:os="windows" length="37710982" type="application/octet-stream" />
+      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/FcmsPro-Setup-1.6.9.exe" sparkle:version="1.6.9" sparkle:os="windows" sparkle:edSignature="5mLH5ssyjh05WXNM0lcJZm1yGyqEapm42q/eh3v9ZThanIEXefG6qnFuxV8w6njrriAXCftIubDwWS8lUuSkCg==" length="37710982" type="application/octet-stream" />
     </item>
     <item>
       <title>v1.6.9 (linux)</title>
       <pubDate>Sat, 24 Oct 2026 22:28:03 -0000</pubDate>
       <description />
-      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/fcmspro_1.6.9_amd64.deb" sparkle:version="1.6.9" sparkle:os="linux" length="37523632" type="application/octet-stream" />
+      <enclosure url="https://github.com/villenaderic/FcmsPro/releases/download/v1.6.9/fcmspro_1.6.9_amd64.deb" sparkle:version="1.6.9" sparkle:os="linux" sparkle:edSignature="SuWSHqT9viAdZ4ebmnsRMgGS11jUdyDkWQTPAEiTVlX+M1AM4TD2pZP3/e2P384xpbpGwG39r94fcbS6qmoIAA==" length="37523632" type="application/octet-stream" />
     </item>
   </channel>
 </rss>

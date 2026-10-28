@@ -62,15 +62,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--
-      Makes everything under Assets/ loadable from XAML via
-      avares://FcmsPro.Avalonia/Assets/<filename> URIs (e.g. an <Image
-      Source="avares://FcmsPro.Avalonia/Assets/logo-wordmark.png" /> on an
-      About screen). The platform-specific icon files (app.ico, app.icns)
-      don't need this - MSBuild's ApplicationIcon property and the installer
-      scripts read those directly from disk - but the PNG assets do.
-    -->
     <AvaloniaResource Include="Assets\**" />
+    <EmbeddedResource Include="..\..\CHANGELOG.md" Link="Assets\CHANGELOG.md" />
   </ItemGroup>
-
 </Project>
