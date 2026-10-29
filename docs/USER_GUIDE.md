@@ -1,5 +1,7 @@
 # FCMS Pro — User Guide
 
+> **Prefer video?** Watch the [Official 3-Minute Video Walkthrough on YouTube](https://www.youtube.com/watch?v=wxfsJB4re-M) covering installation, key features, and client workflows.
+
 ## Getting Started
 
 The first time you launch FCMS Pro, you'll go through a short first-run setup:

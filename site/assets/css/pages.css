@@ -25,6 +25,35 @@
 .hero__visual .window { aspect-ratio: 16 / 10; } /* reserves space: CLS stays ~0 */
 .platform-note { margin-top: var(--sp-3); font-size: var(--fs-xs); color: var(--text-muted); }
 
+/* ============ Video showcase ============ */
+.video-showcase { max-width: 980px; margin-inline: auto; }
+.window--video { box-shadow: var(--shadow-3); overflow: hidden; border-radius: var(--radius-lg); }
+.video-frame-wrap { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #06090e; }
+.video-frame-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+.video-meta {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: var(--sp-4); margin-top: var(--sp-5); padding: var(--sp-4) var(--sp-5);
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
+}
+.video-meta__creator { display: flex; align-items: center; gap: var(--sp-3); }
+.video-meta__avatar {
+  width: 46px; height: 46px; border-radius: 50%; object-fit: cover;
+  border: 2px solid var(--accent); background: var(--surface-2); flex-shrink: 0;
+}
+.video-meta__title { display: block; font-weight: 700; font-size: var(--fs-md); color: var(--text); line-height: 1.25; }
+.video-meta__sub { display: block; font-size: var(--fs-xs); color: var(--text-muted); margin-top: 2px; }
+.video-meta__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); }
+.video-chapters {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: var(--sp-2) var(--sp-3); margin-top: var(--sp-4);
+}
+.video-chapters .chapter-pill {
+  display: inline-flex; align-items: center; gap: var(--sp-2); padding: 0.35rem 0.75rem;
+  font-size: var(--fs-xs); color: var(--text-muted); background: var(--surface-1);
+  border: 1px solid var(--border); border-radius: var(--radius-pill);
+}
+.video-chapters .chapter-pill code { color: var(--accent-text); font-weight: 600; font-family: var(--font-mono); }
+
 /* ============ Product showcase ============ */
 .showcase { display: grid; justify-items: center; }
 .showcase .window { position: relative; width: 100%; max-width: 980px; aspect-ratio: 16 / 10; }

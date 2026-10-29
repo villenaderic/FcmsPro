@@ -11,9 +11,9 @@
 <meta name="twitter:title" content="FCMS Pro: run your freelance business, keep your data">
 <meta name="twitter:description" content="A free, open-source desktop app for freelancers. Everything stays on your own computer.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- CSP: only same-origin + the GitHub API fallback. The two hashes are computed by
-     build-site.py from the exact inlined text (theme boot script, tokens.css). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-BxSzXplG31i2kqvdIPCLCz/GkQHnroDH7kYZ2UC+2dc='; style-src 'self' 'sha256-NOjUBQNE7XEtEo7Gt03szvHLWXjtWEZ/7mdNpBnGmVE='; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.github.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<!-- Security Headers & Hardened CSP: only same-origin + GitHub API fallback + YouTube video player. The two hashes are
+     computed by build-site.py from the exact inlined text (theme boot script, tokens.css). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-BxSzXplG31i2kqvdIPCLCz/GkQHnroDH7kYZ2UC+2dc='; style-src 'self' 'sha256-NOjUBQNE7XEtEo7Gt03szvHLWXjtWEZ/7mdNpBnGmVE='; img-src 'self' data: https://i.ytimg.com https://www.youtube.com; font-src 'self'; connect-src 'self' https://api.github.com; manifest-src 'self'; worker-src 'self'; frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="X-Frame-Options" content="DENY">
 <meta http-equiv="Permissions-Policy" content="accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()">
@@ -115,6 +115,8 @@
 <symbol id="i-heart" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></symbol>
 <symbol id="i-contrast" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"/></symbol>
 <symbol id="i-rss" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></symbol>
+<symbol id="i-youtube" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></symbol>
+<symbol id="i-play" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></symbol>
 </svg>
 
 <header class="site-header" id="site-header">
@@ -123,6 +125,7 @@
       <img src="./assets/img/logo-64.png" width="13" height="19" alt=""><span>FCMS Pro</span>
     </a>
     <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="./#video">Video</a>
       <a href="./#features">Features</a>
       <a href="./download/">Download</a>
       <a href="./changelog/">What&rsquo;s new</a>
@@ -185,56 +188,70 @@
     <div class="hero__visual">
       <div class="window">
         <div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">FCMS Pro</span></div>
-        <div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro dashboard with income, balances and due-soon warnings"><div class="mk" aria-hidden="true">
-  <aside class="mk-side">
-    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
-    <div class="mk-nav is-on"><i></i>Dashboard</div>
-    <div class="mk-nav"><i></i>Analytics</div>
-    <div class="mk-nav"><i></i>Clients</div>
-    <div class="mk-nav"><i></i>Commissions</div>
-    <div class="mk-nav"><i></i>Income</div>
-    <div class="mk-nav"><i></i>Expenses</div>
-    <div class="mk-nav"><i></i>Goals</div>
-    <div class="mk-nav"><i></i>Backup</div>
-    <div class="mk-nav"><i></i>Settings</div>
-  </aside>
-  <div class="mk-main">
-    <div class="mk-top">
-      <h3 class="mk-title">Dashboard</h3>
-      <div class="mk-search">Search<span class="mk-key">/</span></div>
-    </div>
-    <div class="mk-cards">
-      <div class="mk-card"><small>Income this month</small><b class="mk-num is-ok">₱20,000</b><em>3 payments</em></div>
-      <div class="mk-card"><small>Outstanding</small><b class="mk-num">₱2,150</b><em>3 balances</em></div>
-      <div class="mk-card"><small>Overdue</small><b class="mk-num is-bad">₱640</b><em>1 commission</em></div>
-      <div class="mk-card"><small>Active commissions</small><b class="mk-num">7</b><em>2 due soon</em></div>
-    </div>
-    <div class="mk-split">
-      <div class="mk-panel">
-        <h4>Income by month</h4>
-        <div class="mk-bars">
-          <div class="mk-bar"><span class="h-40"></span></div>
-          <div class="mk-bar"><span class="h-55"></span></div>
-          <div class="mk-bar"><span class="h-35"></span></div>
-          <div class="mk-bar"><span class="h-70"></span></div>
-          <div class="mk-bar"><span class="h-60"></span></div>
-          <div class="mk-bar is-now"><span class="h-85"></span></div>
-        </div>
-        <div class="mk-months"><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span></div>
-      </div>
-      <div class="mk-panel">
-        <h4>Due soon</h4>
-        <div class="mk-list">
-          <div class="mk-row"><div>Logo redesign<small>Sample Client A</small></div><span class="mk-pill is-warn">2 days</span></div>
-          <div class="mk-row"><div>Poster campaign<small>Sample Client B</small></div><span class="mk-pill is-bad">Overdue</span></div>
-          <div class="mk-row"><div>Brand guide<small>Sample Client C</small></div><span class="mk-pill is-info">5 days</span></div>
-          <div class="mk-row"><div>Monthly retainer<small>Sample Client D</small></div><span class="mk-pill is-ok">Delivered</span></div>
-        </div>
+        <div class="window__body"><picture><source srcset="./assets/img/screenshots/dashboard.webp" type="image/webp"><img src="./assets/img/screenshots/dashboard.png" width="1280" height="672" alt="FCMS Pro dashboard with income, balances and due-soon warnings" fetchpriority="high"></picture></div>
       </div>
     </div>
   </div>
-</div>
-</div></div>
+</section>
+
+<!-- 2.5 VIDEO DEMO & WALKTHROUGH -->
+<section class="section section--alt" id="video" aria-labelledby="video-h">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Video walkthrough</span>
+      <h2 id="video-h">See FCMS Pro in action</h2>
+      <p>Watch creator Roderic Villena walk through every core feature, installation, and client workflow in under 4 minutes.</p>
+    </div>
+
+    <div class="video-showcase reveal">
+      <div class="window window--video">
+        <div class="window__bar">
+          <span class="window__dot"></span>
+          <span class="window__dot"></span>
+          <span class="window__dot"></span>
+          <span class="window__title">FCMS Pro &mdash; Official Project Walkthrough (3:42)</span>
+        </div>
+        <div class="video-frame-wrap">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/wxfsJB4re-M?rel=0"
+            title="FCMS Pro &mdash; Official Project Demo &amp; Walkthrough by Roderic Villena"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+
+      <div class="video-meta">
+        <div class="video-meta__creator">
+          <img class="video-meta__avatar" src="./assets/img/roderic-villena.png" alt="Roderic Villena" width="46" height="46" loading="lazy">
+          <div>
+            <span class="video-meta__title">Roderic Villena</span>
+            <span class="video-meta__sub">Freelancer since 2023 &middot; Creator of FCMS Pro</span>
+          </div>
+        </div>
+        <div class="video-meta__actions">
+          <a class="btn btn--primary" href="https://www.youtube.com/watch?v=wxfsJB4re-M" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-youtube"/></svg>
+            Watch on YouTube
+          </a>
+          <a class="btn" href="./download/">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>
+            Download Free
+          </a>
+          <a class="btn" href="https://m.me/roderic.villena" target="_blank" rel="noopener noreferrer">
+            Message on Messenger
+          </a>
+        </div>
+      </div>
+
+      <div class="video-chapters" aria-label="Video timeline chapters">
+        <span class="chapter-pill"><code>0:00</code> Intro &amp; Local SQLite</span>
+        <span class="chapter-pill"><code>0:45</code> Cross-Platform Install</span>
+        <span class="chapter-pill"><code>1:20</code> Dashboard &amp; Philippine Pesos (₱)</span>
+        <span class="chapter-pill"><code>2:05</code> Attachments, Kanban &amp; Tax PDF</span>
+        <span class="chapter-pill"><code>3:10</code> Client Inquiries &amp; Messenger</span>
       </div>
     </div>
   </div>
@@ -261,361 +278,37 @@
 
       <div role="tabpanel" id="panel-dashboard" aria-labelledby="tab-dashboard" tabindex="0">
         <h3 class="visually-hidden">Dashboard</h3>
-        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Dashboard</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro dashboard with income, balances and due-soon warnings"><div class="mk" aria-hidden="true">
-  <aside class="mk-side">
-    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
-    <div class="mk-nav is-on"><i></i>Dashboard</div>
-    <div class="mk-nav"><i></i>Analytics</div>
-    <div class="mk-nav"><i></i>Clients</div>
-    <div class="mk-nav"><i></i>Commissions</div>
-    <div class="mk-nav"><i></i>Income</div>
-    <div class="mk-nav"><i></i>Expenses</div>
-    <div class="mk-nav"><i></i>Goals</div>
-    <div class="mk-nav"><i></i>Backup</div>
-    <div class="mk-nav"><i></i>Settings</div>
-  </aside>
-  <div class="mk-main">
-    <div class="mk-top">
-      <h3 class="mk-title">Dashboard</h3>
-      <div class="mk-search">Search<span class="mk-key">/</span></div>
-    </div>
-    <div class="mk-cards">
-      <div class="mk-card"><small>Income this month</small><b class="mk-num is-ok">₱20,000</b><em>3 payments</em></div>
-      <div class="mk-card"><small>Outstanding</small><b class="mk-num">₱2,150</b><em>3 balances</em></div>
-      <div class="mk-card"><small>Overdue</small><b class="mk-num is-bad">₱640</b><em>1 commission</em></div>
-      <div class="mk-card"><small>Active commissions</small><b class="mk-num">7</b><em>2 due soon</em></div>
-    </div>
-    <div class="mk-split">
-      <div class="mk-panel">
-        <h4>Income by month</h4>
-        <div class="mk-bars">
-          <div class="mk-bar"><span class="h-40"></span></div>
-          <div class="mk-bar"><span class="h-55"></span></div>
-          <div class="mk-bar"><span class="h-35"></span></div>
-          <div class="mk-bar"><span class="h-70"></span></div>
-          <div class="mk-bar"><span class="h-60"></span></div>
-          <div class="mk-bar is-now"><span class="h-85"></span></div>
-        </div>
-        <div class="mk-months"><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span></div>
-      </div>
-      <div class="mk-panel">
-        <h4>Due soon</h4>
-        <div class="mk-list">
-          <div class="mk-row"><div>Logo redesign<small>Sample Client A</small></div><span class="mk-pill is-warn">2 days</span></div>
-          <div class="mk-row"><div>Poster campaign<small>Sample Client B</small></div><span class="mk-pill is-bad">Overdue</span></div>
-          <div class="mk-row"><div>Brand guide<small>Sample Client C</small></div><span class="mk-pill is-info">5 days</span></div>
-          <div class="mk-row"><div>Monthly retainer<small>Sample Client D</small></div><span class="mk-pill is-ok">Delivered</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-</div></div></div>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Dashboard</span></div><div class="window__body"><picture><source srcset="./assets/img/screenshots/dashboard.webp" type="image/webp"><img src="./assets/img/screenshots/dashboard.png" width="1280" height="672" alt="FCMS Pro dashboard with income, balances and due-soon warnings" loading="lazy" decoding="async"></picture></div></div>
         <p class="showcase__caption">Income, balances, overdue items and due-soon warnings at a glance.</p>
       </div>
       <div role="tabpanel" id="panel-commissions" aria-labelledby="tab-commissions" tabindex="0" hidden>
         <h3 class="visually-hidden">Commissions</h3>
-        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Commissions</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro commissions table with status badges and client details"><div class="mk" aria-hidden="true">
-  <aside class="mk-side">
-    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
-    <div class="mk-nav"><i></i>Dashboard</div>
-    <div class="mk-nav"><i></i>Analytics</div>
-    <div class="mk-nav"><i></i>Clients</div>
-    <div class="mk-nav is-on"><i></i>Commissions</div>
-    <div class="mk-nav"><i></i>Income</div>
-    <div class="mk-nav"><i></i>Expenses</div>
-    <div class="mk-nav"><i></i>Goals</div>
-    <div class="mk-nav"><i></i>Backup</div>
-    <div class="mk-nav"><i></i>Settings</div>
-  </aside>
-  <div class="mk-main">
-    <div class="mk-top">
-      <h3 class="mk-title">Commissions</h3>
-      <div class="mk-search">Filter status: All</div>
-    </div>
-    <div class="mk-list" style="margin-top: 1rem;">
-      <div class="mk-row" style="padding: 0.85rem 1rem;">
-        <div><b>Brand Identity Package</b><small>Acme Corp &middot; ₱1,800 total &middot; ₱900 paid</small></div>
-        <div style="display:flex;gap:0.5rem;align-items:center;">
-          <span class="mk-pill is-info">In progress</span>
-          <small class="muted">Due in 4 days</small>
-        </div>
-      </div>
-      <div class="mk-row" style="padding: 0.85rem 1rem;">
-        <div><b>Mobile App UI Design</b><small>Starlight Studios &middot; ₱2,400 total &middot; Paid in full</small></div>
-        <div style="display:flex;gap:0.5rem;align-items:center;">
-          <span class="mk-pill is-ok">Delivered</span>
-          <small class="muted">Delivered</small>
-        </div>
-      </div>
-      <div class="mk-row" style="padding: 0.85rem 1rem;">
-        <div><b>Packaging Illustrations</b><small>Bean &amp; Leaf Coffee &middot; ₱1,100 total &middot; ₱0 paid</small></div>
-        <div style="display:flex;gap:0.5rem;align-items:center;">
-          <span class="mk-pill is-warn">Pending</span>
-          <small class="muted">Nov 12</small>
-        </div>
-      </div>
-      <div class="mk-row" style="padding: 0.85rem 1rem;">
-        <div><b>Custom Icon Set</b><small>Nordic Tech &middot; ₱650 total &middot; Paid in full</small></div>
-        <div style="display:flex;gap:0.5rem;align-items:center;">
-          <span class="mk-pill is-ok">Completed</span>
-          <small class="muted">Oct 20</small>
-        </div>
-      </div>
-      <div class="mk-row" style="padding: 0.85rem 1rem;">
-        <div><b>Editorial Cover Art</b><small>Chronicle Media &middot; ₱450 total &middot; Paid in full</small></div>
-        <div style="display:flex;gap:0.5rem;align-items:center;">
-          <span class="mk-pill is-warn">Revision</span>
-          <small class="muted">Due tomorrow</small>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-</div></div></div>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Commissions</span></div><div class="window__body"><picture><source srcset="./assets/img/screenshots/commissions.webp" type="image/webp"><img src="./assets/img/screenshots/commissions.png" width="1280" height="672" alt="FCMS Pro commissions table with status badges and client details" loading="lazy" decoding="async"></picture></div></div>
         <p class="showcase__caption">Status pipeline from Pending through Delivered, with quick inline status updates and balance tracking.</p>
       </div>
       <div role="tabpanel" id="panel-clients" aria-labelledby="tab-clients" tabindex="0" hidden>
         <h3 class="visually-hidden">Clients</h3>
-        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Clients</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro client profile with balances, history and attachments"><div class="mk" aria-hidden="true">
-  <aside class="mk-side">
-    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
-    <div class="mk-nav"><i></i>Dashboard</div>
-    <div class="mk-nav"><i></i>Analytics</div>
-    <div class="mk-nav is-on"><i></i>Clients</div>
-    <div class="mk-nav"><i></i>Commissions</div>
-    <div class="mk-nav"><i></i>Income</div>
-    <div class="mk-nav"><i></i>Expenses</div>
-    <div class="mk-nav"><i></i>Goals</div>
-    <div class="mk-nav"><i></i>Backup</div>
-    <div class="mk-nav"><i></i>Settings</div>
-  </aside>
-  <div class="mk-main">
-    <div class="mk-top">
-      <h3 class="mk-title">Client Profile: Starlight Studios</h3>
-    </div>
-    <div class="mk-cards" style="margin-top: 0.75rem;">
-      <div class="mk-card"><small>Total Billed</small><b class="mk-num">₱6,400</b><em>4 commissions</em></div>
-      <div class="mk-card"><small>Paid to Date</small><b class="mk-num is-ok">₱4,800</b><em>3 payments</em></div>
-      <div class="mk-card"><small>Balance Due</small><b class="mk-num is-warn">₱1,600</b><em>1 active</em></div>
-    </div>
-    <div class="mk-split" style="margin-top: 1rem;">
-      <div class="mk-panel">
-        <h4>Recent Commissions</h4>
-        <div class="mk-list">
-          <div class="mk-row"><div>Mobile App UI Design<small>Oct 2026</small></div><span class="mk-pill is-ok">₱2,400</span></div>
-          <div class="mk-row"><div>Design System Components<small>Sep 2026</small></div><span class="mk-pill is-info">₱1,600</span></div>
-          <div class="mk-row"><div>Initial Prototyping<small>Aug 2026</small></div><span class="mk-pill is-ok">₱2,400</span></div>
-        </div>
-      </div>
-      <div class="mk-panel">
-        <h4>File Attachments</h4>
-        <div class="mk-list">
-          <div class="mk-row"><div>Master_Service_Agreement.pdf<small>Signed contract &middot; 1.4 MB</small></div><span class="mk-pill">PDF</span></div>
-          <div class="mk-row"><div>Brand_Style_Guide.pdf<small>Design specs &middot; 3.8 MB</small></div><span class="mk-pill">PDF</span></div>
-          <div class="mk-row"><div>App_Flowchart.png<small>Architecture ref &middot; 840 KB</small></div><span class="mk-pill">Image</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-</div></div></div>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Clients</span></div><div class="window__body"><picture><source srcset="./assets/img/screenshots/clients.webp" type="image/webp"><img src="./assets/img/screenshots/clients.png" width="1280" height="672" alt="FCMS Pro client profile with balances, history and attachments" loading="lazy" decoding="async"></picture></div></div>
         <p class="showcase__caption">Client profiles showing total billed, payments received, commission history, and file attachments like signed contracts.</p>
       </div>
       <div role="tabpanel" id="panel-tax-pdf" aria-labelledby="tab-tax-pdf" tabindex="0" hidden>
         <h3 class="visually-hidden">Tax Summary PDF</h3>
-        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Tax &amp; Quarterly Summary</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: Tax and quarterly summary exported to PDF from FCMS Pro"><div class="mk" aria-hidden="true">
-  <aside class="mk-side">
-    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
-    <div class="mk-nav"><i></i>Dashboard</div>
-    <div class="mk-nav is-on"><i></i>Analytics</div>
-    <div class="mk-nav"><i></i>Clients</div>
-    <div class="mk-nav"><i></i>Commissions</div>
-    <div class="mk-nav"><i></i>Income</div>
-    <div class="mk-nav"><i></i>Expenses</div>
-    <div class="mk-nav"><i></i>Goals</div>
-    <div class="mk-nav"><i></i>Backup</div>
-    <div class="mk-nav"><i></i>Settings</div>
-  </aside>
-  <div class="mk-main">
-    <div class="mk-top"><h3 class="mk-title">Tax &amp; Quarterly Summary PDF</h3></div>
-    <div class="mk-desk">
-      <div class="mk-paper">
-        <div class="mk-paper-head">
-          <div><b class="mk-paper-biz">Sample Studio</b><small>Tax Year 2026 &middot; Exported from Analytics</small></div>
-          <div class="mk-paper-no"><b>ANNUAL REPORT</b><small>PDF Export</small></div>
-        </div>
-        <div class="mk-paper-meta">
-          <div><small>Gross Income</small><b>₱42,850.00</b></div>
-          <div><small>Total Expenses</small><b>₱8,940.00</b></div>
-          <div><small>Net Freelance Profit</small><b class="is-ok">₱33,910.00</b></div>
-        </div>
-        <div class="mk-paper-table">
-          <div class="mk-paper-row is-head"><span>Quarter Breakdown</span><span>Gross</span><span>Expenses</span><span>Net</span></div>
-          <div class="mk-paper-row"><span>Q1 (Jan &ndash; Mar)</span><span>₱9,400.00</span><span>₱1,900.00</span><span class="mk-num">₱7,500.00</span></div>
-          <div class="mk-paper-row"><span>Q2 (Apr &ndash; Jun)</span><span>₱11,250.00</span><span>₱2,300.00</span><span class="mk-num">₱8,950.00</span></div>
-          <div class="mk-paper-row"><span>Q3 (Jul &ndash; Sep)</span><span>₱10,800.00</span><span>₱2,050.00</span><span class="mk-num">₱8,750.00</span></div>
-          <div class="mk-paper-row"><span>Q4 (Oct &ndash; Dec, YTD)</span><span>₱11,400.00</span><span>₱2,690.00</span><span class="mk-num">₱8,710.00</span></div>
-          <div class="mk-paper-row is-total"><span>Total Annual Net</span><span></span><span></span><span class="mk-num">₱33,910.00</span></div>
-        </div>
-        <div class="mk-paper-foot"><small>Full-page export generated locally with PdfSharpCore. Perfect for tax filing and accountants.</small></div>
-      </div>
-    </div>
-  </div>
-</div>
-</div></div></div>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Tax &amp; Quarterly Summary</span></div><div class="window__body"><picture><source srcset="./assets/img/screenshots/tax-pdf.webp" type="image/webp"><img src="./assets/img/screenshots/tax-pdf.png" width="1280" height="672" alt="Tax and quarterly summary exported to PDF from FCMS Pro" loading="lazy" decoding="async"></picture></div></div>
         <p class="showcase__caption">Export annual and quarterly financial summaries to clean, printable PDF reports for tax preparation.</p>
       </div>
       <div role="tabpanel" id="panel-analytics" aria-labelledby="tab-analytics" tabindex="0" hidden>
         <h3 class="visually-hidden">Analytics</h3>
-        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Analytics</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro analytics with income breakdown charts"><div class="mk" aria-hidden="true">
-  <aside class="mk-side">
-    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
-    <div class="mk-nav"><i></i>Dashboard</div>
-    <div class="mk-nav is-on"><i></i>Analytics</div>
-    <div class="mk-nav"><i></i>Clients</div>
-    <div class="mk-nav"><i></i>Commissions</div>
-    <div class="mk-nav"><i></i>Income</div>
-    <div class="mk-nav"><i></i>Expenses</div>
-    <div class="mk-nav"><i></i>Goals</div>
-    <div class="mk-nav"><i></i>Backup</div>
-    <div class="mk-nav"><i></i>Settings</div>
-  </aside>
-  <div class="mk-main">
-    <div class="mk-top"><h3 class="mk-title">Analytics</h3></div>
-    <div class="mk-split mk-split--even">
-      <div class="mk-panel">
-        <h4>Income by client</h4>
-        <div class="mk-hbars">
-          <div class="mk-hbar"><span>Sample Client C</span><i class="w-90"></i><b class="mk-num">₱3,000</b></div>
-          <div class="mk-hbar"><span>Sample Client B</span><i class="w-65"></i><b class="mk-num">₱2,180</b></div>
-          <div class="mk-hbar"><span>Sample Client E</span><i class="w-40"></i><b class="mk-num">₱1,500</b></div>
-          <div class="mk-hbar"><span>Sample Client D</span><i class="w-30"></i><b class="mk-num">₱900</b></div>
-          <div class="mk-hbar"><span>Sample Client G</span><i class="w-20"></i><b class="mk-num">₱700</b></div>
-        </div>
-      </div>
-      <div class="mk-panel">
-        <h4>By payment method</h4>
-        <div class="mk-donut-wrap">
-          <div class="mk-donut"></div>
-          <div class="mk-legend">
-            <div><i class="c1"></i>GCash<b class="mk-num">45%</b></div>
-            <div><i class="c2"></i>Bank transfer<b class="mk-num">27%</b></div>
-            <div><i class="c3"></i>PayPal<b class="mk-num">18%</b></div>
-            <div><i class="c4"></i>Cash<b class="mk-num">10%</b></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="mk-panel mk-qpanel">
-      <h4>Quarterly summary</h4>
-      <div class="mk-qtable">
-        <div class="is-head"><span>Quarter</span><span>Income</span><span>Expenses</span><span>Net</span></div>
-        <div><span>Q1</span><span class="mk-num">₱9,400</span><span class="mk-num">₱1,900</span><span class="mk-num">₱7,500</span></div>
-        <div><span>Q2</span><span class="mk-num">₱11,250</span><span class="mk-num">₱2,300</span><span class="mk-num">₱8,950</span></div>
-        <div><span>Q3</span><span class="mk-num">₱10,800</span><span class="mk-num">₱2,050</span><span class="mk-num">₱8,750</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-</div></div></div>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Analytics</span></div><div class="window__body"><picture><source srcset="./assets/img/screenshots/analytics.webp" type="image/webp"><img src="./assets/img/screenshots/analytics.png" width="1280" height="672" alt="FCMS Pro analytics with income breakdown charts" loading="lazy" decoding="async"></picture></div></div>
         <p class="showcase__caption">Income breakdowns by client, payment method distribution, and net profit trends.</p>
       </div>
       <div role="tabpanel" id="panel-search" aria-labelledby="tab-search" tabindex="0" hidden>
         <h3 class="visually-hidden">Search</h3>
-        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Search</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro global search opened with the / shortcut"><div class="mk" aria-hidden="true">
-  <aside class="mk-side">
-    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
-    <div class="mk-nav is-on"><i></i>Dashboard</div>
-    <div class="mk-nav"><i></i>Analytics</div>
-    <div class="mk-nav"><i></i>Clients</div>
-    <div class="mk-nav"><i></i>Commissions</div>
-    <div class="mk-nav"><i></i>Income</div>
-    <div class="mk-nav"><i></i>Expenses</div>
-    <div class="mk-nav"><i></i>Goals</div>
-    <div class="mk-nav"><i></i>Backup</div>
-    <div class="mk-nav"><i></i>Settings</div>
-  </aside>
-  <div class="mk-main">
-    <div class="mk-top">
-      <h3 class="mk-title">Dashboard</h3>
-      <div class="mk-searchwrap">
-        <div class="mk-search is-focus"><span>logo</span><span class="mk-key">/</span></div>
-        <div class="mk-results">
-          <div class="mk-group">Commissions</div>
-          <div class="mk-res is-on"><div>Logo redesign<small>Sample Client C</small></div><span class="mk-pill is-info">In progress</span></div>
-          <div class="mk-res"><div>Logo usage sheet<small>Sample Client D</small></div><span class="mk-pill is-ok">Delivered</span></div>
-          <div class="mk-group">Clients</div>
-          <div class="mk-res"><div>LogoCraft Agency<small>Active &middot; 3 commissions</small></div><span class="mk-pill is-info">Client</span></div>
-          <div class="mk-group">Expenses</div>
-          <div class="mk-res"><div>Logo font license<small>Design software</small></div><span class="mk-pill is-warn">Expense</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="mk-cards mk-faded">
-      <div class="mk-card"><small>Income this month</small><b class="mk-num">₱20,000</b></div>
-      <div class="mk-card"><small>Outstanding</small><b class="mk-num">₱2,150</b></div>
-      <div class="mk-card"><small>Overdue</small><b class="mk-num">₱640</b></div>
-      <div class="mk-card"><small>Active commissions</small><b class="mk-num">7</b></div>
-    </div>
-  </div>
-</div>
-</div></div></div>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Search</span></div><div class="window__body"><picture><source srcset="./assets/img/screenshots/search.webp" type="image/webp"><img src="./assets/img/screenshots/search.png" width="1280" height="672" alt="FCMS Pro global search opened with the / shortcut" loading="lazy" decoding="async"></picture></div></div>
         <p class="showcase__caption">Press <kbd>/</kbd> anywhere to search clients, commissions, income, and expenses instantly.</p>
       </div>
       <div role="tabpanel" id="panel-theme" aria-labelledby="tab-theme" tabindex="0" hidden>
         <h3 class="visually-hidden">Light and dark theme</h3>
-        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Light theme</span></div><div class="window__body"><div class="mockup" role="img" aria-label="Sample data: FCMS Pro dashboard in the light theme"><div class="mk-light"><div class="mk" aria-hidden="true">
-  <aside class="mk-side">
-    <div class="mk-brand"><span class="mk-logo"></span>FCMS Pro</div>
-    <div class="mk-nav is-on"><i></i>Dashboard</div>
-    <div class="mk-nav"><i></i>Analytics</div>
-    <div class="mk-nav"><i></i>Clients</div>
-    <div class="mk-nav"><i></i>Commissions</div>
-    <div class="mk-nav"><i></i>Income</div>
-    <div class="mk-nav"><i></i>Expenses</div>
-    <div class="mk-nav"><i></i>Goals</div>
-    <div class="mk-nav"><i></i>Backup</div>
-    <div class="mk-nav"><i></i>Settings</div>
-  </aside>
-  <div class="mk-main">
-    <div class="mk-top">
-      <h3 class="mk-title">Dashboard</h3>
-      <div class="mk-search">Search<span class="mk-key">/</span></div>
-    </div>
-    <div class="mk-cards">
-      <div class="mk-card"><small>Income this month</small><b class="mk-num is-ok">₱20,000</b><em>3 payments</em></div>
-      <div class="mk-card"><small>Outstanding</small><b class="mk-num">₱2,150</b><em>3 balances</em></div>
-      <div class="mk-card"><small>Overdue</small><b class="mk-num is-bad">₱640</b><em>1 commission</em></div>
-      <div class="mk-card"><small>Active commissions</small><b class="mk-num">7</b><em>2 due soon</em></div>
-    </div>
-    <div class="mk-split">
-      <div class="mk-panel">
-        <h4>Income by month</h4>
-        <div class="mk-bars">
-          <div class="mk-bar"><span class="h-40"></span></div>
-          <div class="mk-bar"><span class="h-55"></span></div>
-          <div class="mk-bar"><span class="h-35"></span></div>
-          <div class="mk-bar"><span class="h-70"></span></div>
-          <div class="mk-bar"><span class="h-60"></span></div>
-          <div class="mk-bar is-now"><span class="h-85"></span></div>
-        </div>
-        <div class="mk-months"><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span></div>
-      </div>
-      <div class="mk-panel">
-        <h4>Due soon</h4>
-        <div class="mk-list">
-          <div class="mk-row"><div>Logo redesign<small>Sample Client A</small></div><span class="mk-pill is-warn">2 days</span></div>
-          <div class="mk-row"><div>Poster campaign<small>Sample Client B</small></div><span class="mk-pill is-bad">Overdue</span></div>
-          <div class="mk-row"><div>Brand guide<small>Sample Client C</small></div><span class="mk-pill is-info">5 days</span></div>
-          <div class="mk-row"><div>Monthly retainer<small>Sample Client D</small></div><span class="mk-pill is-ok">Delivered</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-</div></div></div>
+        <div class="window"><div class="window__bar"><span class="window__dot"></span><span class="window__dot"></span><span class="window__dot"></span><span class="window__title">Light theme</span></div><div class="window__body"><picture><source srcset="./assets/img/screenshots/dashboard-light.webp" type="image/webp"><img src="./assets/img/screenshots/dashboard-light.png" width="1280" height="672" alt="FCMS Pro dashboard in the light theme" loading="lazy" decoding="async"></picture></div></div>
         <p class="showcase__caption">Light or dark mode with customizable accent colors. Switch with <strong>Toggle Theme</strong> in the sidebar.</p>
       </div>
     </div>
@@ -901,6 +594,7 @@
       <div>
         <h2>Product</h2>
         <ul>
+          <li><a href="./#video">Video walkthrough</a></li>
           <li><a href="./#features">Features</a></li>
           <li><a href="./download/">Download</a></li>
           <li><a href="./changelog/">What&rsquo;s new</a></li>
@@ -912,6 +606,7 @@
         <h2>Project</h2>
         <ul>
           <li><a href="https://github.com/villenaderic/FcmsPro" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href="https://www.youtube.com/watch?v=wxfsJB4re-M" rel="noopener noreferrer">YouTube Demo</a></li>
           <li><a href="https://github.com/villenaderic/FcmsPro/releases" rel="noopener noreferrer">Releases</a></li>
           <li><a href="https://github.com/villenaderic/FcmsPro/releases.atom" rel="noopener noreferrer">Subscribe to releases</a></li>
           <li><a href="https://github.com/villenaderic/FcmsPro/blob/main/LICENSE" rel="noopener noreferrer">MIT License</a></li>

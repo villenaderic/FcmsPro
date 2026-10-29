@@ -6,9 +6,9 @@
 <meta name="description" content="This page does not exist. Head back to the FCMS Pro home page, downloads or documentation.">
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- CSP: only same-origin + the GitHub API fallback. The two hashes are computed by
-     build-site.py from the exact inlined text (theme boot script, tokens.css). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-BxSzXplG31i2kqvdIPCLCz/GkQHnroDH7kYZ2UC+2dc='; style-src 'self' 'sha256-NOjUBQNE7XEtEo7Gt03szvHLWXjtWEZ/7mdNpBnGmVE='; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.github.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<!-- Security Headers & Hardened CSP: only same-origin + GitHub API fallback + YouTube video player. The two hashes are
+     computed by build-site.py from the exact inlined text (theme boot script, tokens.css). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-BxSzXplG31i2kqvdIPCLCz/GkQHnroDH7kYZ2UC+2dc='; style-src 'self' 'sha256-NOjUBQNE7XEtEo7Gt03szvHLWXjtWEZ/7mdNpBnGmVE='; img-src 'self' data: https://i.ytimg.com https://www.youtube.com; font-src 'self'; connect-src 'self' https://api.github.com; manifest-src 'self'; worker-src 'self'; frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="X-Frame-Options" content="DENY">
 <meta http-equiv="Permissions-Policy" content="accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()">
@@ -84,6 +84,8 @@
 <symbol id="i-heart" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></symbol>
 <symbol id="i-contrast" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"/></symbol>
 <symbol id="i-rss" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></symbol>
+<symbol id="i-youtube" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></symbol>
+<symbol id="i-play" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></symbol>
 </svg>
 
 <header class="site-header" id="site-header">
@@ -92,6 +94,7 @@
       <img src="/FcmsPro/assets/img/logo-64.png" width="13" height="19" alt=""><span>FCMS Pro</span>
     </a>
     <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="/FcmsPro/#video">Video</a>
       <a href="/FcmsPro/#features">Features</a>
       <a href="/FcmsPro/download/">Download</a>
       <a href="/FcmsPro/changelog/">What&rsquo;s new</a>
@@ -142,6 +145,7 @@
       <div>
         <h2>Product</h2>
         <ul>
+          <li><a href="/FcmsPro/#video">Video walkthrough</a></li>
           <li><a href="/FcmsPro/#features">Features</a></li>
           <li><a href="/FcmsPro/download/">Download</a></li>
           <li><a href="/FcmsPro/changelog/">What&rsquo;s new</a></li>
@@ -153,6 +157,7 @@
         <h2>Project</h2>
         <ul>
           <li><a href="https://github.com/villenaderic/FcmsPro" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href="https://www.youtube.com/watch?v=wxfsJB4re-M" rel="noopener noreferrer">YouTube Demo</a></li>
           <li><a href="https://github.com/villenaderic/FcmsPro/releases" rel="noopener noreferrer">Releases</a></li>
           <li><a href="https://github.com/villenaderic/FcmsPro/releases.atom" rel="noopener noreferrer">Subscribe to releases</a></li>
           <li><a href="https://github.com/villenaderic/FcmsPro/blob/main/LICENSE" rel="noopener noreferrer">MIT License</a></li>
