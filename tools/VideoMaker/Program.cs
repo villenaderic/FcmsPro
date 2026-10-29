@@ -1714,24 +1714,92 @@ public static class Program
             canvas.DrawRoundRect(cRect, 16, 16, credBg);
             canvas.DrawRoundRect(cRect, 16, 16, credBorder);
 
-            // Circular Avatar Badge with RV initials
-            float avX = leftX + 26;
-            float avY = credY + 28;
-            using var avBg = new SKPaint { Color = new SKColor(2, 132, 199, 45), IsAntialias = true };
-            using var avBorder = new SKPaint { Color = new SKColor(56, 189, 248), IsStroke = true, StrokeWidth = 2, IsAntialias = true };
-            using var avText = new SKPaint { Color = new SKColor(56, 189, 248), TextSize = 30, FakeBoldText = true, IsAntialias = true };
-            canvas.DrawCircle(avX + 40, avY + 40, 40, avBg);
-            canvas.DrawCircle(avX + 40, avY + 40, 40, avBorder);
-            canvas.DrawText("RV", avX + 20, avY + 50, avText);
+            // Author Photo Avatar
+            var photoPath = Path.Combine(rootDir, "site", "assets", "img", "roderic-villena.png");
+            float avCenterX = leftX + 70;
+            float avCenterY = credY + credH / 2f;
+            float avRadius = 45;
 
-            // Text
-            using var authorName = new SKPaint { Color = SKColors.White, TextSize = 27, FakeBoldText = true, IsAntialias = true };
-            using var authorRole = new SKPaint { Color = new SKColor(148, 163, 184), TextSize = 17, IsAntialias = true };
-            using var authorSub = new SKPaint { Color = new SKColor(56, 189, 248), TextSize = 16, FakeBoldText = true, IsAntialias = true };
+            // Background glow & dark disc behind photo
+            using (var avGlow = new SKPaint
+            {
+                Color = new SKColor(14, 165, 233, 70),
+                ImageFilter = SKImageFilter.CreateBlur(12, 12)
+            })
+            {
+                canvas.DrawCircle(avCenterX, avCenterY, avRadius, avGlow);
+            }
 
-            canvas.DrawText("Roderic Villena", avX + 96, avY + 28, authorName);
-            canvas.DrawText("Freelancer since 2023 • 4-Month Real-World Battle Tested", avX + 96, avY + 54, authorRole);
-            canvas.DrawText("Free & Open Source on GitHub • villenaderic.github.io/FcmsPro", avX + 96, avY + 77, authorSub);
+            using (var avDisc = new SKPaint { Color = new SKColor(15, 23, 42), IsAntialias = true })
+            {
+                canvas.DrawCircle(avCenterX, avCenterY, avRadius, avDisc);
+            }
+
+            bool drawnPhoto = false;
+            if (File.Exists(photoPath))
+            {
+                using var photoBmp = SKBitmap.Decode(photoPath);
+                if (photoBmp != null)
+                {
+                    // Crop centered on Roderic's face & sunglasses (800x800 source)
+                    var srcCrop = new SKRect(70, 10, 730, 670);
+                    var destRect = new SKRect(avCenterX - avRadius, avCenterY - avRadius, avCenterX + avRadius, avCenterY + avRadius);
+
+                    using var clipPath = new SKPath();
+                    clipPath.AddCircle(avCenterX, avCenterY, avRadius);
+                    canvas.Save();
+                    canvas.ClipPath(clipPath, antialias: true);
+                    canvas.DrawBitmap(photoBmp, srcCrop, destRect, new SKPaint { FilterQuality = SKFilterQuality.High });
+                    canvas.Restore();
+                    drawnPhoto = true;
+                }
+            }
+
+            if (!drawnPhoto)
+            {
+                using var avFallback = new SKPaint { Color = new SKColor(56, 189, 248), TextSize = 30, FakeBoldText = true, IsAntialias = true };
+                canvas.DrawText("RV", avCenterX - 20, avCenterY + 10, avFallback);
+            }
+
+            // Crisp neon cyan outer ring
+            using (var avRing = new SKPaint
+            {
+                Color = new SKColor(56, 189, 248),
+                IsStroke = true,
+                StrokeWidth = 2.5f,
+                IsAntialias = true
+            })
+            {
+                canvas.DrawCircle(avCenterX, avCenterY, avRadius, avRing);
+            }
+
+            // Text beside Photo
+            float textX = avCenterX + avRadius + 22;
+            using var authorName = new SKPaint
+            {
+                Color = SKColors.White,
+                TextSize = 27,
+                Typeface = SKTypeface.FromFamilyName("Segoe UI", SKFontStyleWeight.Bold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright),
+                IsAntialias = true
+            };
+            using var authorRole = new SKPaint
+            {
+                Color = new SKColor(148, 163, 184),
+                TextSize = 17,
+                Typeface = SKTypeface.FromFamilyName("Segoe UI", SKFontStyleWeight.Normal, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright),
+                IsAntialias = true
+            };
+            using var authorSub = new SKPaint
+            {
+                Color = new SKColor(56, 189, 248),
+                TextSize = 15,
+                Typeface = SKTypeface.FromFamilyName("Segoe UI", SKFontStyleWeight.SemiBold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright),
+                IsAntialias = true
+            };
+
+            canvas.DrawText("Roderic Villena", textX, credY + 40, authorName);
+            canvas.DrawText("Freelancer since 2023 • 4-Month Real-World Battle Tested", textX, credY + 68, authorRole);
+            canvas.DrawText("Free & Open Source on GitHub • villenaderic.github.io/FcmsPro", textX, credY + 94, authorSub);
         }
 
         // ==========================================
