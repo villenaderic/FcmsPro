@@ -123,7 +123,7 @@ export function inlineMd(text) {
   let t = String(text).replace(/`([^`]+)`/g, (_, c) => `\u0000${codes.push(c) - 1}\u0000`);
   t = escapeHtml(t);
   t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, (_, label, url) =>
-    `<a href="${url}" rel="noopener noreferrer">${label}</a>`);
+    `<a href="${escapeHtml(url)}" rel="noopener noreferrer">${label}</a>`);
   t = t.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
   // No lookbehind here: it is a parse-time SyntaxError in Safari < 16.4 and would
   // stop this whole module from loading.

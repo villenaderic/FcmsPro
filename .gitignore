@@ -46,11 +46,47 @@ __pycache__/
 _build/
 _site/
 
-## Video generation tooling and intermediate build artifacts
+## Video generation tooling and local-only production tools
 .video-tools/
 build-video/
+tools/
 *.mp4
-tools/VideoMaker/bin/
-tools/VideoMaker/obj/
+*.wav
+*.mp3
+*.aac
+*.m4a
+*.ogg
 FCMS_Pro_YouTube_Thumbnail*
+
+## Secrets, credentials, and certificates
+.env*
+*.pem
+*.key
+*.pfx
+*.p12
+*.cer
+*.crt
+*.secret
+*.credentials
+
+## Node & dependency caches
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+## VS Code & user-specific editor state
+.vscode/
+*.user
+*.suo
+*.userosv
+*.sln.docstates
+
+## Test & code coverage artifacts
+TestResults/
+coverage/
+*.lcov
+*.coverage
+.coverage*
 
