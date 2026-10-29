@@ -45,3 +45,8 @@ __pycache__/
 *.pyc
 _build/
 _site/
+
+## Video generation tooling and intermediate build artifacts
+.video-tools/
+build-video/
+

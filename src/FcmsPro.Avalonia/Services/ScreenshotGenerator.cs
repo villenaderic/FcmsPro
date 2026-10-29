@@ -39,7 +39,7 @@ public static class ScreenshotGenerator
         await SeedDataAsync(services);
 
         var themeService = services.GetRequiredService<ThemeService>();
-        AppCulture.Apply("$");
+        AppCulture.Apply("₱");
         themeService.Apply("Dark", "#3B82F6");
 
         var mainVm = services.GetRequiredService<MainWindowViewModel>();
@@ -248,13 +248,14 @@ public static class ScreenshotGenerator
             canvas.DrawRoundRect(paperX, paperY, paperW, paperH, 6, 6, paperPaint);
         }
 
-        using var titlePaint = new SKPaint { Color = new SKColor(15, 23, 42), TextSize = 20, IsAntialias = true, FakeBoldText = true };
-        using var subtitlePaint = new SKPaint { Color = new SKColor(100, 116, 139), TextSize = 11, IsAntialias = true };
-        using var headerPaint = new SKPaint { Color = new SKColor(15, 23, 42), TextSize = 13, IsAntialias = true, FakeBoldText = true };
-        using var bodyPaint = new SKPaint { Color = new SKColor(51, 65, 85), TextSize = 12, IsAntialias = true };
-        using var boldPaint = new SKPaint { Color = new SKColor(15, 23, 42), TextSize = 12, IsAntialias = true, FakeBoldText = true };
-        using var greenPaint = new SKPaint { Color = new SKColor(16, 185, 129), TextSize = 22, IsAntialias = true, FakeBoldText = true };
-        using var cardValuePaint = new SKPaint { Color = new SKColor(15, 23, 42), TextSize = 20, IsAntialias = true, FakeBoldText = true };
+        var segoe = SKTypeface.FromFamilyName("Segoe UI");
+        using var titlePaint = new SKPaint { Typeface = segoe, Color = new SKColor(15, 23, 42), TextSize = 20, IsAntialias = true, FakeBoldText = true };
+        using var subtitlePaint = new SKPaint { Typeface = segoe, Color = new SKColor(100, 116, 139), TextSize = 11, IsAntialias = true };
+        using var headerPaint = new SKPaint { Typeface = segoe, Color = new SKColor(15, 23, 42), TextSize = 13, IsAntialias = true, FakeBoldText = true };
+        using var bodyPaint = new SKPaint { Typeface = segoe, Color = new SKColor(51, 65, 85), TextSize = 12, IsAntialias = true };
+        using var boldPaint = new SKPaint { Typeface = segoe, Color = new SKColor(15, 23, 42), TextSize = 12, IsAntialias = true, FakeBoldText = true };
+        using var greenPaint = new SKPaint { Typeface = segoe, Color = new SKColor(16, 185, 129), TextSize = 22, IsAntialias = true, FakeBoldText = true };
+        using var cardValuePaint = new SKPaint { Typeface = segoe, Color = new SKColor(15, 23, 42), TextSize = 20, IsAntialias = true, FakeBoldText = true };
         using var linePaint = new SKPaint { Color = new SKColor(226, 232, 240), StrokeWidth = 1, IsAntialias = true };
         using var cardBg = new SKPaint { Color = new SKColor(248, 250, 252), IsAntialias = true };
         using var cardBorder = new SKPaint { Color = new SKColor(226, 232, 240), IsStroke = true, StrokeWidth = 1, IsAntialias = true };
@@ -263,7 +264,7 @@ public static class ScreenshotGenerator
         float cy = paperY + 44;
 
         // Header
-        canvas.DrawText("Morgan Creative Studio", cx, cy, subtitlePaint);
+        canvas.DrawText("Roderic Villena Creative Studio", cx, cy, subtitlePaint);
         cy += 24;
         canvas.DrawText("INCOME & EXPENSE SUMMARY - 2026", cx, cy, titlePaint);
         canvas.DrawText("ANNUAL REPORT  |  PDF Export", paperX + paperW - 40 - 180, cy - 4, subtitlePaint);
@@ -280,14 +281,14 @@ public static class ScreenshotGenerator
         canvas.DrawRoundRect(cx, cy, cardW, cardH, 6, 6, cardBg);
         canvas.DrawRoundRect(cx, cy, cardW, cardH, 6, 6, cardBorder);
         canvas.DrawText("Gross Income", cx + 14, cy + 24, subtitlePaint);
-        canvas.DrawText("$48,250.00", cx + 14, cy + 54, cardValuePaint);
+        canvas.DrawText("₱20,000.00", cx + 14, cy + 54, cardValuePaint);
 
         // Card 2: Total Expenses
         float c2x = cx + cardW + 12;
         canvas.DrawRoundRect(c2x, cy, cardW, cardH, 6, 6, cardBg);
         canvas.DrawRoundRect(c2x, cy, cardW, cardH, 6, 6, cardBorder);
         canvas.DrawText("Total Expenses", c2x + 14, cy + 24, subtitlePaint);
-        canvas.DrawText("$9,120.00", c2x + 14, cy + 54, cardValuePaint);
+        canvas.DrawText("₱2,500.00", c2x + 14, cy + 54, cardValuePaint);
 
         // Card 3: Net Profit
         float c3x = c2x + cardW + 12;
@@ -296,7 +297,7 @@ public static class ScreenshotGenerator
         canvas.DrawRoundRect(c3x, cy, cardW, cardH, 6, 6, profitBg);
         canvas.DrawRoundRect(c3x, cy, cardW, cardH, 6, 6, profitBorder);
         canvas.DrawText("Net Freelance Profit", c3x + 14, cy + 24, subtitlePaint);
-        canvas.DrawText("$39,130.00", c3x + 14, cy + 54, greenPaint);
+        canvas.DrawText("₱17,500.00", c3x + 14, cy + 54, greenPaint);
 
         cy += cardH + 34;
 
@@ -327,13 +328,13 @@ public static class ScreenshotGenerator
             cy += 22;
         }
 
-        DrawRow("Q1 (January – March)", "$11,400.00", "$2,100.00", "$9,300.00");
-        DrawRow("Q2 (April – June)", "$12,850.00", "$2,450.00", "$10,400.00");
-        DrawRow("Q3 (July – September)", "$10,600.00", "$1,980.00", "$8,620.00");
-        DrawRow("Q4 (October – December)", "$13,400.00", "$2,590.00", "$10,810.00");
+        DrawRow("Q1 (January – March)", "₱20,000.00", "₱2,500.00", "₱17,500.00");
+        DrawRow("Q2 (April – June)", "₱22,500.00", "₱3,100.00", "₱19,400.00");
+        DrawRow("Q3 (July – September)", "₱20,000.00", "₱2,400.00", "₱17,600.00");
+        DrawRow("Q4 (October – December)", "₱25,000.00", "₱3,500.00", "₱21,500.00");
 
         cy += 6;
-        DrawRow("Total Annual Net", "$48,250.00", "$9,120.00", "$39,130.00", isBold: true);
+        DrawRow("Total Annual Net", "₱87,500.00", "₱11,500.00", "₱76,000.00", isBold: true);
 
         // Footer
         cy = paperY + paperH - 26;
@@ -363,11 +364,11 @@ public static class ScreenshotGenerator
 
         // Settings
         var settings = await db.AppSettings.FirstOrDefaultAsync() ?? new AppSettings { Id = 1 };
-        settings.FreelancerName = "Alex Morgan";
-        settings.BusinessName = "Morgan Creative Studio";
-        settings.CurrencySymbol = "$";
-        settings.ServiceTypesJson = "[\"UI/UX Design\", \"Brand Identity\", \"Illustration\", \"Packaging\", \"Icon Design\"]";
-        settings.PaymentMethodsJson = "[\"Bank Transfer\", \"PayPal\", \"GCash\", \"Cash\"]";
+        settings.FreelancerName = "Roderic Villena";
+        settings.BusinessName = "Roderic Villena Creative Studio";
+        settings.CurrencySymbol = "₱";
+        settings.ServiceTypesJson = "[\"UI/UX Design\", \"Brand Identity\", \"Web Development\", \"Software Tools\", \"Packaging\"]";
+        settings.PaymentMethodsJson = "[\"Bank Transfer\", \"GCash\", \"PayPal\", \"Maya\", \"Cash\"]";
         if (!await db.AppSettings.AnyAsync()) db.AppSettings.Add(settings);
 
         // Terms acceptance
@@ -504,8 +505,8 @@ public static class ScreenshotGenerator
             Title = "Mobile App UI Design",
             ServiceType = "UI/UX Design",
             Description = "Complete design of 18 screens for iOS & Android companion app",
-            Price = 2400m,
-            DownPayment = 1200m,
+            Price = 4500m,
+            DownPayment = 0m,
             Remaining = 0m,
             Status = CommissionStatus.Delivered,
             Priority = CommissionPriority.High,
@@ -518,8 +519,8 @@ public static class ScreenshotGenerator
             Title = "Brand Identity Package",
             ServiceType = "Brand Identity",
             Description = "Logo, typography rules, brand guide and social templates",
-            Price = 1800m,
-            DownPayment = 900m,
+            Price = 2900m,
+            DownPayment = 0m,
             Remaining = 900m,
             Status = CommissionStatus.InProgress,
             Priority = CommissionPriority.High,
@@ -532,9 +533,9 @@ public static class ScreenshotGenerator
             Title = "Packaging Illustrations",
             ServiceType = "Packaging",
             Description = "Series of 4 coffee bag botanical illustrations",
-            Price = 1100m,
+            Price = 610m,
             DownPayment = 0m,
-            Remaining = 1100m,
+            Remaining = 610m,
             Status = CommissionStatus.Pending,
             Priority = CommissionPriority.Normal,
             Deadline = today.AddDays(14)
@@ -544,10 +545,10 @@ public static class ScreenshotGenerator
             Id = Guid.NewGuid(),
             ClientId = clientNordic.Id,
             Title = "Custom Icon Set (48 Icons)",
-            ServiceType = "Icon Design",
+            ServiceType = "Software Tools",
             Description = "Vector icons for developer dashboard and CLI docs",
-            Price = 650m,
-            DownPayment = 650m,
+            Price = 1000m,
+            DownPayment = 0m,
             Remaining = 0m,
             Status = CommissionStatus.Completed,
             Priority = CommissionPriority.Normal,
@@ -558,10 +559,10 @@ public static class ScreenshotGenerator
             Id = Guid.NewGuid(),
             ClientId = clientChronicle.Id,
             Title = "Editorial Magazine Cover",
-            ServiceType = "Illustration",
+            ServiceType = "Web Development",
             Description = "Cover artwork for November technology feature",
-            Price = 450m,
-            DownPayment = 450m,
+            Price = 4500m,
+            DownPayment = 0m,
             Remaining = 0m,
             Status = CommissionStatus.Completed,
             Priority = CommissionPriority.Normal,
@@ -574,9 +575,9 @@ public static class ScreenshotGenerator
             Title = "Design System Components",
             ServiceType = "UI/UX Design",
             Description = "Button states, dialogs, form controls, navigation patterns",
-            Price = 1600m,
-            DownPayment = 800m,
-            Remaining = 800m,
+            Price = 2500m,
+            DownPayment = 0m,
+            Remaining = 0m,
             Status = CommissionStatus.InProgress,
             Priority = CommissionPriority.Normal,
             Deadline = today.AddDays(18)
@@ -586,10 +587,10 @@ public static class ScreenshotGenerator
             Id = Guid.NewGuid(),
             ClientId = clientAcme.Id,
             Title = "Product Launch Poster",
-            ServiceType = "Illustration",
+            ServiceType = "Web Development",
             Description = "Key visual poster for annual user conference",
             Price = 850m,
-            DownPayment = 210m,
+            DownPayment = 0m,
             Remaining = 640m,
             Status = CommissionStatus.InProgress,
             Priority = CommissionPriority.Urgent,
@@ -599,28 +600,21 @@ public static class ScreenshotGenerator
         db.Commissions.AddRange(comm1, comm2, comm3, comm4, comm5, comm6, comm7);
         await db.SaveChangesAsync();
 
-        // Payments (spread over past 6 months for chart)
+        // Payments (spread over past 6 months: Total = exactly ₱20,000.00)
         db.Payments.AddRange(
-            new Payment { Id = Guid.NewGuid(), CommissionId = comm1.Id, ClientId = clientStarlight.Id, Amount = 1800m, Method = PaymentMethod.BankTransfer, Date = today.AddMonths(-5) },
-            new Payment { Id = Guid.NewGuid(), CommissionId = comm2.Id, ClientId = clientAcme.Id, Amount = 2400m, Method = PaymentMethod.BankTransfer, Date = today.AddMonths(-4) },
-            new Payment { Id = Guid.NewGuid(), CommissionId = comm4.Id, ClientId = clientNordic.Id, Amount = 1500m, Method = PaymentMethod.PayPal, Date = today.AddMonths(-3) },
-            new Payment { Id = Guid.NewGuid(), CommissionId = comm1.Id, ClientId = clientStarlight.Id, Amount = 3200m, Method = PaymentMethod.BankTransfer, Date = today.AddMonths(-2) },
-            new Payment { Id = Guid.NewGuid(), CommissionId = comm5.Id, ClientId = clientChronicle.Id, Amount = 2600m, Method = PaymentMethod.GCash, Date = today.AddMonths(-1) },
-            // This month (3 payments totaling $4,820)
-            new Payment { Id = Guid.NewGuid(), CommissionId = comm1.Id, ClientId = clientStarlight.Id, Amount = 2400m, Method = PaymentMethod.BankTransfer, Date = today.AddDays(-12) },
-            new Payment { Id = Guid.NewGuid(), CommissionId = comm2.Id, ClientId = clientAcme.Id, Amount = 900m, Method = PaymentMethod.PayPal, Date = today.AddDays(-6) },
-            new Payment { Id = Guid.NewGuid(), CommissionId = comm4.Id, ClientId = clientNordic.Id, Amount = 1520m, Method = PaymentMethod.BankTransfer, Date = today.AddDays(-2) }
+            new Payment { Id = Guid.NewGuid(), CommissionId = comm1.Id, ClientId = clientStarlight.Id, Amount = 1500m, Method = PaymentMethod.BankTransfer, Date = today.AddMonths(-5) },
+            new Payment { Id = Guid.NewGuid(), CommissionId = comm2.Id, ClientId = clientAcme.Id, Amount = 2000m, Method = PaymentMethod.BankTransfer, Date = today.AddMonths(-4) },
+            new Payment { Id = Guid.NewGuid(), CommissionId = comm4.Id, ClientId = clientNordic.Id, Amount = 2500m, Method = PaymentMethod.PayPal, Date = today.AddMonths(-3) },
+            new Payment { Id = Guid.NewGuid(), CommissionId = comm1.Id, ClientId = clientStarlight.Id, Amount = 3500m, Method = PaymentMethod.BankTransfer, Date = today.AddMonths(-2) },
+            new Payment { Id = Guid.NewGuid(), CommissionId = comm5.Id, ClientId = clientChronicle.Id, Amount = 4500m, Method = PaymentMethod.GCash, Date = today.AddMonths(-1) },
+            // This month (3 payments totaling ₱6,000.00; All 6 months sum to ₱20,000.00)
+            new Payment { Id = Guid.NewGuid(), CommissionId = comm1.Id, ClientId = clientStarlight.Id, Amount = 3000m, Method = PaymentMethod.BankTransfer, Date = today.AddDays(-12) },
+            new Payment { Id = Guid.NewGuid(), CommissionId = comm2.Id, ClientId = clientAcme.Id, Amount = 2000m, Method = PaymentMethod.PayPal, Date = today.AddDays(-6) },
+            new Payment { Id = Guid.NewGuid(), CommissionId = comm4.Id, ClientId = clientNordic.Id, Amount = 1000m, Method = PaymentMethod.GCash, Date = today.AddDays(-2) }
         );
 
-        // Expenses
-        db.Expenses.AddRange(
-            new Expense { Id = Guid.NewGuid(), Description = "Figma Organization License", Category = ExpenseCategory.SoftwareTools, Amount = 90m, Date = today.AddDays(-10) },
-            new Expense { Id = Guid.NewGuid(), Description = "Adobe Creative Cloud", Category = ExpenseCategory.SoftwareTools, Amount = 55m, Date = today.AddDays(-15) },
-            new Expense { Id = Guid.NewGuid(), Description = "Wacom Pro Pen 3D & Nibs", Category = ExpenseCategory.Equipment, Amount = 110m, Date = today.AddDays(-20) },
-            new Expense { Id = Guid.NewGuid(), Description = "High-speed Fiber Internet", Category = ExpenseCategory.InternetUtilities, Amount = 75m, Date = today.AddDays(-25) },
-            new Expense { Id = Guid.NewGuid(), Description = "Commercial Font Family License", Category = ExpenseCategory.SoftwareTools, Amount = 180m, Date = today.AddMonths(-1) }
-        );
-
+        // Zero expenses so Net Profit = Total Income = ₱20,000.00
+        // (Clean ₱20,000 sample profit for showcase screenshots)
         await db.SaveChangesAsync();
     }
 }
