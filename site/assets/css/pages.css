@@ -43,16 +43,6 @@
 .video-meta__title { display: block; font-weight: 700; font-size: var(--fs-md); color: var(--text); line-height: 1.25; }
 .video-meta__sub { display: block; font-size: var(--fs-xs); color: var(--text-muted); margin-top: 2px; }
 .video-meta__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); }
-.video-chapters {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
-  gap: var(--sp-2) var(--sp-3); margin-top: var(--sp-4);
-}
-.video-chapters .chapter-pill {
-  display: inline-flex; align-items: center; gap: var(--sp-2); padding: 0.35rem 0.75rem;
-  font-size: var(--fs-xs); color: var(--text-muted); background: var(--surface-1);
-  border: 1px solid var(--border); border-radius: var(--radius-pill);
-}
-.video-chapters .chapter-pill code { color: var(--accent-text); font-weight: 600; font-family: var(--font-mono); }
 
 /* ============ Product showcase ============ */
 .showcase { display: grid; justify-items: center; }
