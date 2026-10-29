@@ -48,6 +48,13 @@ public static class Program
         Directory.CreateDirectory(buildDir);
         Directory.CreateDirectory(framesDir);
 
+        if (args.Length > 0 && args[0] == "--thumbnail")
+        {
+            Console.WriteLine("Generating YouTube Thumbnail...");
+            GenerateYouTubeThumbnail(rootDir, logoPath);
+            return;
+        }
+
         Console.WriteLine("Generating high-resolution Global Search graphic...");
         GenerateSearchScreenshot(screenshotsDir, rootDir);
 
@@ -1272,5 +1279,510 @@ public static class Program
         canvas.DrawText(pillText, pRect.Left + 8, pRect.Top + 15, pText);
 
         y += itemH + 6;
+    }
+
+    private static void GenerateYouTubeThumbnail(string rootDir, string logoPath)
+    {
+        const int tw = 1920;
+        const int th = 1080;
+
+        using var bmp = new SKBitmap(tw, th);
+        using var canvas = new SKCanvas(bmp);
+
+        // 1. Studio Deep Cyber Navy Gradient Background
+        using (var bgShader = SKShader.CreateLinearGradient(
+            new SKPoint(0, 0),
+            new SKPoint(tw, th),
+            new[] { new SKColor(6, 9, 19), new SKColor(10, 16, 32), new SKColor(5, 8, 17) },
+            null,
+            SKShaderTileMode.Clamp))
+        using (var bgPaint = new SKPaint { Shader = bgShader })
+        {
+            canvas.DrawRect(0, 0, tw, th, bgPaint);
+        }
+
+        // Ambient Studio Lighting Flares
+        using (var cyanGlow = new SKPaint
+        {
+            Color = new SKColor(14, 165, 233, 40),
+            ImageFilter = SKImageFilter.CreateBlur(160, 160)
+        })
+        {
+            canvas.DrawCircle(320, 180, 420, cyanGlow);
+        }
+
+        using (var blueGlow = new SKPaint
+        {
+            Color = new SKColor(37, 99, 235, 45),
+            ImageFilter = SKImageFilter.CreateBlur(180, 180)
+        })
+        {
+            canvas.DrawCircle(1420, 520, 540, blueGlow);
+        }
+
+        using (var purpleGlow = new SKPaint
+        {
+            Color = new SKColor(124, 58, 237, 25),
+            ImageFilter = SKImageFilter.CreateBlur(150, 150)
+        })
+        {
+            canvas.DrawCircle(200, 960, 360, purpleGlow);
+        }
+
+        // Geometric Matrix Dot Pattern
+        using (var dotPaint = new SKPaint { Color = new SKColor(255, 255, 255, 12), IsAntialias = true })
+        {
+            for (int x = 40; x < tw; x += 55)
+            {
+                for (int y = 40; y < th; y += 55)
+                {
+                    canvas.DrawCircle(x, y, 1.4f, dotPaint);
+                }
+            }
+        }
+
+        // Diagonal dynamic speed line
+        using (var streakPaint = new SKPaint
+        {
+            Color = new SKColor(56, 189, 248, 16),
+            StrokeWidth = 3,
+            IsAntialias = true
+        })
+        {
+            canvas.DrawLine(0, 480, tw, 280, streakPaint);
+            canvas.DrawLine(0, 520, tw, 320, streakPaint);
+        }
+
+        // ==========================================
+        // 2. RIGHT SIDE: HEROIC FLOATING APP WINDOW
+        // ==========================================
+        float winX = 810;
+        float winY = 110;
+        float winW = 1045;
+        float winH = 820;
+        float titleBarH = 46;
+
+        // Multi-tier Drop Shadows & Neon Edge Backlight
+        using (var winBackGlow = new SKPaint
+        {
+            Color = new SKColor(14, 165, 233, 70),
+            ImageFilter = SKImageFilter.CreateBlur(45, 45)
+        })
+        {
+            canvas.DrawRoundRect(winX - 4, winY - 4, winW + 8, winH + 8, 20, 20, winBackGlow);
+        }
+
+        using (var winDeepShadow = new SKPaint
+        {
+            Color = new SKColor(0, 0, 0, 230),
+            ImageFilter = SKImageFilter.CreateDropShadow(0, 32, 48, 48, new SKColor(0, 0, 0, 240))
+        })
+        {
+            canvas.DrawRoundRect(winX, winY, winW, winH, 16, 16, winDeepShadow);
+        }
+
+        // Window Background
+        using (var winBg = new SKPaint { Color = new SKColor(11, 15, 25), IsAntialias = true })
+        {
+            canvas.DrawRoundRect(winX, winY, winW, winH, 16, 16, winBg);
+        }
+
+        // Window Title Bar
+        using (var titleBg = new SKPaint { Color = new SKColor(16, 23, 42), IsAntialias = true })
+        {
+            using var clip = new SKPath();
+            clip.AddRoundRect(new SKRect(winX, winY, winX + winW, winY + winH), 16, 16);
+            canvas.Save();
+            canvas.ClipPath(clip, antialias: true);
+            canvas.DrawRect(new SKRect(winX, winY, winX + winW, winY + titleBarH), titleBg);
+            canvas.Restore();
+        }
+
+        // 3 macOS Window Controls
+        using (var dotRed = new SKPaint { Color = new SKColor(239, 68, 68), IsAntialias = true })
+        using (var dotYellow = new SKPaint { Color = new SKColor(245, 158, 11), IsAntialias = true })
+        using (var dotGreen = new SKPaint { Color = new SKColor(16, 185, 129), IsAntialias = true })
+        {
+            canvas.DrawCircle(winX + 24, winY + 23, 7, dotRed);
+            canvas.DrawCircle(winX + 46, winY + 23, 7, dotYellow);
+            canvas.DrawCircle(winX + 68, winY + 23, 7, dotGreen);
+        }
+
+        // Window Title Text
+        using (var winTitlePaint = new SKPaint { Color = new SKColor(148, 163, 184), TextSize = 14, FakeBoldText = true, IsAntialias = true })
+        {
+            string winTitle = "FCMS Pro  —  DASHBOARD IN PHILIPPINE PESOS";
+            float twTitle = winTitlePaint.MeasureText(winTitle);
+            canvas.DrawText(winTitle, winX + (winW - twTitle) / 2f, winY + 28, winTitlePaint);
+        }
+
+        // Window Content (Actual Screenshot with ₱20,000 Pesos)
+        var dashPath = Path.Combine(rootDir, "site", "assets", "img", "screenshots", "dashboard.png");
+        if (File.Exists(dashPath))
+        {
+            using var dashBmp = SKBitmap.Decode(dashPath);
+            if (dashBmp != null)
+            {
+                var destRect = new SKRect(winX, winY + titleBarH, winX + winW, winY + winH);
+                using var contentClip = new SKPath();
+                contentClip.AddRoundRect(new SKRect(winX, winY, winX + winW, winY + winH), 16, 16);
+                canvas.Save();
+                canvas.ClipPath(contentClip, antialias: true);
+                canvas.DrawBitmap(dashBmp, destRect, new SKPaint { FilterQuality = SKFilterQuality.High });
+                canvas.Restore();
+            }
+        }
+
+        // Window Crisp Outer Border
+        using (var winBorderShader = SKShader.CreateLinearGradient(
+            new SKPoint(winX, winY),
+            new SKPoint(winX + winW, winY + winH),
+            new[] { new SKColor(56, 189, 248, 220), new SKColor(30, 41, 59, 140) },
+            null,
+            SKShaderTileMode.Clamp))
+        using (var winBorder = new SKPaint { Shader = winBorderShader, IsStroke = true, StrokeWidth = 2f, IsAntialias = true })
+        {
+            canvas.DrawRoundRect(winX, winY, winW, winH, 16, 16, winBorder);
+        }
+
+        // Floating Callout Badge 1: ₱20,000 DEMO INCOME (Top-Right of Window)
+        float b1X = winX + winW - 350;
+        float b1Y = winY - 26;
+        float b1W = 340;
+        float b1H = 54;
+        using (var b1Shadow = new SKPaint
+        {
+            Color = new SKColor(0, 0, 0, 190),
+            ImageFilter = SKImageFilter.CreateDropShadow(0, 8, 22, 22, new SKColor(0, 0, 0, 210))
+        })
+        using (var b1Shader = SKShader.CreateLinearGradient(
+            new SKPoint(b1X, b1Y),
+            new SKPoint(b1X + b1W, b1Y + b1H),
+            new[] { new SKColor(16, 185, 129), new SKColor(5, 150, 105) },
+            null,
+            SKShaderTileMode.Clamp))
+        using (var b1Bg = new SKPaint { Shader = b1Shader, IsAntialias = true })
+        using (var b1Border = new SKPaint { Color = new SKColor(167, 243, 208), IsStroke = true, StrokeWidth = 2, IsAntialias = true })
+        using (var b1Dot = new SKPaint { Color = SKColors.White, IsAntialias = true })
+        using (var b1Text = new SKPaint
+        {
+            Color = SKColors.White,
+            TextSize = 21,
+            Typeface = SKTypeface.FromFamilyName("Segoe UI", SKFontStyleWeight.Bold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright),
+            IsAntialias = true
+        })
+        {
+            var b1Rect = new SKRect(b1X, b1Y, b1X + b1W, b1Y + b1H);
+            canvas.DrawRoundRect(b1Rect, 27, 27, b1Shadow);
+            canvas.DrawRoundRect(b1Rect, 27, 27, b1Bg);
+            canvas.DrawRoundRect(b1Rect, 27, 27, b1Border);
+            canvas.DrawCircle(b1X + 28, b1Y + 27, 6, b1Dot);
+            string txt1 = "PHP 20,000 SAMPLE INCOME";
+            canvas.DrawText(txt1, b1X + 44, b1Y + 34, b1Text);
+        }
+
+        // Floating Callout Badge 2: COMPLETE PROJECT WALKTHROUGH (Bottom-Right of Window)
+        float b2X = winX + winW - 470;
+        float b2Y = winY + winH - 36;
+        float b2W = 480;
+        float b2H = 64;
+        using (var b2Shadow = new SKPaint
+        {
+            Color = new SKColor(0, 0, 0, 220),
+            ImageFilter = SKImageFilter.CreateDropShadow(0, 12, 26, 26, new SKColor(0, 0, 0, 230))
+        })
+        using (var b2Shader = SKShader.CreateLinearGradient(
+            new SKPoint(b2X, b2Y),
+            new SKPoint(b2X + b2W, b2Y + b2H),
+            new[] { new SKColor(220, 38, 38), new SKColor(153, 27, 27) },
+            null,
+            SKShaderTileMode.Clamp))
+        using (var b2Bg = new SKPaint { Shader = b2Shader, IsAntialias = true })
+        using (var b2Border = new SKPaint { Color = new SKColor(254, 202, 202), IsStroke = true, StrokeWidth = 2, IsAntialias = true })
+        using (var b2Text = new SKPaint
+        {
+            Color = SKColors.White,
+            TextSize = 22,
+            Typeface = SKTypeface.FromFamilyName("Segoe UI", SKFontStyleWeight.Bold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright),
+            IsAntialias = true
+        })
+        {
+            var b2Rect = new SKRect(b2X, b2Y, b2X + b2W, b2Y + b2H);
+            canvas.DrawRoundRect(b2Rect, 14, 14, b2Shadow);
+            canvas.DrawRoundRect(b2Rect, 14, 14, b2Bg);
+            canvas.DrawRoundRect(b2Rect, 14, 14, b2Border);
+
+            // Vector Play Triangle
+            using var playPath = new SKPath();
+            playPath.MoveTo(b2X + 24, b2Y + 22);
+            playPath.LineTo(b2X + 24, b2Y + 42);
+            playPath.LineTo(b2X + 41, b2Y + 32);
+            playPath.Close();
+            using var playPaint = new SKPaint { Color = SKColors.White, Style = SKPaintStyle.Fill, IsAntialias = true };
+            canvas.DrawPath(playPath, playPaint);
+
+            string txt2 = "COMPLETE WALKTHROUGH & INSTALL";
+            canvas.DrawText(txt2, b2X + 52, b2Y + 39, b2Text);
+        }
+
+        // ==========================================
+        // 3. LEFT SIDE: PUNCHY HIGH-CTR HOOK & PITCH
+        // ==========================================
+        float leftX = 75;
+
+        // Official Category Tag
+        float tagY = 65;
+        using (var tagBg = new SKPaint { Color = new SKColor(14, 165, 233, 40), IsAntialias = true })
+        using (var tagBorder = new SKPaint { Color = new SKColor(56, 189, 248, 190), IsStroke = true, StrokeWidth = 1.5f, IsAntialias = true })
+        using (var tagDot = new SKPaint { Color = new SKColor(56, 189, 248), IsAntialias = true })
+        using (var tagText = new SKPaint
+        {
+            Color = new SKColor(56, 189, 248),
+            TextSize = 19,
+            Typeface = SKTypeface.FromFamilyName("Segoe UI", SKFontStyleWeight.Bold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright),
+            IsAntialias = true
+        })
+        {
+            string tagStr = "OFFICIAL 2026 DEMO & COMPLETE WALKTHROUGH";
+            float tagW = tagText.MeasureText(tagStr) + 48;
+            var tagRect = new SKRect(leftX, tagY, leftX + tagW, tagY + 44);
+            canvas.DrawRoundRect(tagRect, 8, 8, tagBg);
+            canvas.DrawRoundRect(tagRect, 8, 8, tagBorder);
+            canvas.DrawCircle(leftX + 22, tagY + 22, 5, tagDot);
+            canvas.DrawText(tagStr, leftX + 36, tagY + 28, tagText);
+        }
+
+        // Brand Identity Row (Actual Ribbon Logo + FCMS Pro)
+        float brandY = 135;
+        if (File.Exists(logoPath))
+        {
+            using var logoBmp = SKBitmap.Decode(logoPath);
+            if (logoBmp != null)
+            {
+                var logoRect = new SKRect(leftX, brandY, leftX + 80, brandY + 80);
+                using var logoClip = new SKPath();
+                logoClip.AddRoundRect(logoRect, 18, 18);
+                canvas.Save();
+                canvas.ClipPath(logoClip, antialias: true);
+                canvas.DrawBitmap(logoBmp, logoRect, new SKPaint { FilterQuality = SKFilterQuality.High });
+                canvas.Restore();
+            }
+        }
+        else
+        {
+            using var logoPlaceholder = new SKPaint { Color = new SKColor(37, 99, 235), IsAntialias = true };
+            canvas.DrawRoundRect(leftX, brandY, 80, 80, 18, 18, logoPlaceholder);
+        }
+
+        using (var brandText = new SKPaint { Color = SKColors.White, TextSize = 54, FakeBoldText = true, IsAntialias = true })
+        {
+            canvas.DrawText("FCMS Pro", leftX + 96, brandY + 52, brandText);
+        }
+        using (var subBrand = new SKPaint { Color = new SKColor(56, 189, 248), TextSize = 19, FakeBoldText = true, IsAntialias = true })
+        {
+            canvas.DrawText("THE LOCAL-FIRST FREELANCE CRM", leftX + 98, brandY + 77, subBrand);
+        }
+
+        // Massive Hook Headline (Extreme Contrast)
+        float headY = 320;
+        using (var h1Paint = new SKPaint
+        {
+            Color = SKColors.White,
+            TextSize = 88,
+            FakeBoldText = true,
+            IsAntialias = true,
+            ImageFilter = SKImageFilter.CreateDropShadow(0, 8, 18, 18, new SKColor(0, 0, 0, 230))
+        })
+        {
+            canvas.DrawText("STOP PAYING", leftX, headY, h1Paint);
+        }
+
+        using (var h2Shader = SKShader.CreateLinearGradient(
+            new SKPoint(leftX, headY + 30),
+            new SKPoint(leftX + 600, headY + 115),
+            new[] { new SKColor(245, 158, 11), new SKColor(252, 211, 77) },
+            null,
+            SKShaderTileMode.Clamp))
+        using (var h2Paint = new SKPaint
+        {
+            Shader = h2Shader,
+            TextSize = 88,
+            FakeBoldText = true,
+            IsAntialias = true,
+            ImageFilter = SKImageFilter.CreateDropShadow(0, 8, 18, 18, new SKColor(0, 0, 0, 230))
+        })
+        {
+            canvas.DrawText("MONTHLY FEES!", leftX, headY + 95, h2Paint);
+        }
+
+        // Sub-banner Pill: 100% OFFLINE & NO SUBSCRIPTIONS
+        float pillY = headY + 130;
+        float pillW = 680;
+        float pillH = 68;
+        using (var pShadow = new SKPaint
+        {
+            Color = new SKColor(0, 0, 0, 180),
+            ImageFilter = SKImageFilter.CreateDropShadow(0, 8, 20, 20, new SKColor(2, 132, 199, 120))
+        })
+        using (var pShader = SKShader.CreateLinearGradient(
+            new SKPoint(leftX, pillY),
+            new SKPoint(leftX + pillW, pillY + pillH),
+            new[] { new SKColor(2, 132, 199), new SKColor(37, 99, 235) },
+            null,
+            SKShaderTileMode.Clamp))
+        using (var pBg = new SKPaint { Shader = pShader, IsAntialias = true })
+        using (var pBorder = new SKPaint { Color = new SKColor(56, 189, 248), IsStroke = true, StrokeWidth = 2, IsAntialias = true })
+        using (var pText = new SKPaint { Color = SKColors.White, TextSize = 34, FakeBoldText = true, IsAntialias = true })
+        {
+            var pRect = new SKRect(leftX, pillY, leftX + pillW, pillY + pillH);
+            canvas.DrawRoundRect(pRect, 14, 14, pShadow);
+            canvas.DrawRoundRect(pRect, 14, 14, pBg);
+            canvas.DrawRoundRect(pRect, 14, 14, pBorder);
+            string pStr = "100% OFFLINE & ZERO SUBSCRIPTION";
+            float twP = pText.MeasureText(pStr);
+            canvas.DrawText(pStr, leftX + (pillW - twP) / 2f, pillY + 46, pText);
+        }
+
+        // Feature Benefits Card
+        float featY = 575;
+        float featW = 680;
+        float featH = 210;
+        using (var featShadow = new SKPaint
+        {
+            Color = new SKColor(0, 0, 0, 150),
+            ImageFilter = SKImageFilter.CreateDropShadow(0, 12, 24, 24, new SKColor(0, 0, 0, 180))
+        })
+        using (var featBg = new SKPaint { Color = new SKColor(15, 23, 42, 210), IsAntialias = true })
+        using (var featBorder = new SKPaint { Color = new SKColor(51, 65, 85, 180), IsStroke = true, StrokeWidth = 1.5f, IsAntialias = true })
+        {
+            var fRect = new SKRect(leftX, featY, leftX + featW, featY + featH);
+            canvas.DrawRoundRect(fRect, 16, 16, featShadow);
+            canvas.DrawRoundRect(fRect, 16, 16, featBg);
+            canvas.DrawRoundRect(fRect, 16, 16, featBorder);
+        }
+
+        // Feature List items
+        var features = new[]
+        {
+            new { Text = "Zero Cloud Lock-in • 100% Private SQLite", Color = new SKColor(241, 245, 249) },
+            new { Text = "Native Philippine Peso (PHP 20,000 Sample)", Color = new SKColor(56, 189, 248) },
+            new { Text = "No Accounts • No Telemetry • No Paywalls", Color = new SKColor(52, 211, 153) },
+            new { Text = "Cross-Platform Desktop: Windows, macOS, Linux", Color = new SKColor(148, 163, 184) }
+        };
+
+        float itemY = featY + 40;
+        using var checkPaint = new SKPaint
+        {
+            Color = new SKColor(56, 189, 248),
+            StrokeWidth = 3f,
+            StrokeCap = SKStrokeCap.Round,
+            IsStroke = true,
+            IsAntialias = true
+        };
+
+        foreach (var item in features)
+        {
+            // Vector checkmark
+            canvas.DrawLine(leftX + 22, itemY - 6, leftX + 29, itemY, checkPaint);
+            canvas.DrawLine(leftX + 29, itemY, leftX + 41, itemY - 14, checkPaint);
+
+            using var textPaint = new SKPaint
+            {
+                Color = item.Color,
+                TextSize = 21,
+                Typeface = SKTypeface.FromFamilyName("Segoe UI", SKFontStyleWeight.Bold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright),
+                IsAntialias = true
+            };
+            canvas.DrawText(item.Text, leftX + 54, itemY, textPaint);
+            itemY += 45;
+        }
+
+        // Creator Signature Card
+        float credY = 815;
+        float credW = 680;
+        float credH = 135;
+        using (var credShadow = new SKPaint
+        {
+            Color = new SKColor(0, 0, 0, 180),
+            ImageFilter = SKImageFilter.CreateDropShadow(0, 14, 28, 28, new SKColor(0, 0, 0, 200))
+        })
+        using (var credBg = new SKPaint { Color = new SKColor(10, 16, 30, 240), IsAntialias = true })
+        using (var credBorder = new SKPaint { Color = new SKColor(56, 189, 248, 140), IsStroke = true, StrokeWidth = 1.5f, IsAntialias = true })
+        {
+            var cRect = new SKRect(leftX, credY, leftX + credW, credY + credH);
+            canvas.DrawRoundRect(cRect, 16, 16, credShadow);
+            canvas.DrawRoundRect(cRect, 16, 16, credBg);
+            canvas.DrawRoundRect(cRect, 16, 16, credBorder);
+
+            // Circular Avatar Badge with RV initials
+            float avX = leftX + 26;
+            float avY = credY + 28;
+            using var avBg = new SKPaint { Color = new SKColor(2, 132, 199, 45), IsAntialias = true };
+            using var avBorder = new SKPaint { Color = new SKColor(56, 189, 248), IsStroke = true, StrokeWidth = 2, IsAntialias = true };
+            using var avText = new SKPaint { Color = new SKColor(56, 189, 248), TextSize = 30, FakeBoldText = true, IsAntialias = true };
+            canvas.DrawCircle(avX + 40, avY + 40, 40, avBg);
+            canvas.DrawCircle(avX + 40, avY + 40, 40, avBorder);
+            canvas.DrawText("RV", avX + 20, avY + 50, avText);
+
+            // Text
+            using var authorName = new SKPaint { Color = SKColors.White, TextSize = 27, FakeBoldText = true, IsAntialias = true };
+            using var authorRole = new SKPaint { Color = new SKColor(148, 163, 184), TextSize = 17, IsAntialias = true };
+            using var authorSub = new SKPaint { Color = new SKColor(56, 189, 248), TextSize = 16, FakeBoldText = true, IsAntialias = true };
+
+            canvas.DrawText("Roderic Villena", avX + 96, avY + 28, authorName);
+            canvas.DrawText("Freelancer since 2023 • 4-Month Real-World Battle Tested", avX + 96, avY + 54, authorRole);
+            canvas.DrawText("Free & Open Source on GitHub • villenaderic.github.io/FcmsPro", avX + 96, avY + 77, authorSub);
+        }
+
+        // ==========================================
+        // 4. EXPORT HIGH-QUALITY ASSETS
+        // ==========================================
+        var outputs = new[]
+        {
+            Path.Combine(rootDir, "FCMS_Pro_YouTube_Thumbnail.png"),
+            Path.Combine(rootDir, "site", "assets", "img", "thumbnail.png"),
+            Path.Combine(rootDir, "docs", "assets", "img", "thumbnail.png"),
+            @"C:\Users\Hp\.gemini\antigravity\brain\7378e3c2-f7ca-429c-82ab-d4bdfc8862ad\verified_thumbnail.png"
+        };
+
+        using (var image = SKImage.FromBitmap(bmp))
+        {
+            // 1. Export 1080p PNGs
+            using (var pngData = image.Encode(SKEncodedImageFormat.Png, 100))
+            {
+                foreach (var outPath in outputs)
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(outPath)!);
+                    using var fs = File.Create(outPath);
+                    pngData.SaveTo(fs);
+                    Console.WriteLine($"  -> Saved 1080p Thumbnail: {outPath}");
+                }
+            }
+
+            // 2. Export 1080p JPEG (< 1MB, fast YouTube upload)
+            var jpgPath = Path.Combine(rootDir, "FCMS_Pro_YouTube_Thumbnail.jpg");
+            using (var jpgData = image.Encode(SKEncodedImageFormat.Jpeg, 92))
+            {
+                using var fs = File.Create(jpgPath);
+                jpgData.SaveTo(fs);
+                Console.WriteLine($"  -> Saved 1080p JPEG Thumbnail: {jpgPath} ({(new FileInfo(jpgPath).Length / 1024f):F1} KB)");
+            }
+        }
+
+        // 3. Export 720p (1280x720) downscaled version
+        using var bmp720 = new SKBitmap(1280, 720);
+        using var canvas720 = new SKCanvas(bmp720);
+        canvas720.DrawBitmap(bmp, new SKRect(0, 0, 1280, 720), new SKPaint { FilterQuality = SKFilterQuality.High });
+
+        var path720 = Path.Combine(rootDir, "FCMS_Pro_YouTube_Thumbnail_720p.png");
+        using (var img720 = SKImage.FromBitmap(bmp720))
+        using (var data720 = img720.Encode(SKEncodedImageFormat.Png, 100))
+        {
+            using var fs720 = File.Create(path720);
+            data720.SaveTo(fs720);
+            Console.WriteLine($"  -> Saved 720p Thumbnail: {path720}");
+        }
+
+        Console.WriteLine("\n🎉 All YouTube Thumbnails Generated Successfully!");
     }
 }

@@ -52,4 +52,5 @@ build-video/
 *.mp4
 tools/VideoMaker/bin/
 tools/VideoMaker/obj/
+FCMS_Pro_YouTube_Thumbnail*
 

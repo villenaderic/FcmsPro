@@ -114,3 +114,4 @@ fs.copyFileSync(tempOutput, finalOutput);
 fs.unlinkSync(tempOutput);
 
 console.log(`\n🎉 Successfully restored crystal-clear master audio in ${finalOutput}!`);
+
