@@ -49,4 +49,7 @@ _site/
 ## Video generation tooling and intermediate build artifacts
 .video-tools/
 build-video/
+*.mp4
+tools/VideoMaker/bin/
+tools/VideoMaker/obj/
 
